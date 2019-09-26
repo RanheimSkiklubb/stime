@@ -1,2 +1,2 @@
 # stime
-Simple Sports Timing
+Simple Sports Timing System
