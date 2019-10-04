@@ -1,6 +1,6 @@
 import { MongoClient, ObjectID, Db } from 'mongodb';
 //const assert = require('assert');
-//const logger = require('./logger');
+import logger from './logger';
 //const ObjectId = require('mongodb').ObjectId;
 //const moment = require('moment-timezone');
 //const _ = require('lodash');
@@ -24,10 +24,11 @@ export default class MongoAPI {
         if (!MongoAPI.instance) {
             return MongoAPI.connect()
                 .then(db => {
+                    logger.info("Connected to " + url);
                     MongoAPI.instance = new MongoAPI(db);
                 })
                 .catch(error => {
-                    console.log("Exiting...")
+                    logger.error(`Could not connect to ${url}. Error: ${error}`);
                     process.exit();
                 })
         }

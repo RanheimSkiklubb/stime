@@ -1,6 +1,7 @@
 import express = require('express');
 import { Response, Request } from "express";
 import MongoAPI from './mongoAPI';
+import logger from './logger';
 const app: express.Application = express();
 
 MongoAPI.getInstance().then(init);
@@ -21,5 +22,5 @@ function eventHandler(req: Request, res: Response) {
 }
 
 function appListener() {
-    console.log("App listening on port 3000");
+    logger.info("App listening on port 3000");
 }
