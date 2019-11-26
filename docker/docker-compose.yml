@@ -9,4 +9,4 @@ services:
     ports:
     - 27017:27017
     volumes:
-    - /data/stime/mongodb:/data/db
+    - /opt/data/stime/mongodb:/data/db
