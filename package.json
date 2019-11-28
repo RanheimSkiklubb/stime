@@ -4,7 +4,7 @@
   "description": "Simple Sports Timing System",
   "main": "server/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register server/test/test-*.ts",
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./server/server.ts",
     "start": "tsc && node ./build/server.js"
@@ -31,5 +31,12 @@
     "ts-node-dev": "^1.0.0-pre.43",
     "typescript": "^3.6.3",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/chai-http": "^4.2.0",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.2.2"
   }
 }
