@@ -1,5 +1,6 @@
 import { Db } from 'mongodb';
 import Event from './event';
+import { Participant } from './participant';
 
 
 export default class MongoAPI {
@@ -10,8 +11,13 @@ export default class MongoAPI {
     }
 
     getEvent(id: string): Promise<Event | null> {
-            return this.db.collection("event").findOne({id})
-                .then(event => event ? new Event(event.id, event.name, new Date(event.startTime), event.participants) : null)
+        return this.db.collection("event").findOne({id})
+            .then(event => event ? new Event(event.id, event.name, new Date(event.startTime), event.participants) : null)
+    }
+    
+    saveParticipant(eventId: string, participant: Participant) {
+        const safeCopy = {firstName: participant.firstName, lastName: participant.lastName, club: participant.club, birthYear: participant.birthYear};
+        return this.db.collection("event").updateOne({id: eventId}, {$push: {participants: safeCopy}});
     }
 
 }

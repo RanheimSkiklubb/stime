@@ -4,6 +4,10 @@ import { Response, Request, NextFunction } from "express";
 import MongoAPI from './mongoAPI';
 import ExpressError from './express-error';
 import { Db } from 'mongodb';
+import Ajv from "ajv";
+import { participantSchema } from './participant.schema'
+
+
 
 export default class API {
     mongo: MongoAPI;
@@ -18,6 +22,7 @@ export default class API {
         const router = Router();
         router.all('*', API.requestLogger);
         router.get('/event/:eventId', this.getEvent);
+        router.post('/event/:eventId/participant', this.postParticipant)
         router.get('/ping', (req: Request, res: Response) => res.send("pong"));
         router.use(API.errorHandler);
         return router;
@@ -36,8 +41,24 @@ export default class API {
         })
     }
 
+    postParticipant(req: Request, res: Response) {
+        const ajv = new Ajv({allErrors: true});
+        const isValid = ajv.validate(participantSchema, req.body);
+        if (!isValid) {
+            logger.error("Invalid content" + JSON.stringify(ajv.errors));
+            res.status(400).send("Invalid format: " + ajv.errors);
+            return;
+        }
+        this.mongo.saveParticipant(req.params.eventId, req.body)
+            .then((result) => {
+                logger.debug("Write result: " + result);
+                res.send("Ok")
+            });
+    }
+
     bind() {
         this.getEvent = this.getEvent.bind(this);
+        this.postParticipant = this.postParticipant.bind(this);
     }
     
     static errorHandler (error: ExpressError, req: Request, res: Response, next:NextFunction) {
