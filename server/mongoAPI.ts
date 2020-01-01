@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
-import Event from './event';
-import { Participant } from './participant';
+import Event from './api/event';
+import { Participant } from './api/participant';
 
 
 export default class MongoAPI {

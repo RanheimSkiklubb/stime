@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import API from './api';
+import API from './api/api';
 import * as http from 'http'
 import { Db } from 'mongodb';
 

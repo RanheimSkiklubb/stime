@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import Ajv from "ajv";
-import { participantSchema } from '../participant.schema'
+import { participantSchema } from '../api/participant.schema'
 
 describe('Participant validation', () => {
     it('should validate proper json', () => {

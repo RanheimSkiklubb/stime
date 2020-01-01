@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import logger from './logger';
+import logger from '../logger';
 import { Response, Request, NextFunction } from "express";
-import MongoAPI from './mongoAPI';
-import ExpressError from './express-error';
+import MongoAPI from '../mongoAPI';
+import ExpressError from '../express-error';
 import { Db } from 'mongodb';
 import Ajv from "ajv";
 import { participantSchema } from './participant.schema'
