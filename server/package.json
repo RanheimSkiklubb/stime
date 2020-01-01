@@ -4,7 +4,7 @@
   "description": "Simple Sports Timing System",
   "main": "server/server.js",
   "scripts": {
-    "test": "mocha -r ts-node/register server/test/test-*.ts",
+    "test": "mocha -r ts-node/register --exit test/test-*.ts",
     "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./server/server.ts",
     "start": "tsc && node ./build/server.js"
@@ -35,7 +35,6 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/chai-http": "^4.2.0",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
