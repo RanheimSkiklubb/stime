@@ -14,6 +14,11 @@ export default class MongoAPI {
         return this.db.collection("event").findOne({id})
             .then(event => event ? new Event(event.id, event.name, new Date(event.startTime), event.participants) : null)
     }
+
+    getAllEvents(): Promise<Event[]> {
+        return this.db.collection("event").find().toArray()
+            .then(events => events.map(event => new Event(event.id, event.name, new Date(event.startTime), event.participants)));
+    }
     
     saveParticipant(eventId: string, participant: Participant) {
         const safeCopy = {firstName: participant.firstName, lastName: participant.lastName, club: participant.club, birthYear: participant.birthYear};

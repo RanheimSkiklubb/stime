@@ -83,6 +83,19 @@ describe('Event API Request', () => {
             })
     })
 
+    it('/events should return 200 and all events', (done) => {
+        const express = new App(db).expressServer;
+        request(express)
+            .get('/api/event')
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('array');
+                expect(res.body).to.have.lengthOf(1);
+                expect(res.body[0]).to.have.property('id', '1');
+                done();
+            })
+    });
+
 
 })
 

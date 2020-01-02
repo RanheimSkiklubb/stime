@@ -21,11 +21,17 @@ export default class API {
     setUpRoutes(): Router {
         const router = Router();
         router.all('*', API.requestLogger);
+        router.get('/event', this.getAllEvents);
         router.get('/event/:eventId', this.getEvent);
         router.post('/event/:eventId/participant', this.postParticipant)
         router.get('/ping', (req: Request, res: Response) => res.send("pong"));
         router.use(API.errorHandler);
         return router;
+    }
+
+    getAllEvents(req: Request, res: Response) {
+        this.mongo.getAllEvents()
+            .then(events => res.send(events));
     }
 
     getEvent(req: Request, res: Response) {
@@ -59,6 +65,7 @@ export default class API {
     bind() {
         this.getEvent = this.getEvent.bind(this);
         this.postParticipant = this.postParticipant.bind(this);
+        this.getAllEvents = this.getAllEvents.bind(this);
     }
     
     static errorHandler (error: ExpressError, req: Request, res: Response, next:NextFunction) {
