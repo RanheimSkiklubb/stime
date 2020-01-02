@@ -9,6 +9,7 @@ export class App {
     constructor(db: Db) {
         const app = express();
         app.use(bodyParser.json());
+        app.use(express.static('../client/build'))
         app.use('/api', new API(db).router);
         this.expressServer = http.createServer(app);
     }

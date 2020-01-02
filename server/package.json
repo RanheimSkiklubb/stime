@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha -r ts-node/register --exit test/test-*.ts",
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./server/server.ts",
+    "dev": "ts-node-dev --respawn --transpileOnly ./server.ts",
     "start": "tsc && node ./build/server.js"
   },
   "repository": {
