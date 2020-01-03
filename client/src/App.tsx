@@ -6,6 +6,13 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import moment from 'moment';
 
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    useParams
+  } from "react-router-dom";
+
 interface Event {
     id: string;
     name: string;
@@ -17,10 +24,19 @@ interface Props {
     events: Event[]
 }
 
-const Content: React.FC<Props> = ({events}: Props) => {
+const Event: React.FC = () => {
+    let { eventId } = useParams();
+    return (
+        <div>
+            <h1>Event {eventId}</h1><br/>
+        </div>
+    );
+}
+
+const EventList: React.FC<Props> = ({events}: Props) => {
     
     const createList = () => events.map(event => 
-    <ListGroup.Item action href="#link1">{moment(event.startTime).format("DD. MMM YYYY")}: {event.name}</ListGroup.Item>
+    <ListGroup.Item action href={`/event/${event.id}`}>{moment(event.startTime).format("DD. MMM YYYY")}: {event.name}</ListGroup.Item>
         );
 
     return (
@@ -56,7 +72,18 @@ class App extends React.Component<{}, Props> {
             <Container fluid={true}>
                 <Row>
                     <Col></Col>
-                    <Col className="text-center" xs={9}><Content events={this.state.events}/></Col>
+                    <Col className="text-center" xs={9}>
+                        <Router>
+                            <Switch>
+                            <Route path="/event/:eventId">
+                                <Event />
+                            </Route>
+                            <Route path="/">
+                                <EventList events={this.state.events}/>
+                            </Route>
+                            </Switch>
+                        </Router>
+                    </Col>
                     <Col></Col>
                 </Row>
             </Container>
