@@ -1,7 +1,6 @@
 import React from 'react';
-import './App.css';
-import Event from './Event';
-import Participant from './Participant';
+import Event from '../Event';
+import Participant from '../Participant';
 import { match } from "react-router-dom";
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -43,21 +42,29 @@ export default class EventPage extends React.Component<Props, State> {
         const event = this.state.event;
         return (
             <div>
-                <h1>{event.name}</h1>
-                <h2>{moment(event.startTime).format("DD. MMM YYYY")}</h2><br/>
-                <Table striped bordered hover size="sm">
+                <h2>{event.name}</h2>
+                <h3>{moment(event.startTime).format("DD. MMM YYYY")}</h3>
+                <hr/>
+                <Table striped bordered size="sm">
                     <thead>
                         <tr>
-                        <th>#</th>
-                        <th>Navn</th>
-                        <th>Klubb</th>
-                        <th>Klasse</th>
+                            <th>#</th>
+                            <th>Navn</th>
+                            <th>Klubb</th>
+                            <th>Klasse</th>
                         </tr>
                     </thead>
                     <tbody>
-        {event.participants.map((p:Participant, idx:number) => <tr key={idx}><td>{idx + 1}</td><td>{p.firstName + " " + p.lastName}</td><td>{p.club}</td><td>{p.eventClass}</td></tr>)}
+                        {
+                        event.participants.map((p:Participant, idx:number) => 
+                        <tr key={idx}><td>{idx + 1}</td>
+                            <td>{p.firstName + " " + p.lastName}</td>
+                            <td>{p.club}</td>
+                            <td>{p.eventClass}</td>
+                        </tr>)
+                        }
                     </tbody>
-                    </Table>
+                </Table>
             </div>
         );
     }

@@ -25,18 +25,18 @@ export default class EventListPage extends React.Component<{}, State> {
     }
 
     render() {
-        const createList = () => this.state.events.map(event => 
-            <ListGroup.Item action href={`/event/${event.id}`} key={event.id}>{moment(event.startTime).format("DD. MMM YYYY")}: {event.name}</ListGroup.Item>
-                );
-        
-            return (
-                <div>
-                    <h1>Arrangement</h1><br/>
-                    <ListGroup>
-                        {createList()}
-                    </ListGroup>
-                </div>
-            );
+        return (
+            <div>
+                <h1>Arrangement</h1><br/>
+                <ListGroup>
+                    {this.state.events.map(event => 
+                        <ListGroup.Item action href={`/event/${event.id}`} key={event.id}>
+                            {moment(event.startTime).format("DD. MMM YYYY")}: {event.name}
+                        </ListGroup.Item>
+                    )}
+                </ListGroup>
+            </div>
+        );
     }
 
 }
