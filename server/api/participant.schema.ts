@@ -13,11 +13,9 @@ export const participantSchema = {
       "club": {
         "type": "string"
       },
-      "birthYear": {
-        "type": "integer",
-        "minimum": 1900,
-        "maximum": 2020
+      "eventClass": {
+        "type": "string"
       }
     },
-    "required": ["firstName", "lastName", "club", "birthYear"]
+    "required": ["firstName", "lastName", "club", "eventClass"]
   }

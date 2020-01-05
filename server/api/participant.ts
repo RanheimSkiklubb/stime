@@ -1,6 +1,6 @@
-export interface Participant {
+export default interface Participant {
     firstName: string,
     lastName: string,
     club: string,
-    birthYear: number
+    eventClass: string
 }

@@ -68,7 +68,7 @@ describe('Event API Request', () => {
         const club = 'Ranheim SK'
         request(express)
             .post('/api/event/1/participant')
-            .send({ firstName, lastName, club, birthYear: 2013 })
+            .send({ firstName, lastName, club, eventClass: 'Mini' })
             .end((err, res) => {
                 expect(err).to.be.null;
                 expect(res.status).to.equal(200);

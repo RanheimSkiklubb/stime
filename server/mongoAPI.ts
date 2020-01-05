@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 import Event from './api/event';
-import { Participant } from './api/participant';
+import Participant from './api/participant';
 
 
 export default class MongoAPI {
@@ -21,7 +21,7 @@ export default class MongoAPI {
     }
     
     saveParticipant(eventId: string, participant: Participant) {
-        const safeCopy = {firstName: participant.firstName, lastName: participant.lastName, club: participant.club, birthYear: participant.birthYear};
+        const safeCopy = {firstName: participant.firstName, lastName: participant.lastName, club: participant.club, eventClass: participant.eventClass};
         return this.db.collection("event").updateOne({id: eventId}, {$push: {participants: safeCopy}});
     }
 

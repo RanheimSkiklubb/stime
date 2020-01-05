@@ -10,8 +10,8 @@ interface State {
 
 export default class EventListPage extends React.Component<{}, State> {
     
-    constructor() {
-        super({});
+    constructor(props: any) {
+        super(props);
         this.state = {events: []};
     }
 
@@ -26,7 +26,7 @@ export default class EventListPage extends React.Component<{}, State> {
 
     render() {
         const createList = () => this.state.events.map(event => 
-            <ListGroup.Item action href={`/event/${event.id}`}>{moment(event.startTime).format("DD. MMM YYYY")}: {event.name}</ListGroup.Item>
+            <ListGroup.Item action href={`/event/${event.id}`} key={event.id}>{moment(event.startTime).format("DD. MMM YYYY")}: {event.name}</ListGroup.Item>
                 );
         
             return (

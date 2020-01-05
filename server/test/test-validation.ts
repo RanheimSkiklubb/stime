@@ -9,7 +9,7 @@ describe('Participant validation', () => {
             firstName: 'Øyvind',
             lastName: 'Rønne',
             club: 'Ranheim SK',
-            birthYear: 2013
+            eventClass: 'Mini'
         }
         const ajv = new Ajv({allErrors: true});
         var validate = ajv.compile(participantSchema);
