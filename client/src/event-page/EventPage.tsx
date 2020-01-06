@@ -4,6 +4,7 @@ import Participant from '../Participant';
 import { match } from "react-router-dom";
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
+import RegistrationModal from './RegistrationModal';
 
 
 interface State {
@@ -44,7 +45,9 @@ export default class EventPage extends React.Component<Props, State> {
             <div>
                 <h2>{event.name}</h2>
                 <h3>{moment(event.startTime).format("DD. MMM YYYY")}</h3>
+                <RegistrationModal/>
                 <hr/>
+                <h3>Deltakere</h3>
                 <Table striped bordered size="sm">
                     <thead>
                         <tr>
