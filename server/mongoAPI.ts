@@ -1,6 +1,8 @@
 import { Db } from 'mongodb';
-import Event from './api/event';
-import Participant from './api/participant';
+import Event from './domain/event';
+import Config from './domain/config';
+import Participant from './domain/participant';
+import logger from './logger';
 
 
 export default class MongoAPI {
@@ -20,6 +22,18 @@ export default class MongoAPI {
     getAllEvents(): Promise<Event[]> {
         return this.db.collection("event").find().toArray()
             .then(objs => objs.map(o => MongoAPI.eventFromObject(o)));
+    }
+
+    getConfig(): Promise<Config> {
+        return this.db.collection("config").findOne({_id: 1})
+            .then(obj => {
+                if (!obj) {
+                    const errorMessage = "Db does not contain config object!";
+                    logger.error(errorMessage);
+                    throw new Error(errorMessage);
+                }
+                return {clubs: obj.clubs}
+            });
     }
     
     saveParticipant(eventId: string, participant: Participant) {

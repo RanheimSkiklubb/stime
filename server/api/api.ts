@@ -24,6 +24,7 @@ export default class API {
         router.get('/event', this.getAllEvents);
         router.get('/event/:eventId', this.getEvent);
         router.post('/event/:eventId/participant', this.postParticipant)
+        router.get('/config', this.getConfig);
         router.get('/ping', (req: Request, res: Response) => res.send("pong"));
         router.use(API.errorHandler);
         return router;
@@ -62,10 +63,22 @@ export default class API {
             });
     }
 
+    getConfig(req: Request, res: Response) {
+        this.mongo.getConfig()
+            .then(event => {
+                logger.info(event);
+                res.send(event) 
+            })
+            .catch(error => {
+                res.status(500).send(error)
+            })
+    }
+
     bind() {
         this.getEvent = this.getEvent.bind(this);
         this.postParticipant = this.postParticipant.bind(this);
         this.getAllEvents = this.getAllEvents.bind(this);
+        this.getConfig = this.getConfig.bind(this);
     }
     
     static errorHandler (error: ExpressError, req: Request, res: Response, next:NextFunction) {
