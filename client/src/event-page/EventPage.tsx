@@ -32,8 +32,8 @@ export default class EventPage extends React.Component<Props, State> {
         fetch(`http://localhost:3000/api/event/${eventId}`)
         .then(res => res.json())
         .then((data) => {
-            const event = Event.fromObject(data);
-            this.setState({ event: event });
+            const event = {id: data.id, name: data.name, startTime: data.startTime, eventClasses: data.eventClasses, participants: data.participants};
+            this.setState({ event });
         })
         .catch(console.log)
     }
@@ -45,7 +45,7 @@ export default class EventPage extends React.Component<Props, State> {
             <div>
                 <h2>{event.name}</h2>
                 <h3>{moment(event.startTime).format("DD. MMM YYYY")}</h3>
-                <RegistrationModal/>
+                <RegistrationModal event={event}/>
                 <hr/>
                 <h3>Deltakere</h3>
                 <Table striped bordered size="sm">

@@ -4,9 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import Participant from '../Participant';
+import Event from '../Event';
 
 
-const RegistrationForm: React.FC = () => {
+interface Props {
+    event: Event
+}
+
+const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const [validated, setValidated] = useState(false);
     const [showForm, setShowForm] = useState(true);
@@ -40,7 +45,7 @@ const RegistrationForm: React.FC = () => {
                     body: JSON.stringify({firstName, lastName, club, eventClass}),
                     headers: {'Content-Type': 'application/json'}
                 });
-                registered.push(new Participant(registrationCount.toString(), firstName, lastName, club, eventClass));
+                registered.push({id: registrationCount.toString(), firstName, lastName, club, eventClass});
                 registrationCount += 1;
                 setShowForm(false);
             }
@@ -70,11 +75,7 @@ const RegistrationForm: React.FC = () => {
             <Form.Group controlId="formBasicEventClass">
                 <Form.Label>Velg klasse</Form.Label>
                 <Form.Control as="select" onChange={eventClassChange} value={eventClass}>
-                    <option>Mini</option>
-                    <option>J 08-10</option>
-                    <option>J 10-11</option>
-                    <option>J 12-13</option>
-                    <option>J 14-15</option>
+                    {props.event.eventClasses.map(eventClass => (<option value={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                 </Form.Control>
             </Form.Group>
             <Button variant="outline-primary" type="submit">Meld på</Button>
@@ -112,14 +113,12 @@ const RegistrationForm: React.FC = () => {
     
 }
 
-const RegistrationModal: React.FC = () => {
+
+const RegistrationModal: React.FC<Props> = (props: Props) => {
     const [show, setShow] = useState(false);
-    //const [showForm, setShowForm] = useState(true);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);    
     console.log("Render")
-
-    //const handleFinishedChange = (finished:boolean) => setShowForm(finished);
 
     return (
         
@@ -131,7 +130,7 @@ const RegistrationModal: React.FC = () => {
                     <Modal.Title>Påmelding</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <RegistrationForm/>
+                    <RegistrationForm event={props.event}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-primary" onClick={handleClose}>Lukk</Button>
