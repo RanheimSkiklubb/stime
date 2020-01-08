@@ -10,14 +10,16 @@ export default class MongoAPI {
         this.db = db;
     }
 
+    static eventFromObject = (o:any):Event => {return {id: o.id, name: o.name, startTime: new Date(o.startTime), eventClasses: o.eventClasses, participants: o.participants}};
+
     getEvent(id: string): Promise<Event | null> {
         return this.db.collection("event").findOne({id})
-            .then(event => event ? new Event(event.id, event.name, new Date(event.startTime), event.participants) : null)
+            .then(obj => obj ? MongoAPI.eventFromObject(obj) : null)
     }
 
     getAllEvents(): Promise<Event[]> {
         return this.db.collection("event").find().toArray()
-            .then(events => events.map(event => new Event(event.id, event.name, new Date(event.startTime), event.participants)));
+            .then(objs => objs.map(o => MongoAPI.eventFromObject(o)));
     }
     
     saveParticipant(eventId: string, participant: Participant) {
