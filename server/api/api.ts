@@ -24,7 +24,7 @@ export default class API {
         router.get('/event', this.getAllEvents);
         router.get('/event/:eventId', this.getEvent);
         router.post('/event/:eventId/participant', this.postParticipant)
-        router.get('/config', this.getConfig);
+        router.get('/club', this.getClub);
         router.get('/ping', (req: Request, res: Response) => res.send("pong"));
         router.use(API.errorHandler);
         return router;
@@ -52,7 +52,7 @@ export default class API {
         const ajv = new Ajv({allErrors: true});
         const isValid = ajv.validate(participantSchema, req.body);
         if (!isValid) {
-            logger.error("Invalid content" + JSON.stringify(ajv.errors));
+            logger.warn("Invalid content" + JSON.stringify(ajv.errors));
             res.status(400).send("Invalid format: " + ajv.errors);
             return;
         }
@@ -63,11 +63,10 @@ export default class API {
             });
     }
 
-    getConfig(req: Request, res: Response) {
+    getClub(req: Request, res: Response) {
         this.mongo.getConfig()
             .then(event => {
-                logger.info(event);
-                res.send(event) 
+                res.send(event.clubs) 
             })
             .catch(error => {
                 res.status(500).send(error)
@@ -78,7 +77,7 @@ export default class API {
         this.getEvent = this.getEvent.bind(this);
         this.postParticipant = this.postParticipant.bind(this);
         this.getAllEvents = this.getAllEvents.bind(this);
-        this.getConfig = this.getConfig.bind(this);
+        this.getClub = this.getClub.bind(this);
     }
     
     static errorHandler (error: ExpressError, req: Request, res: Response, next:NextFunction) {
