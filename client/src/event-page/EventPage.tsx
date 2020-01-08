@@ -5,10 +5,12 @@ import { match } from "react-router-dom";
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import RegistrationModal from './RegistrationModal';
+import Club from '../model/club';
 
 
 interface State {
-    event: Event
+    event: Event,
+    clubs: Club[]
 }
 
 interface MatchParams {
@@ -23,29 +25,31 @@ interface Props {
 export default class EventPage extends React.Component<Props, State> {
     
 
-    componentDidMount() {
+    async componentDidMount() {
         if (!this.props.match) {
             console.error("Props.match not set!");
             return;
         }
         const eventId = this.props.match.params.eventId;
-        fetch(`http://localhost:3000/api/event/${eventId}`)
-        .then(res => res.json())
-        .then((data) => {
-            const event = {id: data.id, name: data.name, startTime: data.startTime, eventClasses: data.eventClasses, participants: data.participants};
-            this.setState({ event });
-        })
-        .catch(console.log)
+        const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
+        const eventData = await eventBody.json();
+        const clubsBody = await fetch('http://localhost:3000/api/club')
+        const clubsData = await clubsBody.json();
+        
+        const event = {id: eventData.id, name: eventData.name, startTime: eventData.startTime, eventClasses: eventData.eventClasses, participants: eventData.participants};
+        this.setState({ event, clubs: clubsData });
+        
     }
 
     render() {
         if (!this.state || !this.state.event) return "";
         const event = this.state.event;
+        const clubs = this.state.clubs;
         return (
             <div>
                 <h2>{event.name}</h2>
                 <h3>{moment(event.startTime).format("DD. MMM YYYY")}</h3>
-                <RegistrationModal event={event}/>
+                <RegistrationModal event={event} clubs={clubs}/>
                 <hr/>
                 <h3>Deltakere</h3>
                 <Table striped bordered size="sm">

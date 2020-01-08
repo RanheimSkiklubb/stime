@@ -5,10 +5,12 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import Participant from '../Participant';
 import Event from '../Event';
+import Club from '../model/club';
 
 
 interface Props {
-    event: Event
+    event: Event,
+    clubs: Club[]
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -17,7 +19,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const [showForm, setShowForm] = useState(true);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [club, setClub] = useState("");
+    const [club, setClub] = useState(props.clubs[0].name);
     const [eventClass, setEventClass] = useState("Mini");
     const [registered] = useState<Participant[]>([]);
     let registrationCount = 0;
@@ -70,7 +72,9 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             </Form.Group>
             <Form.Group controlId="formBasicClub">
                 <Form.Label>Klubb</Form.Label>
-                <Form.Control type="text" required placeholder="Skriv inn klubbnavn" onChange={clubChange} value={club}/>
+                <Form.Control as="select" onChange={clubChange} value={club}>
+                    {props.clubs.map(c => (<option>{c.name}</option>))}
+                </Form.Control>
             </Form.Group>
             <Form.Group controlId="formBasicEventClass">
                 <Form.Label>Velg klasse</Form.Label>
@@ -130,7 +134,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
                     <Modal.Title>Påmelding</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <RegistrationForm event={props.event}/>
+                    <RegistrationForm event={props.event} clubs={props.clubs}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-primary" onClick={handleClose}>Lukk</Button>
