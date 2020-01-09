@@ -16,7 +16,7 @@ interface Props {
 const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const [validated, setValidated] = useState(false);
-    const [showForm, setShowForm] = useState(true);
+    const [progress, setProgress] = useState(0);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [club, setClub] = useState(props.clubs[0].name);
@@ -29,31 +29,38 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const clubChange = (event:ChangeEvent<HTMLInputElement>) => setClub(event.currentTarget.value);
     const eventClassChange = (event:ChangeEvent<HTMLInputElement>) => setEventClass(event.currentTarget.value);
 
+    const handleEdit = () => {
+        setProgress(0);
+    }
+
+    const handleRegister = async () => {
+        try {
+            await fetch(`http://localhost:3000/api/event/1/participant`, 
+            {
+                method: 'POST', 
+                body: JSON.stringify({firstName, lastName, club, eventClass}),
+                headers: {'Content-Type': 'application/json'}
+            });
+            registered.push({id: registrationCount.toString(), firstName, lastName, club, eventClass});
+            registrationCount += 1;
+            setProgress(2);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     const handleRegisterMore = () => {
         setFirstName("");
-        setShowForm(true);
+        setProgress(0);
     }
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        console.log("handleSubmit");
         const form = event.currentTarget;
         event.preventDefault();
         event.stopPropagation();
         if (form.checkValidity()) {
-            try {
-                await fetch(`http://localhost:3000/api/event/1/participant`, 
-                {
-                    method: 'POST', 
-                    body: JSON.stringify({firstName, lastName, club, eventClass}),
-                    headers: {'Content-Type': 'application/json'}
-                });
-                registered.push({id: registrationCount.toString(), firstName, lastName, club, eventClass});
-                registrationCount += 1;
-                setShowForm(false);
-            }
-            catch (error) {
-                console.error(error);
-            }
+            setProgress(1);
         }
         else {
             setValidated(true); //Trigger display of validation responses in form
@@ -73,47 +80,61 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             <Form.Group controlId="formBasicClub">
                 <Form.Label>Klubb</Form.Label>
                 <Form.Control as="select" onChange={clubChange} value={club}>
-                    {props.clubs.map(c => (<option>{c.name}</option>))}
+                    {props.clubs.map(c => (<option key={c.name}>{c.name}</option>))}
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId="formBasicEventClass">
                 <Form.Label>Velg klasse</Form.Label>
                 <Form.Control as="select" onChange={eventClassChange} value={eventClass}>
-                    {props.event.eventClasses.map(eventClass => (<option value={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
+                    {props.event.eventClasses.map(eventClass => (<option value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                 </Form.Control>
             </Form.Group>
-            <Button variant="outline-primary" type="submit">Meld på</Button>
+            <Button className="float-right" variant="outline-primary" type="submit">Neste</Button>
         </Form>
     );
 
-    if (showForm) {
-        return form
-    } 
-    return (
+    const step1 = (
         <div>
-            Din påmelding er registrert
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Fornavn</th>
-                        <th>Etternavn</th>
-                        <th>Klubb</th>
-                        <th>Klasse</th>
-                    </tr>
-                </thead>
+            <p>Du har registert følgende</p>
+            <Table bordered size="sm">
                 <tbody>
-                    {registered.map(p => <tr key={p.id}>
-                        <td>{p.firstName}</td>
-                        <td>{p.lastName}</td>
-                        <td>{p.club}</td>
-                        <td>{p.eventClass}</td>
-                    </tr>)}
-                    
+                    <tr>
+                        <td>Fornavn</td>
+                        <td>{firstName}</td>
+                    </tr>
+                    <tr>
+                        <td>Etternavn</td>
+                        <td>{lastName}</td>
+                    </tr>
+                    <tr>
+                        <td>Klubb</td>
+                        <td>{club}</td>
+                    </tr>
+                    <tr>
+                        <td>Klasse</td>
+                        <td>{eventClass}</td>
+                    </tr>
                 </tbody>
             </Table>
-            <Button variant="outline-primary" onClick={handleRegisterMore}>Meld på flere</Button>
+            <Button variant="outline-primary" onClick={handleEdit}>Endre</Button>
+            <Button variant="outline-primary" className="float-right" onClick={handleRegister}>Meld på</Button>
         </div>
-    )
+    );
+
+    const step2 = (
+        <div>
+            <p>Din påmelding er registrert!</p>
+            <Button variant="outline-primary" className="float-right" onClick={handleRegisterMore}>Meld på flere</Button>
+        </div>
+    );
+
+    if (progress === 0) {
+        return form
+    }
+    if (progress === 1) {
+        return step1;
+    }
+    return step2;
     
 }
 
@@ -137,7 +158,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
                     <RegistrationForm event={props.event} clubs={props.clubs}/>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-primary" onClick={handleClose}>Lukk</Button>
+                    <Button variant="outline-secondary" onClick={handleClose}>Lukk</Button>
                 </Modal.Footer>
             </Modal>
         </>
