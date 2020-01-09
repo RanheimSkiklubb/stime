@@ -1,42 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import './App.css';
-import ListGroup from 'react-bootstrap/ListGroup';
+import Table from 'react-bootstrap/Table';
 import moment from 'moment';
 import Event from './Event';
+
 
 interface State {
     events: Event[]
 }
 
-export default class EventListPage extends React.Component<{}, State> {
+const EventListPage: React.FC = () => {
     
-    constructor(props: any) {
-        super(props);
-        this.state = {events: []};
-    }
+    const history = useHistory();
+    const [events, setEvents] = useState<Event[]>([]);
 
-    componentDidMount() {
-        fetch('http://localhost:3000/api/event')
-        .then(res => res.json())
-        .then((data) => {
-          this.setState({ events: data })
-        })
-        .catch(console.log)
-    }
-
-    render() {
-        return (
-            <div>
-                <h1>Arrangement</h1><br/>
-                <ListGroup>
-                    {this.state.events.map(event => 
-                        <ListGroup.Item action href={`/event/${event.id}`} key={event.id}>
-                            {moment(event.startTime).format("DD. MMM YYYY")}: {event.name}
-                        </ListGroup.Item>
+    useEffect(() => {
+        const fecthEvents = () => {
+            fetch('http://localhost:3000/api/event')
+            .then(res => res.json())
+            .then((data) => setEvents(data))
+        }
+        fecthEvents();
+      }, []);
+ 
+    return (
+        <div>
+            <h1>Arrangement</h1><br/>
+            <Table hover>
+                <thead>
+                    <tr>
+                        <th>Dato</th>
+                        <th>Arrangement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {events.map(event => 
+                        <tr key={event.id}>
+                            <td onClick={() => history.push(`/event/${event.id}`)}>{moment(event.startTime).format("DD. MMM YYYY")}</td><td>{event.name}</td>
+                        </tr>
                     )}
-                </ListGroup>
-            </div>
-        );
-    }
+                </tbody>
+            </Table>
+        </div>
+    );
 
 }
+
+export default EventListPage;
