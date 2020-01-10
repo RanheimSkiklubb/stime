@@ -1,0 +1,39 @@
+{
+    "id" : "1",
+    "name" : "Super duper event",
+    "description" : "Super duper event - Race 1: Fristil",
+    "registrationStart" : ISODate("2020-01-01T00:00:00.000Z"),
+    "registrationEnd" : ISODate("2020-01-19T22:00:00.000Z"),
+    "startTime" : ISODate("2020-01-20T17:30:00.000Z"),
+    "eventClasses" : [ 
+        {
+            "name" : "Mini",
+            "course" : "Kort Løype"
+        }, 
+        {
+            "name" : "J 08-10",
+            "course" : "1 runde"
+        }, 
+        {
+            "name" : "J 11-12",
+            "course" : "1 runde"
+        }, 
+        {
+            "name" : "J 13-14",
+            "course" : "2 runder"
+        }, 
+        {
+            "name" : "G 08-10",
+            "course" : "1 runde"
+        }, 
+        {
+            "name" : "G 11-12",
+            "course" : "1 runde"
+        }, 
+        {
+            "name" : "G 13-14",
+            "course" : "2 runder"
+        }
+    ],
+    "participants" : []
+}
