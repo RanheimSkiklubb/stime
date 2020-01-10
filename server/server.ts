@@ -17,7 +17,7 @@ async function run() {
     expressApp.listen(port, () => logger.info(`Library server is running on ${port}`));
 }
 
-function connectToDb(url: string): Promise<Db> {
+async function connectToDb(url: string): Promise<Db> {
     return MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(mongoClient => {
             logger.info("Connected to " + url);
