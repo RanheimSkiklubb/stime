@@ -2,6 +2,7 @@ import React from 'react';
 import './EventPage.css';
 import Event from '../model/event';
 import Participant from '../model/participant';
+import EventClass from '../model/eventClass';
 import { match } from "react-router-dom";
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -65,10 +66,23 @@ export default class EventPage extends React.Component<Props, State> {
                         <tr><td>Første start:</td><td>{moment(event.startTime).format("HH:mm")}</td></tr>
                         <tr><td>Påmeldingsfrist:</td><td>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</td></tr>
                         <tr><td>Beskrivelse:</td><td>{event.description}</td></tr>
-
+                        <tr><td colSpan={2}>
+                            <Table striped bordered size="sm">
+                                <thead>
+                                    <th>Klasse</th>
+                                    <th>Løype</th>
+                                </thead>
+                                <tbody>
+                                    {event.eventClasses.map((ec:EventClass, idx:number) => 
+                                    <tr key={idx}>
+                                        <td>{ec.name}</td>
+                                        <td>{ec.course}</td>
+                                    </tr>)}
+                                </tbody>
+                            </Table></td>
+                        </tr>
                     </tbody>
                 </table>
-
                 <hr/>
 
                 <RegistrationModal event={event} clubs={this.state.clubs}/>
