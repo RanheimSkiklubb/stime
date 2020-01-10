@@ -17,7 +17,7 @@ const EventListPage: React.FC = () => {
 
     useEffect(() => {
         const fecthEvents = () => {
-            fetch('http://localhost:3000/api/event')
+            fetch('http://localhost:3001/api/event')
             .then(res => res.json())
             .then((data) => setEvents(data))
         }

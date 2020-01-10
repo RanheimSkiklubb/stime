@@ -33,7 +33,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const handleRegister = async () => {
         try {
-            await fetch(`http://localhost:3000/api/event/1/participant`, 
+            await fetch(`http://localhost:3001/api/event/1/participant`, 
             {
                 method: 'POST', 
                 body: JSON.stringify({firstName, lastName, club, eventClass}),

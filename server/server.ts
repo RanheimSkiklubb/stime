@@ -3,7 +3,7 @@ import logger from './logger';
 import { MongoClient, Db } from 'mongodb';
 
 const dbUrl = 'mongodb://stime:stime@localhost:27017/stime';
-const port = 3000;
+const port = 3001;
 
 async function run() {
     let db;

@@ -20,7 +20,7 @@ interface Props {
 }
 
 const fetchEvent = async (eventId: string):Promise<Event> => {
-    const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
+    const eventBody = await fetch(`http://localhost:3001/api/event/${eventId}`)
     const eventObj = await eventBody.json();
     return Promise.resolve({
         id: eventObj.id, 
@@ -56,7 +56,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         const fecthEvents = async () => {
-            const clubsBody = await fetch('http://localhost:3000/api/club')
+            const clubsBody = await fetch('http://localhost:3001/api/club')
             const clubsData = await clubsBody.json();
             setClubs(clubsData)
         }
