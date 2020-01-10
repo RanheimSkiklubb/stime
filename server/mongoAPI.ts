@@ -16,6 +16,7 @@ export default class MongoAPI {
         return {
             id: o.id, 
             name: o.name, 
+            description: o.description,
             startTime: new Date(o.startTime), 
             registrationStart: new Date(o.registrationStart), 
             registrationEnd: new Date(o.registrationEnd),

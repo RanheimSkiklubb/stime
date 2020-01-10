@@ -5,15 +5,19 @@ import { describe, it, before, after } from 'mocha';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db, Server } from 'mongodb';
 import logger from '../logger';
+import Event from '../domain/event';
 
 let mongod: MongoMemoryServer;
 let db: Db;
 
+const eventId = "1"
+const eventName = "Event 1";
 const startTime = new Date("2020-01-10T16:00:00.000Z");
 const registrationStart = new Date("2020-01-01T16:00:00.000Z");
 const registrationEnd = new Date("2020-01-09T16:00:00.000Z");
+const description = "The best event ever"
 
-const event = { id : "1", name : "Event 1", startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
+const event:Event = { id : eventId, name : eventName, description, startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
 const config = {
     _id: 1,
     clubs: [
@@ -67,7 +71,8 @@ describe('Event API Request', () => {
             .then(res => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.be.an('object');
-                expect(res.body).to.have.property('name', 'Event 1');
+                expect(res.body).to.have.property('name', eventName);
+                expect(res.body).to.have.property('description', description);
                 expect(res.body).to.have.property('startTime', startTime.toISOString());
                 expect(res.body).to.have.property('registrationStart', registrationStart.toISOString());
                 expect(res.body).to.have.property('registrationEnd', registrationEnd.toISOString());
@@ -88,7 +93,7 @@ describe('Event API Request', () => {
             .end((err, res) => {
                 expect(err).to.be.null;
                 expect(res.status).to.equal(200);
-                db.collection("event").findOne({id: "1"})
+                db.collection("event").findOne({id: eventId})
                     .then(event => {
                         expect(event.participants).to.have.lengthOf(1);
                         expect(event.participants[0]).to.have.property('firstName', firstName);
