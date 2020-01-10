@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './EventPage.css';
 import Event from '../model/event';
-import Participant from '../model/participant';
 import EventClass from '../model/eventClass';
 import { match } from "react-router-dom";
 import moment from 'moment';
@@ -9,13 +8,8 @@ import Table from 'react-bootstrap/Table';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import RegistrationModal from './RegistrationModal';
+import ParticipantList from './ParticipantList';
 import Club from '../model/club';
-
-
-interface State {
-    event: Event,
-    clubs: Club[]
-}
 
 interface MatchParams {
     eventId: string
@@ -59,8 +53,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
         fecthEvents();
     }, []);
 
-    //if (!this.state || !this.state.event) return null;
-
     const infoTab = (
         <div>
             <table className="eventInfo">
@@ -72,8 +64,10 @@ const EventPage: React.FC<Props> = (props: Props) => {
                     <tr><td colSpan={2}>
                         <Table striped bordered size="sm">
                             <thead>
-                                <th>Klasse</th>
-                                <th>Løype</th>
+                                <tr>
+                                    <th>Klasse</th>
+                                    <th>Løype</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {event.eventClasses.map((ec:EventClass, idx:number) => 
@@ -89,31 +83,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <hr/>
 
             <RegistrationModal event={event} clubs={clubs}/>
-            
         </div>
-    );
-
-    const participantList = (
-        <Table striped bordered size="sm">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Navn</th>
-                    <th>Klubb</th>
-                    <th>Klasse</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                event.participants.map((p:Participant, idx:number) => 
-                <tr key={idx}><td>{idx + 1}</td>
-                    <td>{p.firstName + " " + p.lastName}</td>
-                    <td>{p.club}</td>
-                    <td>{p.eventClass}</td>
-                </tr>)
-                }
-            </tbody>
-        </Table>
     );
 
     return (
@@ -124,7 +94,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                     {infoTab}
                 </Tab>
                 <Tab eventKey="profile" title="Deltakerliste">
-                    {participantList}
+                    <ParticipantList event={event}/>
                 </Tab>
             </Tabs>
         </div>
