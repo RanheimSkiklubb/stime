@@ -140,10 +140,8 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);    
-    console.log("Render")
 
-    return (
-        
+    return (  
         <>
             <Button variant="outline-primary" onClick={handleShow}>Meld på</Button>
 

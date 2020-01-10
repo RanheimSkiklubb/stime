@@ -19,17 +19,19 @@ interface Props {
     match: match<MatchParams>
 }
 
-const eventFromObj = (obj:any): Event => {
-    return {
-        id: obj.id, 
-        name: obj.name,
-        description: obj.description,
-        startTime: obj.startTime, 
-        registrationStart: obj.registrationStart, 
-        registrationEnd: obj.registrationEnd, 
-        eventClasses: obj.eventClasses, 
-        participants: obj.participants
-    };
+const fetchEvent = async (eventId: string):Promise<Event> => {
+    const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
+    const eventObj = await eventBody.json();
+    return Promise.resolve({
+        id: eventObj.id, 
+        name: eventObj.name,
+        description: eventObj.description,
+        startTime: eventObj.startTime, 
+        registrationStart: eventObj.registrationStart, 
+        registrationEnd: eventObj.registrationEnd, 
+        eventClasses: eventObj.eventClasses, 
+        participants: eventObj.participants
+    });
 }
 
 const EventPage: React.FC<Props> = (props: Props) => {
@@ -38,17 +40,15 @@ const EventPage: React.FC<Props> = (props: Props) => {
     const [clubs, setClubs] = useState<Club[]>([]);
 
     const loadEvent = async () => {
-        console.log("Load Event");
         const eventId = props.match.params.eventId;
-        const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
-        setEvents(eventFromObj(await eventBody.json()));
+        const event = await fetchEvent(eventId);
+        setEvents(event);
     }
 
     useEffect(() => {
         const fecthEvents = async () => {
             const eventId = props.match.params.eventId;
-            const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
-            const event = eventFromObj(await eventBody.json())
+            const event = await fetchEvent(eventId);
             setEvents(event);
         }
         fecthEvents();
