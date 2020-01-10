@@ -3,8 +3,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
-import Participant from '../Participant';
-import Event from '../Event';
+import Participant from '../model/participant';
+import Event from '../model/event';
 import Club from '../model/club';
 
 

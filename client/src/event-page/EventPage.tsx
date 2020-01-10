@@ -1,6 +1,6 @@
 import React from 'react';
-import Event from '../Event';
-import Participant from '../Participant';
+import Event from '../model/event';
+import Participant from '../model/participant';
 import { match } from "react-router-dom";
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';

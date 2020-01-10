@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import './App.css';
 import Table from 'react-bootstrap/Table';
 import moment from 'moment';
-import Event from './Event';
+import Event from './model/event';
 
 
 interface State {
