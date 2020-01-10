@@ -2,4 +2,4 @@
 
 STime is a simple sport event timing system. It consists of a React/TypeScript-based front end, a Node.js/Express/TypeScript-based back end and a MongoDB database.
 
-See the README section in the `/client` and `/server` directories for instructions on how to run.
+See the README in the `/client` and `/server` directories for instructions on how to run, and the README in `/mongo` for how to set up and run the database locally.
