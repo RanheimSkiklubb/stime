@@ -13,4 +13,4 @@ Run MongoDB locally using Docker with:  `docker-compose up -d` from the `/mongo`
 7. Create the collection `config`. Populate it with a single object with `_id=1`. A template for the `config` collection can be found in [`templates/config.json`](templates/config.json)
 
 ### Add a new event
-To add a new event, insert a new document into the `event` collection. [`templates/event.json`](templates/config.json) contains a template for an object in the `event` collection.
+To add a new event, insert a new document into the `event` collection. [`templates/event.json`](templates/event.json) contains a template for an object in the `event` collection.
