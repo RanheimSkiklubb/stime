@@ -12,7 +12,17 @@ export default class MongoAPI {
         this.db = db;
     }
 
-    static eventFromObject = (o:any):Event => {return {id: o.id, name: o.name, startTime: new Date(o.startTime), eventClasses: o.eventClasses, participants: o.participants}};
+    static eventFromObject = (o:any):Event => {
+        return {
+            id: o.id, 
+            name: o.name, 
+            startTime: new Date(o.startTime), 
+            registrationStart: new Date(o.registrationStart), 
+            registrationEnd: new Date(o.registrationEnd),
+            eventClasses: o.eventClasses, 
+            participants: o.participants
+        }
+    };
 
     getEvent(id: string): Promise<Event | null> {
         return this.db.collection("event").findOne({id})

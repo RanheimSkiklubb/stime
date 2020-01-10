@@ -9,13 +9,11 @@ import logger from '../logger';
 let mongod: MongoMemoryServer;
 let db: Db;
 
-const event = {
-    id : "1",
-    name : "Event 1",
-    startTime : new Date("2020-01-01T16:00:00.000Z"),
-    eventClasses: [],
-    participants : []
-}
+const startTime = new Date("2020-01-10T16:00:00.000Z");
+const registrationStart = new Date("2020-01-01T16:00:00.000Z");
+const registrationEnd = new Date("2020-01-09T16:00:00.000Z");
+
+const event = { id : "1", name : "Event 1", startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
 const config = {
     _id: 1,
     clubs: [
@@ -70,6 +68,9 @@ describe('Event API Request', () => {
                 expect(res.status).to.equal(200);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('name', 'Event 1');
+                expect(res.body).to.have.property('startTime', startTime.toISOString());
+                expect(res.body).to.have.property('registrationStart', registrationStart.toISOString());
+                expect(res.body).to.have.property('registrationEnd', registrationEnd.toISOString());
                 done();
             }) 
 
