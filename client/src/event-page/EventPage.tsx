@@ -19,27 +19,37 @@ interface Props {
     match: match<MatchParams>
 }
 
+const eventFromObj = (obj:any): Event => {
+    return {
+        id: obj.id, 
+        name: obj.name,
+        description: obj.description,
+        startTime: obj.startTime, 
+        registrationStart: obj.registrationStart, 
+        registrationEnd: obj.registrationEnd, 
+        eventClasses: obj.eventClasses, 
+        participants: obj.participants
+    };
+}
+
 const EventPage: React.FC<Props> = (props: Props) => {
 
     const [event, setEvents] = useState<Event>({id: "", name: "", description: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
     const [clubs, setClubs] = useState<Club[]>([]);
 
+    const loadEvent = async () => {
+        console.log("Load Event");
+        const eventId = props.match.params.eventId;
+        const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
+        setEvents(eventFromObj(await eventBody.json()));
+    }
+
     useEffect(() => {
         const fecthEvents = async () => {
             const eventId = props.match.params.eventId;
             const eventBody = await fetch(`http://localhost:3000/api/event/${eventId}`)
-            const eventData = await eventBody.json();
-            const loadedEvent = {
-                id: eventData.id, 
-                name: eventData.name,
-                description: eventData.description,
-                startTime: eventData.startTime, 
-                registrationStart: eventData.registrationStart, 
-                registrationEnd: eventData.registrationEnd, 
-                eventClasses: eventData.eventClasses, 
-                participants: eventData.participants
-            };
-            setEvents(loadedEvent);
+            const event = eventFromObj(await eventBody.json())
+            setEvents(event);
         }
         fecthEvents();
     }, [props.match]);
@@ -82,7 +92,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
             </table>
             <hr/>
 
-            <RegistrationModal event={event} clubs={clubs}/>
+            <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
         </div>
     );
 

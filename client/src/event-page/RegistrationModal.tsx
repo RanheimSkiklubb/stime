@@ -3,14 +3,14 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
-import Participant from '../model/participant';
 import Event from '../model/event';
 import Club from '../model/club';
 
 
 interface Props {
     event: Event,
-    clubs: Club[]
+    clubs: Club[],
+    loadEventCallback: () => void
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -21,8 +21,6 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const [lastName, setLastName] = useState("");
     const [club, setClub] = useState(props.clubs[0].name);
     const [eventClass, setEventClass] = useState("Mini");
-    const [registered] = useState<Participant[]>([]);
-    let registrationCount = 0;
 
     const firstNameChange = (event:ChangeEvent<HTMLInputElement>) => setFirstName(event.currentTarget.value);
     const lastNameChange = (event:ChangeEvent<HTMLInputElement>) => setLastName(event.currentTarget.value);
@@ -41,8 +39,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 body: JSON.stringify({firstName, lastName, club, eventClass}),
                 headers: {'Content-Type': 'application/json'}
             });
-            registered.push({id: registrationCount.toString(), firstName, lastName, club, eventClass});
-            registrationCount += 1;
+            props.loadEventCallback();
             setProgress(2);
         }
         catch (error) {
@@ -155,7 +152,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
                     <Modal.Title>Påmelding</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <RegistrationForm event={props.event} clubs={props.clubs}/>
+                    <RegistrationForm event={props.event} clubs={props.clubs} loadEventCallback={props.loadEventCallback}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="outline-secondary" onClick={handleClose}>Lukk</Button>
