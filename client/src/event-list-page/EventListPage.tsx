@@ -30,14 +30,15 @@ const EventListPage: React.FC = () => {
             <Table hover>
                 <thead>
                     <tr>
-                        <th>Dato</th>
-                        <th>Arrangement</th>
+                        <th scope="row">Dato</th>
+                        <th scope="row">Arrangement</th>
+                        <th scope="row">Øvelse</th>
                     </tr>
                 </thead>
                 <tbody>
                     {events.map(event => 
-                        <tr key={event.id}>
-                            <td onClick={() => history.push(`/event/${event.id}`)}>{moment(event.startTime).format("DD. MMM YYYY")}</td><td>{event.name}</td>
+                        <tr key={event.id} onClick={() => history.push(`/event/${event.id}`)}>
+                            <td>{moment(event.startTime).format("DD. MMM YYYY")}</td><td>{event.name}</td><td>{event.eventType}</td>
                         </tr>
                     )}
                 </tbody>

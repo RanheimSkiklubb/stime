@@ -25,6 +25,7 @@ const fetchEvent = async (eventId: string):Promise<Event> => {
     return Promise.resolve({
         id: eventObj.id, 
         name: eventObj.name,
+        eventType: eventObj.eventType,
         description: eventObj.description,
         startTime: eventObj.startTime, 
         registrationStart: eventObj.registrationStart, 
@@ -36,7 +37,7 @@ const fetchEvent = async (eventId: string):Promise<Event> => {
 
 const EventPage: React.FC<Props> = (props: Props) => {
 
-    const [event, setEvents] = useState<Event>({id: "", name: "", description: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
+    const [event, setEvents] = useState<Event>({id: "", name: "", description: "", eventType: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
     const [clubs, setClubs] = useState<Club[]>([]);
 
     const loadEvent = async () => {
@@ -64,35 +65,38 @@ const EventPage: React.FC<Props> = (props: Props) => {
     }, []);
 
     const infoTab = (
-        <div>
+        <div className="eventContainer">
             <table className="eventInfo">
                 <tbody>
                     <tr><td>Dato:</td><td>{moment(event.startTime).format("DD. MMM YYYY")}</td></tr>
+                    <tr><td>Arrangement:</td><td>{event.description}</td></tr>
+                    <tr><td>Øvelse:</td><td>{event.eventType}</td></tr>
                     <tr><td>Første start:</td><td>{moment(event.startTime).format("HH:mm")}</td></tr>
                     <tr><td>Påmeldingsfrist:</td><td>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</td></tr>
-                    <tr><td>Beskrivelse:</td><td>{event.description}</td></tr>
-                    <tr><td colSpan={2}>
-                        <Table striped bordered size="sm">
-                            <thead>
-                                <tr>
-                                    <th>Klasse</th>
-                                    <th>Løype</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {event.eventClasses.map((ec:EventClass, idx:number) => 
-                                <tr key={idx}>
-                                    <td>{ec.name}</td>
-                                    <td>{ec.course}</td>
-                                </tr>)}
-                            </tbody>
-                        </Table></td>
+                    <tr><td>Klasser:</td>
+                        <td>
+                            <Table striped bordered size="sm">
+                                <thead>
+                                    <tr>
+                                        <th>Klasse</th>
+                                        <th>Løype</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {event.eventClasses.map((ec:EventClass, idx:number) => 
+                                    <tr key={idx}>
+                                        <td>{ec.name}</td>
+                                        <td>{ec.course}</td>
+                                    </tr>)}
+                                </tbody>
+                            </Table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td><td><RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/></td>
                     </tr>
                 </tbody>
             </table>
-            <hr/>
-
-            <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
         </div>
     );
 

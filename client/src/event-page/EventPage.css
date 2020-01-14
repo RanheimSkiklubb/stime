@@ -1,9 +1,13 @@
-.eventInfo {
-    margin: auto;
-    padding: 20px;
+.eventContainer {
+    padding-top: 10px;
 }
 
 .eventInfo td {
     text-align: left;
-    padding: 5px;
+    padding: 5px 20px 0 2px;
+    vertical-align: top;
+}
+
+.participantList {
+    padding-top: 15px;
 }
