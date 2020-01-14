@@ -1,13 +1,15 @@
-.eventContainer {
-    padding-top: 10px;
+.infoContainer {
+    padding-top: 15px;
 }
 
 .eventInfo td {
     text-align: left;
-    padding: 5px 20px 0 2px;
-    vertical-align: top;
 }
 
 .participantList {
     padding-top: 15px;
+}
+
+.marginTop {
+    margin-top: 20px;
 }

@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import Event from '../model/event';
 import Club from '../model/club';
+import './EventPage.css';
 
 
 interface Props {
@@ -86,13 +87,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     {props.event.eventClasses.map(eventClass => (<option value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                 </Form.Control>
             </Form.Group>
-            <Button className="float-right" variant="outline-primary" type="submit">Neste</Button>
+            <Button className="float-right" variant="primary" type="submit">Neste</Button>
         </Form>
     );
 
     const step1 = (
         <div>
             <p>Du har registert følgende</p>
+            <div>
             <Table bordered size="sm">
                 <tbody>
                     <tr>
@@ -113,15 +115,16 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     </tr>
                 </tbody>
             </Table>
-            <Button variant="outline-primary" onClick={handleEdit}>Endre</Button>
-            <Button variant="outline-primary" className="float-right" onClick={handleRegister}>Meld på</Button>
+            </div>
+            <Button variant="primary" onClick={handleEdit}>Endre</Button>
+            <Button variant="primary" className="float-right" onClick={handleRegister}>Meld på</Button>
         </div>
     );
 
     const step2 = (
         <div>
             <p>Din påmelding er registrert!</p>
-            <Button variant="outline-primary" className="float-right" onClick={handleRegisterMore}>Meld på flere</Button>
+            <Button variant="primary" className="float-right" onClick={handleRegisterMore}>Meld på flere</Button>
         </div>
     );
 
@@ -143,7 +146,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
 
     return (  
         <>
-            <Button variant="outline-primary" onClick={handleShow}>Meld på</Button>
+            <Button variant="primary" className="marginTop" onClick={handleShow}>Påmelding</Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -153,7 +156,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
                     <RegistrationForm event={props.event} clubs={props.clubs} loadEventCallback={props.loadEventCallback}/>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="outline-secondary" onClick={handleClose}>Lukk</Button>
+                    <Button variant="secondary" onClick={handleClose}>Lukk</Button>
                 </Modal.Footer>
             </Modal>
         </>

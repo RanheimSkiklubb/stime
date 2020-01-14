@@ -15,7 +15,6 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
             <Table striped bordered size="sm">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Navn</th>
                         <th>Klubb</th>
                         <th>Klasse</th>
@@ -24,7 +23,7 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
                 <tbody>
                     {
                     props.event.participants.map((p:Participant, idx:number) => 
-                    <tr key={idx}><td>{idx + 1}</td>
+                    <tr key={idx}>
                         <td>{p.firstName + " " + p.lastName}</td>
                         <td>{p.club}</td>
                         <td>{p.eventClass}</td>
