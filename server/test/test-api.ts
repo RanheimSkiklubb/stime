@@ -12,12 +12,13 @@ let db: Db;
 
 const eventId = "1"
 const eventName = "Event 1";
+const eventType = "Classic";
 const startTime = new Date("2020-01-10T16:00:00.000Z");
 const registrationStart = new Date("2020-01-01T16:00:00.000Z");
 const registrationEnd = new Date("2020-01-09T16:00:00.000Z");
 const description = "The best event ever"
 
-const event:Event = { id : eventId, name : eventName, description, startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
+const event:Event = { id : eventId, name : eventName, eventType, description, startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
 const config = {
     _id: 1,
     clubs: [
@@ -68,10 +69,12 @@ describe('Event API Request', () => {
     it('should get 200 and event when event exits', (done) => {
         const express = new App(db).expressServer;
         request(express).get('/api/event/1')
-            .then(res => {
+            .end((err, res) => {
+                expect(err).to.be.null;
                 expect(res.status).to.equal(200);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.property('name', eventName);
+                expect(res.body).to.have.property('eventType', eventType);
                 expect(res.body).to.have.property('description', description);
                 expect(res.body).to.have.property('startTime', startTime.toISOString());
                 expect(res.body).to.have.property('registrationStart', registrationStart.toISOString());
@@ -125,6 +128,7 @@ describe('Event API Request', () => {
         request(express)
             .get('/api/event')
             .end((err, res) => {
+                expect(err).to.be.null;
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.a('array');
                 expect(res.body).to.have.lengthOf(1);
@@ -138,6 +142,7 @@ describe('Event API Request', () => {
         request(express)
             .get('/api/club')
             .end((err, res) => {
+                expect(err).to.be.null;
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.a('array');
                 expect(res.body).to.have.lengthOf(1);
