@@ -3,7 +3,7 @@ import './App.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import EventListPage from './EventListPage'
+import EventListPage from './event-list-page/EventListPage'
 import EventPage from './event-page/EventPage'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import './App.css';
+import '../App.css';
 import Table from 'react-bootstrap/Table';
 import moment from 'moment';
-import Event from './model/event';
+import Event from '../model/event';
 
 
 interface State {
