@@ -2,6 +2,7 @@
     "id" : "1",
     "name" : "Super duper event",
     "description" : "Super duper event - Race 1: Fristil",
+    "eventType": "Fristil",
     "registrationStart" : ISODate("2020-01-01T00:00:00.000Z"),
     "registrationEnd" : ISODate("2020-01-19T22:00:00.000Z"),
     "startTime" : ISODate("2020-01-20T17:30:00.000Z"),
