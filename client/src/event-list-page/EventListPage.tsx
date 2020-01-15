@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
-import moment from 'moment';
-import Event from '../model/event';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,10 +8,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import { useHistory } from "react-router-dom";
+import moment from 'moment';
+import Event from '../model/event';
 
-interface State {
-    events: Event[]
-}
 
 const useStyles = makeStyles({
     table: {
@@ -38,10 +34,9 @@ const EventListPage: React.FC = () => {
         fecthEvents();
     }, []);
 
- 
     return (
-        <div>
-            <h1>Arrangement</h1><br/>
+        <React.Fragment>
+            <h1 style={{textAlign: "center"}}>Arrangement</h1><br/>
 
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
@@ -64,23 +59,7 @@ const EventListPage: React.FC = () => {
                 </Table>
                 </TableContainer>
 
-            {/* <BSTable hover>
-                <thead>
-                    <tr>
-                        <th scope="row">Dato</th>
-                        <th scope="row">Arrangement</th>
-                        <th scope="row">Øvelse</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {events.map(event => 
-                        <tr key={event.id} onClick={() => history.push(`/event/${event.id}`)}>
-                            <td>{moment(event.startTime).format("DD. MMM YYYY")}</td><td>{event.name}</td><td>{event.eventType}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </BSTable> */}
-        </div>
+        </React.Fragment>
     );
 
 }
