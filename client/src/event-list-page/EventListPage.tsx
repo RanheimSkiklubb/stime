@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,17 +12,10 @@ import moment from 'moment';
 import Event from '../model/event';
 
 
-const useStyles = makeStyles({
-    table: {
-      minWidth: 650,
-    },
-});
-
 const EventListPage: React.FC = () => {
     
     const history = useHistory();
     const [events, setEvents] = useState<Event[]>([]);
-    const classes = useStyles();
 
     useEffect(() => {
         const fecthEvents = () => {
@@ -36,10 +28,10 @@ const EventListPage: React.FC = () => {
 
     return (
         <React.Fragment>
-            <h1 style={{textAlign: "center"}}>Arrangement</h1><br/>
+            <h1>Arrangement</h1><br/>
 
             <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
+                <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Dato</TableCell>
