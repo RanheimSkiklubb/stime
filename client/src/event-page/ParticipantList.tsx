@@ -11,7 +11,7 @@ interface Props {
 const ParticipantList: React.FC<Props> = (props: Props) => {
 
     return (
-        <div className="participantList">
+        <div className="marginTop15">
             <Table striped bordered size="sm">
                 <thead>
                     <tr>

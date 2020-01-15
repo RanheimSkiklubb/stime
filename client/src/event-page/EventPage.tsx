@@ -11,6 +11,7 @@ import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import RegistrationModal from './RegistrationModal';
 import ParticipantList from './ParticipantList';
+import StartNumberTab from './StartNumberTab';
 import Club from '../model/club';
 
 interface MatchParams {
@@ -67,7 +68,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
     }, []);
 
     const infoTab = (
-        <div className="infoContainer">
+        <div className="marginTop15">
             <CardGroup>
                 <Card>
                     <Card.Body>
@@ -110,12 +111,15 @@ const EventPage: React.FC<Props> = (props: Props) => {
     return (
         <div>
             <h2>{event.name}</h2>
-                <Tabs defaultActiveKey="home" id="uncontrolled-tab-example">
-                <Tab eventKey="home" title="Informasjon">
+                <Tabs defaultActiveKey="info" id="event-tabs">
+                <Tab eventKey="info" title="Informasjon">
                     {infoTab}
                 </Tab>
-                <Tab eventKey="profile" title={`Deltakerliste (${event.participants.length})`}>
+                <Tab eventKey="participants" title={`Deltakerliste (${event.participants.length})`}>
                     <ParticipantList event={event}/>
+                </Tab>
+                <Tab eventKey="startNumberAdmin" title="Admin: startnummer">
+                    <StartNumberTab event={event}/>
                 </Tab>
             </Tabs>
         </div>

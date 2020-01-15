@@ -1,15 +1,15 @@
-.infoContainer {
-    padding-top: 15px;
+.marginTop15 {
+    margin-top: 15px;
+}
+
+.marginTop20 {
+    margin-top: 20px;
 }
 
 .eventInfo td {
     text-align: left;
 }
 
-.participantList {
-    padding-top: 15px;
-}
-
-.marginTop {
-    margin-top: 20px;
+.startNumberAdminTable td {
+    text-align: left;
 }
