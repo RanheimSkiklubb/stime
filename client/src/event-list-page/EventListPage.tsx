@@ -49,7 +49,7 @@ const EventListPage: React.FC = () => {
                     ))}
                     </TableBody>
                 </Table>
-                </TableContainer>
+            </TableContainer>
 
         </React.Fragment>
     );
