@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableContainer from '@material-ui/core/TableContainer';
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -23,7 +22,6 @@ import RegistrationModal from './RegistrationModal';
 import ParticipantList from './ParticipantList';
 import StartNumberTab from './StartNumberTab';
 import Club from '../model/club';
-import classes from '*.module.css';
 
 interface MatchParams {
     eventId: string
@@ -98,51 +96,58 @@ const EventPage: React.FC<Props> = (props: Props) => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-                '& > *': {
-                    margin: theme.spacing(1)
+                display: 'flex',
+                flexWrap: 'wrap',
+                    '& > *': {
+                        margin: 0
+                    },
                 },
-            },
+            eventClasses: {
+                justifyContent: 'right'
+            }
         }),
     );
     const classes = useStyles();
     const infoTab = (
-        <div>
+        <React.Fragment>
             <div className={classes.root}>
-                <Paper>
-                    <Table>
-                        <TableBody>
-                            <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
-                            <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.description}</TableCell></TableRow>
-                            <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
-                            <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                            <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</TableCell></TableRow>
-                            <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{event.description}</TableCell></TableRow>
-                        </TableBody>
-                    </Table>
-                </Paper>
-                <Paper>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Klasse</TableCell>
-                                <TableCell>Løype</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {event.eventClasses.map((ec:EventClass, idx:number) => (
-                                <TableRow key={event.name}>
-                                    <TableCell>{ec.name}</TableCell>
-                                    <TableCell>{ec.course}</TableCell>
+                <Box width="49%">
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableBody>
+                                <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
+                                <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.description}</TableCell></TableRow>
+                                <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
+                                <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
+                                <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</TableCell></TableRow>
+                                <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{event.description}</TableCell></TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+                <Box width="49%" className={classes.eventClasses}>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Klasse</TableCell>
+                                    <TableCell>Løype</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Paper>
+                            </TableHead>
+                            <TableBody>
+                                {event.eventClasses.map((ec:EventClass, idx:number) => (
+                                    <TableRow key={ec.name}>
+                                        <TableCell>{ec.name}</TableCell>
+                                        <TableCell>{ec.course}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
             </div>
-        <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
-        </div>
+            <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
+        </React.Fragment>
     );
 
     const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -150,7 +155,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <div>
+        <React.Fragment>
             <h2>{event.name}</h2>
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
@@ -168,7 +173,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <TabPanel value={tabIndex} index={2}>
                 <StartNumberTab event={event}/>
             </TabPanel>
-        </div>
+        </React.Fragment>
     );
     
 }
