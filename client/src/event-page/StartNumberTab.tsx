@@ -1,9 +1,15 @@
 import React from 'react';
 import './EventPage.css';
 import Event from '../model/event';
-import Table from 'react-bootstrap/Table';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableContainer from '@material-ui/core/TableContainer';
+import Paper from '@material-ui/core/Paper';
 import EventClass from '../model/eventClass';
-import Form from 'react-bootstrap/Form';
+
 
 interface Props {
     event: Event;
@@ -12,32 +18,25 @@ interface Props {
 const StartNumberTab: React.FC<Props> = (props: Props) => {
 
     return (
-        <div className="marginTop15">
-            <Table bordered className="startNumberAdminTable">
-                <thead>
-                    <tr>
-                        <th>Klasse</th>
-                        <th>Startmetode</th>
-                        <th>Intervall</th>
-                        <th>Ant. reservenummer</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Klasse</TableCell>
+                        <TableCell>Intervall</TableCell>
+                        <TableCell>Ant. reservenummer</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {props.event.eventClasses.map((ec:EventClass, idx:number) => 
-                    <tr key={idx}>
-                        <td>{`${ec.name} (${ec.course})`}</td>
-                        <td>
-                            <Form>
-                                <Form.Check label="intervallstart" type="radio" name={`start-method-${idx}`} />
-                                <Form.Check label="fellesstart" type="radio" name={`start-method-${idx}`} />
-                            </Form>
-                        </td>
-                        <td></td>
-                        <td></td>
-                    </tr>)}
-                </tbody>
+                    <TableRow key={idx}>
+                        <TableCell>{`${ec.name} (${ec.course})`}</TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                    </TableRow>)}
+                </TableBody>
             </Table>
-        </div>
+        </TableContainer>
     );
     
 }
