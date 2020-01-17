@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.8.3",
+    "@material-ui/lab": "^4.0.0-alpha.39",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -23,7 +24,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
