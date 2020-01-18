@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,7 +13,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import Event from '../model/event';
-import EventClass from '../model/eventClass';
+import EventClass from '../model/event-class';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
@@ -94,23 +94,16 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
-            root: {
-                display: 'flex',
-                flexWrap: 'wrap',
-                    '& > *': {
-                        margin: 0
-                    },
-                },
-            eventClasses: {
-                justifyContent: 'right'
+            container: {
+                marginBottom: '20px'
             }
-        }),
+        })
     );
     const classes = useStyles();
     const infoTab = (
         <React.Fragment>
-            <div className={classes.root}>
-                <Box width="49%">
+            <Grid container spacing={2} className={classes.container}>
+                <Grid item xs={6}>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableBody>
@@ -119,18 +112,19 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
                                 <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{event.description}</TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell>{event.description}</TableCell></TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </Box>
-                <Box width="49%" className={classes.eventClasses}>
+                </Grid>
+                <Grid item xs={6}>
                     <TableContainer component={Paper}>
-                        <Table>
+                        <Table size="small">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Klasse</TableCell>
                                     <TableCell>Løype</TableCell>
+                                    <TableCell>Beskrivelse</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -138,13 +132,14 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                     <TableRow key={ec.name}>
                                         <TableCell>{ec.name}</TableCell>
                                         <TableCell>{ec.course}</TableCell>
+                                        <TableCell>{ec.description}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </Box>
-            </div>
+                </Grid>
+            </Grid>
             <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
         </React.Fragment>
     );
@@ -160,7 +155,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Informasjon"/>
                     <Tab label={`Deltakerliste (${event.participants.length})`}/>
-                    <Tab label="Admin: startnummer"/>
+                    {/* <Tab label="Admin: startnummer"/> */}
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIndex} index={0}>
@@ -169,9 +164,9 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <TabPanel value={tabIndex} index={1}>
                 <ParticipantList event={event}/>
             </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
+            {/* <TabPanel value={tabIndex} index={2}>
                 <StartNumberTab event={event}/>
-            </TabPanel>
+            </TabPanel> */}
         </React.Fragment>
     );
     

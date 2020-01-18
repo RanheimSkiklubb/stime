@@ -218,7 +218,7 @@ const RegistrationModal: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Button variant="contained" color="primary" className="marginTop20" onClick={handleShow}>Påmelding</Button>
+            <Button variant="contained" color="primary" className="marginTop20" size="large" onClick={handleShow}>Påmelding</Button>
             <Modal open={show} onClose={handleClose}>
                 <div style={modalStyle} className={classes.paper}>
                     <h3>Påmelding</h3>
