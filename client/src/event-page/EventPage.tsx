@@ -12,6 +12,7 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import RegistrationModal from './RegistrationModal';
 import ParticipantList from './ParticipantList';
 import Club from '../model/club';
+import firebase from '../components/Firebase';
 
 interface MatchParams {
     eventId: string
@@ -21,22 +22,6 @@ interface Props {
     match: match<MatchParams>
 }
 
-const fetchEvent = async (eventId: string):Promise<Event> => {
-    const eventBody = await fetch(`http://localhost:3001/api/event/${eventId}`)
-    const eventObj = await eventBody.json();
-    return Promise.resolve({
-        id: eventObj.id, 
-        name: eventObj.name,
-        eventType: eventObj.eventType,
-        description: eventObj.description,
-        startTime: eventObj.startTime, 
-        registrationStart: eventObj.registrationStart, 
-        registrationEnd: eventObj.registrationEnd, 
-        eventClasses: eventObj.eventClasses, 
-        participants: eventObj.participants
-    });
-}
-
 const EventPage: React.FC<Props> = (props: Props) => {
 
     const [event, setEvents] = useState<Event>({id: "", name: "", description: "", eventType: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
@@ -44,26 +29,23 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     const loadEvent = async () => {
         const eventId = props.match.params.eventId;
-        const event = await fetchEvent(eventId);
+        const event = await firebase.fetchEvent(eventId);
         setEvents(event);
     }
 
     useEffect(() => {
-        const fecthEvents = async () => {
+        (async () => {
             const eventId = props.match.params.eventId;
-            const event = await fetchEvent(eventId);
+            const event = await firebase.fetchEvent(eventId);
             setEvents(event);
-        }
-        fecthEvents();
+        })();
     }, [props.match]);
 
     useEffect(() => {
-        const fecthEvents = async () => {
-            const clubsBody = await fetch('http://localhost:3001/api/club')
-            const clubsData = await clubsBody.json();
-            setClubs(clubsData)
-        }
-        fecthEvents();
+        (async () => {
+            const clubs = await firebase.fetchClubs();
+            setClubs(clubs);
+        })();
     }, []);
 
     const infoTab = (

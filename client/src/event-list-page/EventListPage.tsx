@@ -4,24 +4,21 @@ import '../App.css';
 import Table from 'react-bootstrap/Table';
 import moment from 'moment';
 import Event from '../model/event';
-
+import * as firebase from '../components/Firebase/firebase';
 
 interface State {
     events: Event[]
 }
 
-const EventListPage: React.FC = () => {
+const EventListPage: React.FC = (props) => {
     
     const history = useHistory();
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        const fecthEvents = () => {
-            fetch('http://localhost:3001/api/event')
-            .then(res => res.json())
-            .then((data) => setEvents(data))
-        }
-        fecthEvents();
+        (async () => {
+           const events = await firebase.fetchEvents()
+           setEvents(events)})();
       }, []);
  
     return (

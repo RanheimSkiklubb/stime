@@ -8,7 +8,6 @@ import EventPage from './event-page/EventPage'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const App: React.FC = () => {
-
         return (
             <Container fluid={true}>
                 <Row>
@@ -18,7 +17,7 @@ const App: React.FC = () => {
                             <Switch>
                                 <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
                                 <Route path="/">
-                                    <EventListPage/>
+                                    <EventListPage />
                                 </Route>
                             </Switch>
                         </Router>
