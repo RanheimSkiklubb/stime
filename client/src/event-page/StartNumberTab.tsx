@@ -1,5 +1,4 @@
 import React from 'react';
-import './EventPage.css';
 import Event from '../model/event';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

@@ -1,5 +1,4 @@
 import React from 'react';
-import './EventPage.css';
 import Event from '../model/event';
 import Participant from '../model/participant';
 import Table from '@material-ui/core/Table';
