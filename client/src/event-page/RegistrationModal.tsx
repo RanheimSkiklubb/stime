@@ -1,5 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
-import Modal from '@material-ui/core/Modal';
+import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -7,13 +11,11 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
 import Event from '../model/event';
 import Club from '../model/club';
 import * as _ from "lodash";
@@ -85,83 +87,92 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const handleEdit = () => setProgress(0);
     const handleNext = () => setProgress(1);
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            root: {
-                '& > *': {
-                    margin: theme.spacing(1),
-                    width: 200,
-                },
-            },
-        }),
-    );
-    const classes = useStyles();
     let tempValue: string;
     const form = (
-        <form className={classes.root} noValidate autoComplete="off">
-            <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
-            <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange} error={!lastNameValid} />
-            <Autocomplete
-                id="club"
-                freeSolo
-                value={club}
-                options={props.clubs.map(club => club.name)}
-                onChange={(event: any, newValue: any | null) => {
-                    clubChange(newValue);
-                }}
-                onInputChange={(event: any, newValue: any) => {
-                    tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
-                    validate(undefined, undefined, newValue);
-                }}
-                onClose={(event: any) => {
-                    if (tempValue) {
-                        clubChange(tempValue);
-                    }
-                }}
-                renderInput={params => (
-                    <TextField {...params} label="Klubb" margin="normal" fullWidth InputProps={{ ...params.InputProps, type: 'search' }} error={!clubValid} />
-                )}
-            />
-            <FormControl>
-                <InputLabel id="event-class-label">Klasse</InputLabel>
-                <Select labelId="event-class-label" id="eventClass" value={eventClass} onChange={eventClassChange}>
-                    {props.event.eventClasses.map(eventClass => (<MenuItem value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</MenuItem>))}
-                </Select>
-            </FormControl>
-            <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
-        </form>
+
+        <Grid container spacing={2}>
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                    <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                    <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange} error={!lastNameValid} />
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+            <FormControl fullWidth>
+                    <Autocomplete
+                        id="club"
+                        freeSolo
+                        value={club}
+                        options={props.clubs.map(club => club.name)}
+                        onChange={(event: any, newValue: any | null) => {
+                            clubChange(newValue);
+                        }}
+                        onInputChange={(event: any, newValue: any) => {
+                            tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
+                            validate(undefined, undefined, newValue);
+                        }}
+                        onClose={(event: any) => {
+                            if (tempValue) {
+                                clubChange(tempValue);
+                            }
+                        }}
+                        renderInput={params => (
+                            <TextField {...params} label="Klubb" margin="normal" fullWidth InputProps={{ ...params.InputProps, type: 'search' }} error={!clubValid} style={{marginTop: '0'}}/>
+                        )}
+                    />
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                    <InputLabel id="event-class-label">Klasse</InputLabel>
+                    <Select labelId="event-class-label" id="eventClass" value={eventClass} onChange={eventClassChange}>
+                        {props.event.eventClasses.map(eventClass => (<MenuItem value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</MenuItem>))}
+                    </Select>
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6} style={{textAlign: 'right'}}>
+                <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
+            </Grid>
+        </Grid>
     );
 
     const step1 = (
-        <div>
-            <p>Du har registert følgende</p>
+        <Grid container>
+            <Grid item xs={12} style={{textAlign: 'center'}}>
+                <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
 
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Fornavn</TableCell>
-                            <TableCell>{firstName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Etternavn</TableCell>
-                            <TableCell>{lastName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Klubb</TableCell>
-                            <TableCell>{club}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Klasse</TableCell>
-                            <TableCell>{eventClass}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                <TableContainer style={{width: '50%', margin: 'auto', marginBottom: '20px'}}>
+                    <Table size="small">
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Fornavn</TableCell>
+                                <TableCell>{firstName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Etternavn</TableCell>
+                                <TableCell>{lastName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Klubb</TableCell>
+                                <TableCell>{club}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Klasse</TableCell>
+                                <TableCell>{eventClass}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Grid>
+            <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
+            <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
+        </Grid>
 
-            <Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button>
-            <Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button>
-        </div>
     );
 
     const step2 = (
@@ -181,51 +192,23 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
 }
 
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-    const top = 50 + rand();
-    const left = 50 + rand();
-
-    return {
-        top: `${top}%`,
-        left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`,
-    };
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            position: 'absolute',
-            width: 400,
-            backgroundColor: theme.palette.background.paper,
-            border: '2px solid #000',
-            boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3),
-        },
-    }),
-);
-
 const RegistrationModal: React.FC<Props> = (props: Props) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [modalStyle] = React.useState(getModalStyle);
-    const classes = useStyles();
 
     return (
         <>
             <Button variant="contained" color="primary" className="marginTop20" size="large" onClick={handleShow}>Påmelding</Button>
-            <Modal open={show} onClose={handleClose}>
-                <div style={modalStyle} className={classes.paper}>
-                    <h3>Påmelding</h3>
+            <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
+                <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
+                <DialogContent>
                     <RegistrationForm event={props.event} clubs={props.clubs} loadEventCallback={props.loadEventCallback} />
+                </DialogContent>
+                <DialogActions>
                     <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>
-                </div>
-            </Modal>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
