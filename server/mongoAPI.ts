@@ -2,6 +2,7 @@ import { Db } from 'mongodb';
 import Event from './domain/event';
 import Config from './domain/config';
 import Participant from './domain/participant';
+import EventClass from './domain/event-class';
 import logger from './logger';
 
 
@@ -10,6 +11,14 @@ export default class MongoAPI {
 
     constructor(db: Db) {
         this.db = db;
+    }
+
+    static eventClassFromObject = (o:any):EventClass => {
+        return {
+            name: o.name,
+            course: o.course,
+            description: o.description
+        }
     }
 
     static eventFromObject = (o:any):Event => {
@@ -21,7 +30,7 @@ export default class MongoAPI {
             startTime: new Date(o.startTime), 
             registrationStart: new Date(o.registrationStart), 
             registrationEnd: new Date(o.registrationEnd),
-            eventClasses: o.eventClasses, 
+            eventClasses: o.eventClasses.map(MongoAPI.eventClassFromObject), 
             participants: o.participants
         }
     };
