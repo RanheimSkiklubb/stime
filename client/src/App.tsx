@@ -1,31 +1,35 @@
 import React from 'react';
-import './App.css';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
+
 import EventListPage from './event-list-page/EventListPage'
 import EventPage from './event-page/EventPage'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+const useStyles = makeStyles({
+    container: {
+      textAlign: "center"
+    },
+});
+
 const App: React.FC = () => {
-        return (
-            <Container fluid={true}>
-                <Row>
-                    <Col></Col>
-                    <Col className="text-center" xs={9}>
-                        <Router>
-                            <Switch>
-                                <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
-                                <Route path="/">
-                                    <EventListPage />
-                                </Route>
-                            </Switch>
-                        </Router>
-                    </Col>
-                    <Col></Col>
-                </Row>
+    const classes = useStyles();
+    return (
+        <React.Fragment>
+            <CssBaseline />
+            <Container maxWidth="lg" className={classes.container}>
+                <Router>
+                    <Switch>
+                        <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
+                        <Route path="/">
+                            <EventListPage/>
+                        </Route>
+                    </Switch>
+                </Router>
             </Container>
-        );
-    }
+        </React.Fragment>
+    );
+};
 
 export default App;

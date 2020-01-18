@@ -1,5 +1,5 @@
 import Participant from './participant';
-import EventClass from './eventClass';
+import EventClass from './event-class';
 
 export default interface Event {
     id: string;

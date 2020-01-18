@@ -1,5 +1,5 @@
 import Event from '../../model/event';
-import EventClass from '../../model/eventClass';
+import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
 import Club from '../../model/club';
 
@@ -36,7 +36,8 @@ const eventClassesFromFirebase = (fbClasses : object[]) : EventClass[] => {
 const eventClassFromFirebase = (fbClass : any) : EventClass => {
     const eventClass : EventClass = {
         name:  fbClass.name,
-        course: fbClass.course
+        course: fbClass.course,
+        description: ''
     };
     return eventClass;
 };

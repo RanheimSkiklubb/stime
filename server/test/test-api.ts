@@ -6,6 +6,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db, Server } from 'mongodb';
 import logger from '../logger';
 import Event from '../domain/event';
+import EventClass from '../domain/event-class';
 
 let mongod: MongoMemoryServer;
 let db: Db;
@@ -16,9 +17,13 @@ const eventType = "Classic";
 const startTime = new Date("2020-01-10T16:00:00.000Z");
 const registrationStart = new Date("2020-01-01T16:00:00.000Z");
 const registrationEnd = new Date("2020-01-09T16:00:00.000Z");
-const description = "The best event ever"
+const description = "The best event ever";
+const eventClassName = "class1";
+const courseName = "course1";
+const eventClassDescription = "a great class";
 
-const event:Event = { id : eventId, name : eventName, eventType, description, startTime, registrationStart, registrationEnd, eventClasses: [], participants : [] }
+const eventClasses:EventClass[] = [{name: eventClassName, course: courseName, description: eventClassDescription}];
+const event:Event = { id : eventId, name : eventName, eventType, description, startTime, registrationStart, registrationEnd, eventClasses, participants : [] }
 const config = {
     _id: 1,
     clubs: [
@@ -79,6 +84,12 @@ describe('Event API Request', () => {
                 expect(res.body).to.have.property('startTime', startTime.toISOString());
                 expect(res.body).to.have.property('registrationStart', registrationStart.toISOString());
                 expect(res.body).to.have.property('registrationEnd', registrationEnd.toISOString());
+                expect(res.body.eventClasses).to.be.an('array');
+                expect(res.body.eventClasses).to.have.lengthOf(1);
+                expect(res.body.eventClasses[0]).to.have.property('name', eventClassName);
+                expect(res.body.eventClasses[0]).to.have.property('course', courseName);
+                expect(res.body.eventClasses[0]).to.have.property('description', eventClassDescription);
+
                 done();
             }) 
 

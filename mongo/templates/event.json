@@ -9,32 +9,46 @@
     "eventClasses" : [ 
         {
             "name" : "Mini",
-            "course" : "Kort Løype"
+            "course" : "Kort Løype",
+            "description" : "Jenter & gutter født 2013 og senere"
         }, 
         {
             "name" : "J 08-10",
-            "course" : "1 runde"
-        }, 
-        {
-            "name" : "J 11-12",
-            "course" : "1 runde"
-        }, 
-        {
-            "name" : "J 13-14",
-            "course" : "2 runder"
+            "course" : "1 runde",
+            "description" : "Jenter født 2010-2012"
         }, 
         {
             "name" : "G 08-10",
-            "course" : "1 runde"
+            "course" : "1 runde",
+            "description" : "Gutter født 2010-2012"
+        }, 
+        {
+            "name" : "J 11-12",
+            "course" : "1 runde",
+            "description" : "Jenter født 2008-2009"
         }, 
         {
             "name" : "G 11-12",
-            "course" : "1 runde"
+            "course" : "1 runde",
+            "description" : "Gutter født 2008-2009"
+        }, 
+        {
+            "name" : "J 13-14",
+            "course" : "2 runder",
+            "description" : "Jenter født 2006-2007"
         }, 
         {
             "name" : "G 13-14",
-            "course" : "2 runder"
+            "course" : "2 runder",
+            "description" : "Gutter født 2006-2007"
         }
     ],
-    "participants" : []
+    "participants" : [
+        {
+            "firstName" : "Firstname",
+            "lastName" : "Lastnameson",
+            "club" : "The clubb",
+            "eventClass" : "Mini"
+        }
+    ]
 }
