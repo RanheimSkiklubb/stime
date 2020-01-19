@@ -1,10 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Select from '@material-ui/core/Select';
@@ -16,9 +11,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import Event from '../model/event';
-import Club from '../model/club';
-import * as _ from "lodash";
+import Button from '@material-ui/core/Button';
+
+import Club from '../../model/club';
+import Event from '../../model/event';
+import _ from "lodash";
 
 interface Props {
     event: Event,
@@ -177,7 +174,6 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
             <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
         </Grid>
-
     );
 
     const step2 = (
@@ -197,25 +193,4 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
 }
 
-const RegistrationModal: React.FC<Props> = (props: Props) => {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    return (
-        <>
-            <Button variant="contained" color="primary" className="marginTop20" size="large" onClick={handleShow}>Påmelding</Button>
-            <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
-                <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
-                <DialogContent>
-                    <RegistrationForm event={props.event} clubs={props.clubs} loadEventCallback={props.loadEventCallback} />
-                </DialogContent>
-                <DialogActions>
-                    <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-}
-
-export default RegistrationModal;
+export default RegistrationForm;
