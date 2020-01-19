@@ -29,13 +29,14 @@ interface Props {
 const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const [progress, setProgress] = useState(0);
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [club, setClub] = useState("");
-    const [eventClass, setEventClass] = useState("Mini");
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [club, setClub] = useState('');
+    const [eventClass, setEventClass] = useState('');
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [clubValid, setClubValid] = useState(true);
+    const [eventClassValid, setEventClassValid] = useState(true);
     const [formValid, setFormValid] = useState(false);
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +54,10 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         validate(undefined, value);
     }
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
-        setEventClass(event.target.value as string);
+        const newEventClass = event.target.value as string;
+        setEventClass(newEventClass);
+        setEventClassValid(newEventClass.length > 0);
+        validate(undefined, undefined, undefined, newEventClass);
     }
     const clubChange = (newClub:string) => {
         setClub(newClub);
@@ -62,8 +66,8 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         validate(undefined, undefined, newClub);
     }
 
-    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club) => 
-        setFormValid(!_.isNil(newFirstName) && newFirstName.length > 0 && !_.isNil(newLastName) && newLastName.length > 0 && !_.isNil(newClub) && newClub.length > 0);
+    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass) => 
+        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0);
 
     const handleRegister = async () => {
         try {
@@ -81,7 +85,8 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         }
     }
     const handleRegisterMore = () => {
-        setFirstName("");
+        setFirstName('');
+        setEventClass('')
         setProgress(0);
     }
     const handleEdit = () => setProgress(0);
@@ -129,7 +134,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             <Grid item xs={6}>
                 <FormControl fullWidth>
                     <InputLabel id="event-class-label">Klasse</InputLabel>
-                    <Select labelId="event-class-label" id="eventClass" value={eventClass} onChange={eventClassChange}>
+                    <Select labelId="event-class-label" id="eventClass" value={eventClass} onChange={eventClassChange} error={!eventClassValid}>
                         {props.event.eventClasses.map(eventClass => (<MenuItem value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</MenuItem>))}
                     </Select>
                 </FormControl>
@@ -176,7 +181,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     );
 
     const step2 = (
-        <div>
+        <div style={{textAlign: 'center', fontWeight: 'bold'}}>
             <p>Din påmelding er registrert!</p>
             <Button variant="contained" color="primary" className="float-right" onClick={handleRegisterMore}>Meld på flere</Button>
         </div>
