@@ -19,7 +19,7 @@ import moment from 'moment';
 
 import RegistrationModal from './RegistrationModal';
 import ParticipantList from './ParticipantList';
-import StartNumberTab from './StartNumberTab';
+//import StartNumberTab from './StartNumberTab';
 import Club from '../model/club';
 
 interface MatchParams {
