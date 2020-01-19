@@ -3,16 +3,16 @@ import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
 import Club from '../../model/club';
 
-export const eventsFromFirebase = (querySnapshot : firebase.firestore.QuerySnapshot) : Event[] =>
-    {
-        const events : Event[] = [];
-        querySnapshot.forEach(doc => { events.push(eventFromFirebase(doc)) });
-        return events;
-    }
+export const eventsFromFirebase = (querySnapshot: firebase.firestore.QuerySnapshot) : Event[] => {
+    const events: Event[] = [];
+    querySnapshot.forEach(doc => { events.push(eventFromFirebase(doc)) });
+    return events;
+};
 
-export const eventFromFirebase = (document : firebase.firestore.QueryDocumentSnapshot | firebase.firestore.DocumentSnapshot) : Event => {
-    const data : any = document.data();
-    const event : Event = {
+export const eventFromFirebase = (document: firebase.firestore.QueryDocumentSnapshot | firebase.firestore.DocumentSnapshot): Event => {
+    const data: any = document.data();
+    console.log(data);
+    const event: Event = {
         id: document.id,
         name: data.name,
         eventType: data.eventType,
@@ -26,30 +26,29 @@ export const eventFromFirebase = (document : firebase.firestore.QueryDocumentSna
     return event;
 };
 
-
-const eventClassesFromFirebase = (fbClasses : object[]) : EventClass[] => {
-    const eventClasses : EventClass[] = [];
-    fbClasses.forEach(fbClass => { eventClasses.push(eventClassFromFirebase(fbClass))});
+const eventClassesFromFirebase = (fbClasses: object[]): EventClass[] => {
+    const eventClasses: EventClass[] = [];
+    fbClasses.forEach(fbClass => { eventClasses.push(eventClassFromFirebase(fbClass)) });
     return eventClasses;
 };
 
-const eventClassFromFirebase = (fbClass : any) : EventClass => {
-    const eventClass : EventClass = {
+const eventClassFromFirebase = (fbClass: any): EventClass => {
+    const eventClass: EventClass = {
         name:  fbClass.name,
         course: fbClass.course,
-        description: ''
+        description: fbClass.description
     };
     return eventClass;
 };
 
-const participantsFromFirebase = (fbParticipants : object[]) : Participant[] => {
-    const participants : Participant[] = [];
+export const participantsFromFirebase = (fbParticipants: object[]): Participant[] => {
+    const participants: Participant[] = [];
     fbParticipants.forEach(fbParticipant => { participants.push(participantFromFirebase(fbParticipant)) });
     return participants;
 };
 
-const participantFromFirebase = (fbParticipant : any) : Participant => {
-    const participant : Participant = {
+const participantFromFirebase = (fbParticipant: any): Participant => {
+    const participant: Participant = {
         id: fbParticipant.id,
         firstName: fbParticipant.firstName,
         lastName: fbParticipant.lastName,
@@ -59,19 +58,17 @@ const participantFromFirebase = (fbParticipant : any) : Participant => {
     return participant;
 };
 
-export const clubsFromFirebase = (fbClubs : firebase.firestore.QuerySnapshot) : Club[] => {
-    const clubs : Club[] = [];
+export const clubsFromFirebase = (fbClubs: firebase.firestore.QuerySnapshot): Club[] => {
+    const clubs: Club[] = [];
     fbClubs.forEach(fbClub => { clubs.push(clubFromFirebase(fbClub))});
     return clubs;
 };
 
-const clubFromFirebase = (fbClub : firebase.firestore.QueryDocumentSnapshot) : Club => {
-    const data : any = fbClub.data();
+const clubFromFirebase = (fbClub: firebase.firestore.QueryDocumentSnapshot): Club => {
+    const data: any = fbClub.data();
     const club: Club = {
         name: data.name,
         shortName: data.shortName
     }
     return club;
 };
-
-//export default eventsFromFirebase;

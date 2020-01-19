@@ -16,7 +16,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Event from '../model/event';
 import Club from '../model/club';
+import Participant from '../model/participant';
 import * as _ from "lodash";
+import firebase from '../components/Firebase';
 
 interface Props {
     event: Event,
@@ -42,47 +44,62 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         const newFirstNameValid = value.length > 0;
         setFirstNameValid(newFirstNameValid);
         validate(value);
-    }
+    };
+
     const lastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;
         setLastName(value);
         const newLastNameValid = value.length > 0;
         setLastNameValid(newLastNameValid);
         validate(undefined, value);
-    }
+    };
+
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
         setEventClass(event.target.value as string);
-    }
+    };
+
     const clubChange = (newClub:string) => {
         setClub(newClub);
         const newClubValid = !_.isNil(newClub) && newClub.length > 0;
         setClubValid(newClubValid);
         validate(undefined, undefined, newClub);
-    }
+    };
 
     const validate = (newFirstName = firstName, newLastName = lastName, newClub = club) => 
         setFormValid(!_.isNil(newFirstName) && newFirstName.length > 0 && !_.isNil(newLastName) && newLastName.length > 0 && !_.isNil(newClub) && newClub.length > 0);
 
     const handleRegister = async () => {
         try {
-            await fetch(`http://localhost:3001/api/event/1/participant`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({ firstName, lastName, club, eventClass }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            props.loadEventCallback();
+            // await fetch(`http://localhost:3001/api/event/1/participant`,
+            //     {
+            //         method: 'POST',
+            //         body: JSON.stringify({ firstName, lastName, club, eventClass }),
+            //         headers: { 'Content-Type': 'application/json' }
+            //     });
+            // props.loadEventCallback();
+            // setProgress(2);
+            const participant: Participant = {
+                id: '',
+                firstName: firstName,
+                lastName: lastName,
+                club: club,
+                eventClass: eventClass
+            };
+            await firebase.addParticipant(props.event.id, participant);
             setProgress(2);
         }
         catch (error) {
             console.error(error);
         }
-    }
+    };
+
     const handleRegisterMore = () => {
         setFirstName("");
         setProgress(0);
-    }
+    };
+
     const handleEdit = () => setProgress(0);
+
     const handleNext = () => setProgress(1);
 
     const useStyles = makeStyles((theme: Theme) =>
@@ -95,8 +112,11 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             },
         }),
     );
+
     const classes = useStyles();
+
     let tempValue: string;
+
     const form = (
         <form className={classes.root} noValidate autoComplete="off">
             <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
@@ -174,12 +194,13 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     if (progress === 0) {
         return form
     }
+
     if (progress === 1) {
         return step1;
     }
-    return step2;
 
-}
+    return step2;
+};
 
 function rand() {
     return Math.round(Math.random() * 20) - 10;

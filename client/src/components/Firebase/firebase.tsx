@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {eventFromFirebase, eventsFromFirebase, clubsFromFirebase} from "./utils";
+import {eventFromFirebase, eventsFromFirebase, clubsFromFirebase, participantsFromFirebase} from "./utils";
 
 interface FirebaseConfig {
     apiKey ?: String;
@@ -20,11 +20,41 @@ const config: FirebaseConfig = {
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 };
 
-export const init = () => { firebase.initializeApp(config) };
+let db: firebase.firestore.Firestore;
+let eventsRef: firebase.firestore.CollectionReference;
+let clubsRef: firebase.firestore.CollectionReference;
+
+export const init = () => {
+    firebase.initializeApp(config);
+    db = firebase.firestore();
+    eventsRef = db.collection('events');
+    clubsRef = db.collection('clubs');
+};
+
+export const subscribeEvents = (callback: any) => {
+    eventsRef.onSnapshot(querySnapshot => {
+        const events = eventsFromFirebase(querySnapshot);
+        callback(events)
+    });
+};
+
+export const subscribeEvent = (eventId: string, callback: any) => {
+    eventsRef.doc(eventId).onSnapshot(documentSnapshot => {
+        const event = eventFromFirebase(documentSnapshot);
+        callback(event);
+    });
+};
+
+export const subscribeClubs = (callback: any) => {
+    clubsRef.onSnapshot(querySnapshot => {
+        const clubs = clubsFromFirebase(querySnapshot);
+        callback(clubs);
+    });
+};
 
 export const fetchEvents = async () => {
     try {
-        const collection = await firebase.firestore().collection('events').get();
+        const collection = await eventsRef.get();
         return eventsFromFirebase(collection);
     } catch (error) {
         return Promise.reject(error);
@@ -32,11 +62,17 @@ export const fetchEvents = async () => {
 };
 
 export const fetchEvent = async (eventId: string) =>  {
-    const eventBody = await firebase.firestore().collection('events').doc(eventId).get();
+    const eventBody = await eventsRef.doc(eventId).get();
     return eventFromFirebase(eventBody);
 };
 
 export const fetchClubs = async () => {
-    const collection = await firebase.firestore().collection('clubs').get();
+    const collection = await clubsRef.get();
     return clubsFromFirebase(collection);
+};
+
+export const addParticipant = async (eventId: string, participant: any) => {
+    await eventsRef.doc(eventId).update({
+        participants: firebase.firestore.FieldValue.arrayUnion(participant)
+    });
 };

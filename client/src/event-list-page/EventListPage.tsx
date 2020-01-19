@@ -22,10 +22,8 @@ const EventListPage: React.FC = (props) => {
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        (async () => {
-           const events = await firebase.fetchEvents()
-           setEvents(events)})();
-      }, []);
+        const unsubscribe = firebase.subscribeEvents(setEvents);
+    }, []);
 
     return (
         <React.Fragment>
