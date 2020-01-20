@@ -17,9 +17,9 @@ import EventClass from '../model/event-class';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import RegistrationModal from './RegistrationModal';
+import Registration from '../components/registration/Registration';
 import ParticipantList from './ParticipantList';
-import StartNumberTab from './StartNumberTab';
+//import StartNumberTab from './StartNumberTab';
 import Club from '../model/club';
 import firebase from '../components/Firebase';
 
@@ -132,7 +132,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                     </TableContainer>
                 </Grid>
             </Grid>
-            <RegistrationModal event={event} clubs={clubs} loadEventCallback={loadEvent}/>
+            <Registration event={event} clubs={clubs} loadEventCallback={loadEvent}/>
         </React.Fragment>
     );
 
