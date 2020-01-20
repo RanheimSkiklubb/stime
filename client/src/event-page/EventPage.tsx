@@ -21,6 +21,7 @@ import Registration from '../components/registration/Registration';
 import ParticipantList from './ParticipantList';
 //import StartNumberTab from './StartNumberTab';
 import Club from '../model/club';
+import firebase from '../components/Firebase';
 
 interface MatchParams {
     eventId: string
@@ -64,32 +65,23 @@ function TabPanel(props: TabPanelProps) {
 
 const EventPage: React.FC<Props> = (props: Props) => {
 
-    const [event, setEvents] = useState<Event>({id: "", name: "", description: "", eventType: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
+    const [event, setEvent] = useState<Event>({id: "", name: "", description: "", eventType: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
     const [clubs, setClubs] = useState<Club[]>([]);
     const [tabIndex, setTabIndex] = useState(0);
 
     const loadEvent = async () => {
         const eventId = props.match.params.eventId;
-        const event = await fetchEvent(eventId);
-        setEvents(event);
-    }
+        const event = await firebase.fetchEvent(eventId);
+        setEvent(event);
+    };
 
     useEffect(() => {
-        const fecthEvents = async () => {
-            const eventId = props.match.params.eventId;
-            const event = await fetchEvent(eventId);
-            setEvents(event);
-        }
-        fecthEvents();
+        const eventId = props.match.params.eventId;
+        const unsubscribe = firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
 
     useEffect(() => {
-        const fecthEvents = async () => {
-            const clubsBody = await fetch('http://localhost:3001/api/club')
-            const clubsData = await clubsBody.json();
-            setClubs(clubsData)
-        }
-        fecthEvents();
+        const unsubscribe = firebase.subscribeClubs(setClubs);
     }, []);
 
     const useStyles = makeStyles((theme: Theme) =>

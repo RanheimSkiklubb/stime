@@ -30,6 +30,6 @@ const App: React.FC = () => {
             </Container>
         </React.Fragment>
     );
-}
+};
 
 export default App;

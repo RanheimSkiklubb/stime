@@ -15,7 +15,9 @@ import Button from '@material-ui/core/Button';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
-import _ from "lodash";
+import _ from 'lodash';
+import Participant from '../../model/participant';
+import firebase from '../Firebase';
 
 interface Props {
     event: Event,
@@ -68,13 +70,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const handleRegister = async () => {
         try {
-            await fetch(`http://localhost:3001/api/event/1/participant`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({ firstName, lastName, club, eventClass }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            props.loadEventCallback();
+            const participant: Participant = {
+                id: '',
+                firstName: firstName,
+                lastName: lastName,
+                club: club,
+                eventClass: eventClass
+            };
+            await firebase.addParticipant(props.event.id, participant);
             setProgress(2);
         }
         catch (error) {
