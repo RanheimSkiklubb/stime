@@ -48,7 +48,6 @@ export const participantsFromFirebase = (fbParticipants: object[]): Participant[
 
 const participantFromFirebase = (fbParticipant: any): Participant => {
     const participant: Participant = {
-        id: fbParticipant.id,
         firstName: fbParticipant.firstName,
         lastName: fbParticipant.lastName,
         club: fbParticipant.club,

@@ -6,18 +6,15 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
 import Button from '@material-ui/core/Button';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
 import _ from 'lodash';
 import Participant from '../../model/participant';
+import RegisteredParticipant from './RegisteredParticipant';
 import firebase from '../Firebase';
+import { compareTwoStrings }  from 'string-similarity';
 
 interface Props {
     event: Event,
@@ -71,7 +68,6 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const handleRegister = async () => {
         try {
             const participant: Participant = {
-                id: '',
                 firstName: firstName,
                 lastName: lastName,
                 club: club,
@@ -94,7 +90,6 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     let tempValue: string;
     const form = (
-
         <Grid container spacing={2}>
             <Grid item xs={6}>
                 <FormControl fullWidth>
@@ -114,7 +109,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                         value={club}
                         options={props.clubs.map(club => club.name)}
                         onChange={(event: any, newValue: any | null) => {
-                            clubChange(newValue);
+                            clubChange(_.isNil(newValue) ? "" : newValue);
                         }}
                         onInputChange={(event: any, newValue: any) => {
                             tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
@@ -146,41 +141,55 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         </Grid>
     );
 
-    const step1 = (
-        <Grid container>
-            <Grid item xs={12} style={{textAlign: 'center'}}>
-                <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
-            </Grid>
-            <Grid item xs={12} sm={6} style={{margin: 'auto'}}>
-                <TableContainer>
-                    <Table size="small">
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>Fornavn</TableCell>
-                                <TableCell>{firstName}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Etternavn</TableCell>
-                                <TableCell>{lastName}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Klubb</TableCell>
-                                <TableCell>{club}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Klasse</TableCell>
-                                <TableCell>{eventClass}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Grid>
+    const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null => {
+        if (!e) return null;
+        const generateKey = (p: Participant) => `${p.firstName}${p.lastName}${p.club}`;
+        const key = generateKey(p);
+        const similarities = e.participants.map((p: Participant) => {
+            return {
+                participant: p,
+                similarity: compareTwoStrings(key, generateKey(p))
+            }
+        });
+        const mostSimilar = similarities.reduce((p, c) => p.similarity > c.similarity ? p : c, {similarity: -1, participant: p});
+        if (mostSimilar.similarity > 0.9) {
+            return mostSimilar.participant;
+        }
+        return null;
+    };
+
+    const step1 = () => {
+        const participant = {firstName, lastName, club, eventClass};
+        const similar = lookForSimilarRegistrations(participant, props.event);
+        let similarNotification = null;
+        if (similar) {
+            similarNotification = (
+                <React.Fragment>
+                    <Grid item xs={12} style={{textAlign: 'center'}} >
+                            <p style={{fontWeight: 'bold'}}>Merk at det allerede finnes en liknende registrering: </p>
+                        </Grid>
+                    <Grid item xs={12} sm={6} style={{margin: 'auto'}} >
+                            <RegisteredParticipant participant={similar}/>
+                    </Grid>
+                </React.Fragment>
+            )
+        }
+        return (
             <Grid container>
-                <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
-                <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
+                <Grid item xs={12} style={{textAlign: 'center'}}>
+                    <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
+                </Grid>
+                <Grid item xs={12} sm={6} style={{margin: 'auto'}}>
+                    <RegisteredParticipant participant={participant}/>
+                </Grid>
+                {similarNotification}
+                <Grid container>
+                    <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
+                    <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
+                </Grid>
             </Grid>
-        </Grid>
-    );
+        )
+    };
 
     const step2 = (
         <div style={{textAlign: 'center', fontWeight: 'bold'}}>
@@ -193,7 +202,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         return form
     }
     if (progress === 1) {
-        return step1;
+        return step1();
     }
     return step2;
 
