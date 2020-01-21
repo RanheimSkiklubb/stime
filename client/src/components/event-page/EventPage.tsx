@@ -7,7 +7,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -68,18 +67,10 @@ const EventPage: React.FC<Props> = (props: Props) => {
         firebase.subscribeClubs(setClubs);
     }, []);
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            container: {
-                marginBottom: '20px'
-            }
-        })
-    );
-    const classes = useStyles();
     const infoTab = (
         <React.Fragment>
-            <Grid container spacing={2} className={classes.container}>
-                <Grid item xs={6}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableBody>
@@ -93,7 +84,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                         </Table>
                     </TableContainer>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                     <TableContainer component={Paper}>
                         <Table size="small">
                             <TableHead>

@@ -150,8 +150,9 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         <Grid container>
             <Grid item xs={12} style={{textAlign: 'center'}}>
                 <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
-
-                <TableContainer style={{width: '50%', margin: 'auto', marginBottom: '20px'}}>
+            </Grid>
+            <Grid item xs={12} sm={6} style={{margin: 'auto'}}>
+                <TableContainer>
                     <Table size="small">
                         <TableBody>
                             <TableRow>
@@ -174,8 +175,10 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     </Table>
                 </TableContainer>
             </Grid>
-            <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
-            <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
+            <Grid container>
+                <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
+                <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
+            </Grid>
         </Grid>
     );
 

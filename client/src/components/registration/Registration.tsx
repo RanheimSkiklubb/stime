@@ -23,7 +23,7 @@ const Registration: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <Button variant="contained" color="primary" className="marginTop20" size="large" onClick={handleShow}>Påmelding</Button>
+            <Button variant="contained" color="primary" style={{margin: '20px'}} size="large" onClick={handleShow}>Påmelding</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
                 <DialogContent>
