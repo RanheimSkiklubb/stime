@@ -8,6 +8,7 @@ import RegistrationForm from './RegistrationForm';
 
 import Event from '../../model/event';
 import Club from '../../model/club';
+import moment from "moment";
 
 
 interface Props {
@@ -21,9 +22,21 @@ const Registration: React.FC<Props> = (props: Props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const registrationOpen = (event: Event):boolean => {
+        const today = moment.now();
+        return !moment().isBetween(event.registrationStart, event.registrationEnd);
+    };
+
     return (
         <>
-            <Button variant="contained" color="primary" style={{margin: '20px'}} size="large" onClick={handleShow}>Påmelding</Button>
+            <Button
+                variant="contained"
+                disabled={registrationOpen(props.event)}
+                color="primary" style={{margin: '20px'}}
+                size="large"
+                onClick={handleShow}>
+                Påmelding
+            </Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
                 <DialogContent>

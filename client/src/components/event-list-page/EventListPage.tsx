@@ -6,6 +6,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
@@ -25,6 +26,11 @@ const EventListPage: React.FC = (props) => {
         firebase.subscribeEvents(setEvents);
     }, []);
 
+    const registrationOpen = (event: Event):boolean => {
+        const today = moment.now();
+        return moment().isBetween(event.registrationStart, event.registrationEnd);
+    };
+
     return (
         <React.Fragment>
             <h1>Arrangement</h1><br/>
@@ -33,6 +39,7 @@ const EventListPage: React.FC = (props) => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
+                            <TableCell align='center' style={{width: '10%'}}>Påmelding åpen</TableCell>
                             <TableCell>Dato</TableCell>
                             <TableCell>Arrangment</TableCell>
                             <TableCell>Øvelse</TableCell>
@@ -41,6 +48,7 @@ const EventListPage: React.FC = (props) => {
                     <TableBody>
                     {events.map((event:Event) => (
                         <TableRow hover key={event.name} onClick={() => history.push(`/event/${event.id}`)}>
+                            <TableCell align='center'>{registrationOpen(event) ? <CheckCircle style={{ color: 'green' }} /> : <div></div>}</TableCell>
                             <TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell>{event.eventType}</TableCell>
