@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {eventFromFirebase, eventsFromFirebase, clubsFromFirebase, participantsFromFirebase} from "./utils";
+import {eventFromFirebase, eventsFromFirebase, clubsFromFirebase} from "./utils";
+import _ from 'lodash';
 
 interface FirebaseConfig {
     apiKey ?: String;
@@ -34,7 +35,8 @@ export const init = () => {
 export const subscribeEvents = (callback: any) => {
     eventsRef.onSnapshot(querySnapshot => {
         const events = eventsFromFirebase(querySnapshot);
-        callback(events)
+        const sortedEvents = _.sortBy(events, 'startTime');
+        callback(sortedEvents)
     });
 };
 
