@@ -17,7 +17,7 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
 
     return (
         <TableContainer component={Paper}>
-            <Table>
+            <Table size="small">
                 <TableHead>
                     <TableRow>
                         <TableCell>Navn</TableCell>
