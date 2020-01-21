@@ -11,7 +11,6 @@ export const eventsFromFirebase = (querySnapshot: firebase.firestore.QuerySnapsh
 
 export const eventFromFirebase = (document: firebase.firestore.QueryDocumentSnapshot | firebase.firestore.DocumentSnapshot): Event => {
     const data: any = document.data();
-    console.log(data);
     const event: Event = {
         id: document.id,
         name: data.name,

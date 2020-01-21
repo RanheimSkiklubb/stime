@@ -22,7 +22,7 @@ const EventListPage: React.FC = (props) => {
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        const unsubscribe = firebase.subscribeEvents(setEvents);
+        firebase.subscribeEvents(setEvents);
     }, []);
 
     return (

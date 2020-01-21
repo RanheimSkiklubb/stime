@@ -31,22 +31,6 @@ interface Props {
     match: match<MatchParams>
 }
 
-const fetchEvent = async (eventId: string):Promise<Event> => {
-    const eventBody = await fetch(`http://localhost:3001/api/event/${eventId}`)
-    const eventObj = await eventBody.json();
-    return Promise.resolve({
-        id: eventObj.id, 
-        name: eventObj.name,
-        eventType: eventObj.eventType,
-        description: eventObj.description,
-        startTime: eventObj.startTime, 
-        registrationStart: eventObj.registrationStart, 
-        registrationEnd: eventObj.registrationEnd, 
-        eventClasses: eventObj.eventClasses, 
-        participants: eventObj.participants
-    });
-}
-
 interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
@@ -77,11 +61,11 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        const unsubscribe = firebase.subscribeEvent(eventId, setEvent);
+        firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
 
     useEffect(() => {
-        const unsubscribe = firebase.subscribeClubs(setClubs);
+        firebase.subscribeClubs(setClubs);
     }, []);
 
     const useStyles = makeStyles((theme: Theme) =>
