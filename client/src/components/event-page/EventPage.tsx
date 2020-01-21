@@ -12,16 +12,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import Event from '../model/event';
-import EventClass from '../model/event-class';
+import Event from '../../model/event';
+import EventClass from '../../model/event-class';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import Registration from '../components/registration/Registration';
+import Registration from '../registration/Registration';
 import ParticipantList from './ParticipantList';
 //import StartNumberTab from './StartNumberTab';
-import Club from '../model/club';
-import firebase from '../components/Firebase';
+import Club from '../../model/club';
+import firebase from '../Firebase';
 
 interface MatchParams {
     eventId: string

@@ -9,8 +9,8 @@ import Paper from '@material-ui/core/Paper';
 
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
-import Event from '../model/event';
-import * as firebase from '../components/Firebase/firebase';
+import Event from '../../model/event';
+import * as firebase from '../Firebase/firebase';
 
 interface State {
     events: Event[]
