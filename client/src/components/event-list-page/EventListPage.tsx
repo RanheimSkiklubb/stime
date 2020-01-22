@@ -27,7 +27,6 @@ const EventListPage: React.FC = (props) => {
     }, []);
 
     const registrationOpen = (event: Event):boolean => {
-        const today = moment.now();
         return moment().isBetween(event.registrationStart, event.registrationEnd);
     };
 

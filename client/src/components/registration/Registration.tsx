@@ -23,20 +23,13 @@ const Registration: React.FC<Props> = (props: Props) => {
     const handleShow = () => setShow(true);
 
     const registrationOpen = (event: Event):boolean => {
-        const today = moment.now();
         return !moment().isBetween(event.registrationStart, event.registrationEnd);
     };
 
     return (
-        <>
-            <Button
-                variant="contained"
-                disabled={registrationOpen(props.event)}
-                color="primary" style={{margin: '20px'}}
-                size="large"
-                onClick={handleShow}>
-                Påmelding
-            </Button>
+        <React.Fragment>
+            <Button variant="contained" disabled={registrationOpen(props.event)} color="primary" size="medium" 
+            onClick={handleShow}>Påmelding</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
                 <DialogContent>
@@ -46,7 +39,7 @@ const Registration: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>
                 </DialogActions>
             </Dialog>
-        </>
+        </React.Fragment>
     );
 }
 

@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Event from '../../model/event';
 import EventClass from '../../model/event-class';
@@ -67,19 +68,43 @@ const EventPage: React.FC<Props> = (props: Props) => {
         firebase.subscribeClubs(setClubs);
     }, []);
 
+    const useStyles = makeStyles({
+        infoTable: {
+          '& td': {
+              verticalAlign: "top"
+          }
+        },
+      });
+
+    const registrationInfo = () => {
+        if (moment().isBefore(event.registrationStart)) {
+            return (<>Påmeldingen har ikke åpnet</>);
+        }
+        if (moment().isAfter(event.registrationEnd)) {
+            return (<>Påmeldingsfristen er ute. Etteranmelding kan gjøres til paamelding@ranheimskiklubb.no</>);
+        }
+        return (<><Registration event={event} clubs={clubs} loadEventCallback={loadEvent}/>
+            <p style={{marginBottom: '0'}}>Frist: {moment(event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p></>);
+    }
+    const classes = useStyles();
     const infoTab = (
         <React.Fragment>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <TableContainer component={Paper}>
-                        <Table>
+                        <Table className={classes.infoTable}>
                             <TableBody>
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.description}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Påmeldingsfrist:</TableCell><TableCell>{moment(event.registrationEnd).format("DD. MMM YYYY HH:mm")}</TableCell></TableRow>
                                 <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell>{event.description}</TableCell></TableRow>
+                                <TableRow>
+                                    <TableCell>Påmelding:</TableCell>
+                                    <TableCell>
+                                        {registrationInfo()}
+                                    </TableCell>
+                                </TableRow>
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -107,7 +132,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
                     </TableContainer>
                 </Grid>
             </Grid>
-            <Registration event={event} clubs={clubs} loadEventCallback={loadEvent}/>
         </React.Fragment>
     );
 
