@@ -1,42 +1,47 @@
 import React from 'react';
 import Event from '../../model/event';
-import Participant from '../../model/participant';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
+import _ from 'lodash';
+import MaterialTable from 'material-table';
 
 interface Props {
     event: Event;
 }
 
+interface Row {
+    name: string,
+    club: string,
+    eventClass: string
+}
+
+const columns = [
+    {title: 'Name', field: 'name'},
+    {title: 'Klubb', field: 'club'},
+    {title: 'Klasse', field: 'eventClass'}
+];
+
 const ParticipantList: React.FC<Props> = (props: Props) => {
 
+    const sortMapping: Record<string, number> = {};
+    props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
+    const participants = props.event.participants.map(p => {
+        const name = `${p.firstName} ${p.lastName}`;
+        return {name, club: p.club, eventClass: p.eventClass, sort1: sortMapping[p.eventClass], sort2: name.toLowerCase()};
+    });
+    const sortedParticipants = _.sortBy(participants, ["sort1", "sort2"]);
+
     return (
-        <TableContainer component={Paper}>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Navn</TableCell>
-                        <TableCell>Klubb</TableCell>
-                        <TableCell>Klasse</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                    props.event.participants.map((p:Participant, idx:number) => 
-                    <TableRow key={idx}>
-                        <TableCell>{p.firstName + " " + p.lastName}</TableCell>
-                        <TableCell>{p.club}</TableCell>
-                        <TableCell>{p.eventClass}</TableCell>
-                    </TableRow>)
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <MaterialTable
+            title=""
+            columns = {columns}
+            data = {sortedParticipants}
+            options={{
+                sorting: true,
+                paging: false,
+                padding: "dense"
+            }}
+        />
+
+
     ); 
 }
 

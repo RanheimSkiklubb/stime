@@ -65,7 +65,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass) => 
         setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0);
 
-    const handleRegister = async () => {
+    const handleRegister = () => {
         try {
             const participant: Participant = {
                 firstName: firstName,
@@ -73,7 +73,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 club: club,
                 eventClass: eventClass
             };
-            await firebase.addParticipant(props.event.id, participant);
+            firebase.addParticipant(props.event.id, participant);
             setProgress(2);
         }
         catch (error) {
