@@ -7,7 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Participant from '../../model/participant';
 
 interface Props {
-    participant: Participant
+    participant: Participant,
+    email: string
 }
 
 const RegisteredParticipant: React.FC<Props> = (props: Props) => {
@@ -30,6 +31,10 @@ const RegisteredParticipant: React.FC<Props> = (props: Props) => {
                     <TableRow>
                         <TableCell>Klasse</TableCell>
                         <TableCell>{props.participant.eventClass}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>E-post</TableCell>
+                        <TableCell>{props.email}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

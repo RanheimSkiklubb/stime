@@ -3,70 +3,42 @@ import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
 import Club from '../../model/club';
 
-export const eventsFromFirebase = (querySnapshot: firebase.firestore.QuerySnapshot) : Event[] => {
-    const events: Event[] = [];
-    querySnapshot.forEach(doc => { events.push(eventFromFirebase(doc)) });
-    return events;
-};
-
-export const eventFromFirebase = (document: firebase.firestore.QueryDocumentSnapshot | firebase.firestore.DocumentSnapshot): Event => {
-    const data: any = document.data();
-    const event: Event = {
-        id: document.id,
-        name: data.name,
-        eventType: data.eventType,
-        description: data.description,
-        startTime: data.startTime,
-        registrationStart: data.registrationStart,
-        registrationEnd: data.registrationEnd,
-        eventClasses: eventClassesFromFirebase(data.eventClasses),
-        participants: participantsFromFirebase(data.participants)
-        };
-    return event;
-};
-
-const eventClassesFromFirebase = (fbClasses: object[]): EventClass[] => {
-    const eventClasses: EventClass[] = [];
-    fbClasses.forEach(fbClass => { eventClasses.push(eventClassFromFirebase(fbClass)) });
-    return eventClasses;
-};
-
-const eventClassFromFirebase = (fbClass: any): EventClass => {
-    const eventClass: EventClass = {
-        name:  fbClass.name,
-        course: fbClass.course,
-        description: fbClass.description
-    };
-    return eventClass;
-};
-
-export const participantsFromFirebase = (fbParticipants: object[]): Participant[] => {
-    const participants: Participant[] = [];
-    fbParticipants.forEach(fbParticipant => { participants.push(participantFromFirebase(fbParticipant)) });
-    return participants;
-};
-
-const participantFromFirebase = (fbParticipant: any): Participant => {
-    const participant: Participant = {
-        firstName: fbParticipant.firstName,
-        lastName: fbParticipant.lastName,
-        club: fbParticipant.club,
-        eventClass: fbParticipant.eventClass
-    };
-    return participant;
-};
-
-export const clubsFromFirebase = (fbClubs: firebase.firestore.QuerySnapshot): Club[] => {
-    const clubs: Club[] = [];
-    fbClubs.forEach(fbClub => { clubs.push(clubFromFirebase(fbClub))});
-    return clubs;
-};
-
-const clubFromFirebase = (fbClub: firebase.firestore.QueryDocumentSnapshot): Club => {
-    const data: any = fbClub.data();
-    const club: Club = {
-        name: data.name,
-        shortName: data.shortName
+export const eventConverter = {
+    toFirestore(event: Event): firebase.firestore.DocumentData {
+        return {
+            name: event.name,
+            eventType: event.eventType,
+            description: event.description,
+            startTime: event.startTime,
+            registrationStart: event.registrationStart,
+            registrationEnd: event.registrationEnd,
+            eventClasses: event.eventClasses,
+            participants: event.participants
+        }
+    },
+    fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Event {
+        const data = snapshot.data();
+        return new Event(
+            snapshot.id,
+            data.name,
+            data.eventType,
+            data.description,
+            data.startTime,
+            data.registrationStart,
+            data.registrationEnd,
+            data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description))),
+            data.participants.map((d: any) => (new Participant(d.firstName, d.lastName, d.club, d.eventClass))));
     }
-    return club;
+};
+
+export const clubConverter = {
+    toFirestore(club: Club): firebase.firestore.DocumentData {
+        return {name: club.name, shortName: club.shortName};
+    },
+    fromFirestore(
+        snapshot: firebase.firestore.QueryDocumentSnapshot,
+        options: firebase.firestore.SnapshotOptions): Club {
+        const data = snapshot.data(options)!;
+        return new Club(data.name, data.shortName);
+    }
 };

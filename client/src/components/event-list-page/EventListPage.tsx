@@ -23,12 +23,8 @@ const EventListPage: React.FC = (props) => {
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        firebase.subscribeEvents(setEvents);
+        return firebase.subscribeEvents(setEvents);
     }, []);
-
-    const registrationOpen = (event: Event):boolean => {
-        return moment().isBetween(event.registrationStart, event.registrationEnd);
-    };
 
     return (
         <React.Fragment>
@@ -47,7 +43,7 @@ const EventListPage: React.FC = (props) => {
                     <TableBody>
                     {events.map((event:Event) => (
                         <TableRow hover key={event.name} onClick={() => history.push(`/event/${event.id}`)}>
-                            <TableCell align='center'>{registrationOpen(event) ? <CheckCircle style={{ color: 'green' }} /> : <div></div>}</TableCell>
+                            <TableCell align='center'>{event.registrationOpen() ? <CheckCircle style={{ color: 'green' }} /> : <div></div>}</TableCell>
                             <TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell>{event.eventType}</TableCell>

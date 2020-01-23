@@ -1,5 +1,6 @@
-export default interface EventClass {
-    name: string;
-    course: string;
-    description: string;
+export default class EventClass {
+    constructor(
+        readonly name: string,
+        readonly course: string,
+        readonly description: string) {}
 }

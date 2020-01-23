@@ -18,8 +18,7 @@ import { compareTwoStrings }  from 'string-similarity';
 
 interface Props {
     event: Event,
-    clubs: Club[],
-    loadEventCallback: () => void
+    clubs: Club[]
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -28,11 +27,13 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [club, setClub] = useState('');
+    const [email, setEmail] = useState('');
     const [eventClass, setEventClass] = useState('');
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [clubValid, setClubValid] = useState(true);
     const [eventClassValid, setEventClassValid] = useState(true);
+    const [emailValid, setEmailValid] = useState(true);
     const [formValid, setFormValid] = useState(false);
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -41,29 +42,40 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         const newFirstNameValid = value.length > 0;
         setFirstNameValid(newFirstNameValid);
         validate(value);
-    }
+    };
     const lastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;
         setLastName(value);
         const newLastNameValid = value.length > 0;
         setLastNameValid(newLastNameValid);
         validate(undefined, value);
-    }
+    };
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
         const newEventClass = event.target.value as string;
         setEventClass(newEventClass);
         setEventClassValid(newEventClass.length > 0);
         validate(undefined, undefined, undefined, newEventClass);
-    }
-    const clubChange = (newClub:string) => {
+    };
+    const clubChange = (newClub: string) => {
         setClub(newClub);
         const newClubValid = !_.isNil(newClub) && newClub.length > 0;
         setClubValid(newClubValid);
         validate(undefined, undefined, newClub);
-    }
+    };
+    const emailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.currentTarget.value;
+        setEmail(value);
+        const newEmailValid = validateEmail(value) && value.length > 0;
+        setEmailValid(newEmailValid);
+        validate(undefined, value);
+    };
 
-    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass) => 
-        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0);
+    const validateEmail  = (email: string) => {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    };
+
+    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass, newEmail = email) =>
+        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0 && newEmail.length > 0);
 
     const handleRegister = () => {
         try {
@@ -73,7 +85,12 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 club: club,
                 eventClass: eventClass
             };
+            const contact = {
+                name: firstName + " " + lastName,
+                email: email
+            };
             firebase.addParticipant(props.event.id, participant);
+            firebase.addContact(props.event.id, contact);
             setProgress(2);
         }
         catch (error) {
@@ -134,7 +151,12 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+                <FormControl fullWidth>
+                    <TextField id="email" label="Kontakt e-post" value={email} onChange={emailChange} error={!emailValid} />
+                </FormControl>
+            </Grid>
+            <Grid item xs={6}></Grid><Grid item xs={6}></Grid>
             <Grid item xs={6} style={{textAlign: 'right'}}>
                 <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
             </Grid>
@@ -160,6 +182,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     const step1 = () => {
         const participant = {firstName, lastName, club, eventClass};
+        const contact = {name: firstName + ' ' + lastName, email};
         const similar = lookForSimilarRegistrations(participant, props.event);
         let similarNotification = null;
         if (similar) {
@@ -169,7 +192,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                             <p style={{fontWeight: 'bold'}}>Merk at det allerede finnes en liknende registrering: </p>
                         </Grid>
                     <Grid item xs={12} sm={6} style={{margin: 'auto'}} >
-                            <RegisteredParticipant participant={similar}/>
+                            <RegisteredParticipant participant={similar} email={email}/>
                     </Grid>
                 </React.Fragment>
             )
@@ -180,7 +203,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
                 </Grid>
                 <Grid item xs={12} sm={6} style={{margin: 'auto'}}>
-                    <RegisteredParticipant participant={participant}/>
+                    <RegisteredParticipant participant={participant} email={email}/>
                 </Grid>
                 {similarNotification}
                 <Grid container>

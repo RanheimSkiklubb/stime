@@ -13,8 +13,7 @@ import moment from "moment";
 
 interface Props {
     event: Event,
-    clubs: Club[],
-    loadEventCallback: () => void
+    clubs: Club[]
 }
 
 const Registration: React.FC<Props> = (props: Props) => {

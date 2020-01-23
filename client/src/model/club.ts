@@ -1,4 +1,5 @@
-export default interface Club {
-    name: string;
-    shortName: string;
+export default class Club {
+    constructor(
+        readonly name: string,
+        readonly shortName: string) {}
 }
