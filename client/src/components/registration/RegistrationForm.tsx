@@ -2,11 +2,12 @@ import React, { useState, ChangeEvent } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Alert from '@material-ui/lab/Alert';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
@@ -90,55 +91,59 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
 
     let tempValue: string;
     const form = (
-        <Grid container spacing={2}>
-            <Grid item xs={6}>
+        <form noValidate autoComplete="off">
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange} error={!lastNameValid} />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
                 <FormControl fullWidth>
-                    <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
-                </FormControl>
+                        <Autocomplete
+                            id="club"
+                            freeSolo
+                            value={club}
+                            options={props.clubs.map(club => club.name)}
+                            onChange={(event: any, newValue: any | null) => {
+                                clubChange(_.isNil(newValue) ? "" : newValue);
+                            }}
+                            onInputChange={(event: any, newValue: any) => {
+                                tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
+                                validate(undefined, undefined, newValue);
+                            }}
+                            onClose={(event: any) => {
+                                if (tempValue) {
+                                    clubChange(tempValue);
+                                }
+                            }}
+                            renderInput={params => (
+                                <TextField {...params} label="Klubb" margin="normal" fullWidth InputProps={{ ...params.InputProps, type: 'search' }} error={!clubValid} style={{marginTop: '0'}}/>
+                            )}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
+                        <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass} onChange={eventClassChange} error={!eventClassValid}>
+                            <option value=""></option>
+                            {props.event.eventClasses.map(eventClass => (<option value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
+                        </NativeSelect>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}></Grid>
+                <Grid item xs={6} style={{textAlign: 'right'}}>
+                    <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
+                </Grid>
             </Grid>
-            <Grid item xs={6}>
-                <FormControl fullWidth>
-                    <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange} error={!lastNameValid} />
-                </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-            <FormControl fullWidth>
-                    <Autocomplete
-                        id="club"
-                        freeSolo
-                        value={club}
-                        options={props.clubs.map(club => club.name)}
-                        onChange={(event: any, newValue: any | null) => {
-                            clubChange(_.isNil(newValue) ? "" : newValue);
-                        }}
-                        onInputChange={(event: any, newValue: any) => {
-                            tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
-                            validate(undefined, undefined, newValue);
-                        }}
-                        onClose={(event: any) => {
-                            if (tempValue) {
-                                clubChange(tempValue);
-                            }
-                        }}
-                        renderInput={params => (
-                            <TextField {...params} label="Klubb" margin="normal" fullWidth InputProps={{ ...params.InputProps, type: 'search' }} error={!clubValid} style={{marginTop: '0'}}/>
-                        )}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-                <FormControl fullWidth>
-                    <InputLabel id="event-class-label">Klasse</InputLabel>
-                    <Select labelId="event-class-label" id="eventClass" value={eventClass} onChange={eventClassChange} error={!eventClassValid}>
-                        {props.event.eventClasses.map(eventClass => (<MenuItem value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</MenuItem>))}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={6} style={{textAlign: 'right'}}>
-                <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
-            </Grid>
-        </Grid>
+        </form>
+
     );
 
     const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null => {
@@ -158,6 +163,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         return null;
     };
 
+    const useStyles = makeStyles({
+        similar: {
+            '& td': {
+                color: "grey"
+            }
+        },
+    });
+    const classes = useStyles();
     const step1 = () => {
         const participant = {firstName, lastName, club, eventClass};
         const similar = lookForSimilarRegistrations(participant, props.event);
@@ -165,25 +178,25 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         if (similar) {
             similarNotification = (
                 <React.Fragment>
-                    <Grid item xs={12} style={{textAlign: 'center'}} >
-                            <p style={{fontWeight: 'bold'}}>Merk at det allerede finnes en liknende registrering: </p>
-                        </Grid>
-                    <Grid item xs={12} sm={6} style={{margin: 'auto'}} >
-                            <RegisteredParticipant participant={similar}/>
+                    <Grid item xs={12} sm={9}>
+                        <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} severity="warning">Merk at det allerede finnes en liknende registrering:</Alert>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <RegisteredParticipant participant={similar} className={classes.similar}/>
                     </Grid>
                 </React.Fragment>
             )
         }
         return (
-            <Grid container>
-                <Grid item xs={12} style={{textAlign: 'center'}}>
+            <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item xs={12}>
                     <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
                 </Grid>
-                <Grid item xs={12} sm={6} style={{margin: 'auto'}}>
+                <Grid item xs={12} sm={6}>
                     <RegisteredParticipant participant={participant}/>
                 </Grid>
                 {similarNotification}
-                <Grid container>
+                <Grid container style={{marginTop: '20px'}}>
                     <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleEdit}>Endre</Button></Grid>
                     <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={handleRegister}>Meld på</Button></Grid>
                 </Grid>
