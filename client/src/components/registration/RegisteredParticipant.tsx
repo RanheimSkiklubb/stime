@@ -8,13 +8,14 @@ import Participant from '../../model/participant';
 
 interface Props {
     participant: Participant,
-    email: string
+    email: string,
+    className?: string
 }
 
 const RegisteredParticipant: React.FC<Props> = (props: Props) => {
     return (
         <TableContainer>
-            <Table size="small">
+            <Table size="small" className={props.className}>
                 <TableBody>
                     <TableRow>
                         <TableCell>Fornavn</TableCell>
