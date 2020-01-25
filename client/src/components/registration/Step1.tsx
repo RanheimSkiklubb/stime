@@ -37,45 +37,53 @@ const Step1: React.FC<Props> = (props: Props) => {
 
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.currentTarget.value;
-        setFirstName(value);
-        const newFirstNameValid = value.length > 0;
+        const newFirstName = event.currentTarget.value;
+        setFirstName(newFirstName);
+        const newFirstNameValid = newFirstName.length > 0;
         setFirstNameValid(newFirstNameValid);
-        validate(value);
+        validateForm({firstName: newFirstName});
     };
     const lastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.currentTarget.value;
-        setLastName(value);
-        const newLastNameValid = value.length > 0;
+        const newLastName = event.currentTarget.value;
+        setLastName(newLastName);
+        const newLastNameValid = newLastName.length > 0;
         setLastNameValid(newLastNameValid);
-        validate(undefined, value);
+        validateForm({lastName: newLastName});
     };
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
         const newEventClass = event.target.value as string;
         setEventClass(newEventClass);
         setEventClassValid(newEventClass.length > 0);
-        validate(undefined, undefined, undefined, newEventClass);
+        validateForm({eventClass: newEventClass});
     };
     const clubChange = (newClub: string) => {
         setClub(newClub);
         const newClubValid = !_.isNil(newClub) && newClub.length > 0;
         setClubValid(newClubValid);
-        validate(undefined, undefined, newClub);
+        validateForm({club: newClub});
     };
     const emailChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.currentTarget.value;
-        setEmail(value);
-        const newEmailValid = validateEmail(value) && value.length > 0;
+        const newEmail = event.currentTarget.value;
+        setEmail(newEmail);
+        const newEmailValid = validateEmail(newEmail) && newEmail.length > 0;
         setEmailValid(newEmailValid);
-        validate(undefined, value);
+        validateForm({email: newEmail, emailValid: newEmailValid});
     };
 
     const validateEmail  = (email: string) => {
         return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
     };
 
-    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass, newEmail = email) =>
-        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0 && newEmail.length > 0);
+    const validateForm = (changedValue: any) => {
+        const firstNameValue = changedValue['firstName'] || firstName;
+        const lastNameValue = changedValue['lastName'] || lastName;
+        const clubValue = changedValue['club'] || club;
+        const eventClassValue = changedValue['eventClass'] || eventClass;
+        const emailValue = changedValue['email'] || email;
+        const emailValidValue = changedValue['emailValid'] !== undefined ? changedValue['emailValid'] : emailValid;
+        setFormValid(firstNameValue.length > 0 && lastNameValue.length > 0 && clubValue.length > 0 
+            && eventClassValue.length > 0 && emailValue.length > 0 && emailValidValue);
+    }
 
     const handleNext = () => {
         const participant = new Participant(firstName, lastName, club, eventClass);
@@ -110,7 +118,9 @@ const Step1: React.FC<Props> = (props: Props) => {
                             }}
                             onInputChange={(event: any, newValue: any) => {
                                 tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directly
-                                validate(undefined, undefined, newValue);
+                                const newClubValid = !_.isNil(newValue) && newValue.length > 0;
+                                setClubValid(newClubValid);
+                                validateForm({club: newValue});
                             }}
                             onClose={(event: any) => {
                                 if (tempValue) {
