@@ -21,7 +21,7 @@ import Registration from '../registration/Registration';
 import ParticipantList from './ParticipantList';
 //import StartNumberTab from './StartNumberTab';
 import Club from '../../model/club';
-import firebase from '../Firebase';
+import Firebase from '../Firebase';
 
 interface MatchParams {
     eventId: string
@@ -61,11 +61,11 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        return firebase.subscribeEvent(eventId, setEvent);
+        return Firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
 
     useEffect(() => {
-        return firebase.subscribeClubs(setClubs);
+        return Firebase.subscribeClubs(setClubs);
     }, []);
 
     const useStyles = makeStyles({

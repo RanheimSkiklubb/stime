@@ -11,7 +11,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import Event from '../../model/event';
-import * as firebase from '../Firebase/firebase';
+import Firebase from '../Firebase';
 
 interface State {
     events: Event[]
@@ -23,7 +23,7 @@ const EventListPage: React.FC = (props) => {
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
-        return firebase.subscribeEvents(setEvents);
+        return Firebase.subscribeEvents(setEvents);
     }, []);
 
     return (

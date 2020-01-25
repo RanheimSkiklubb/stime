@@ -14,7 +14,7 @@ import Event from '../../model/event';
 import _ from 'lodash';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
-import firebase from '../Firebase';
+import Firebase from '../Firebase';
 import { compareTwoStrings }  from 'string-similarity';
 
 interface Props {
@@ -72,7 +72,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     };
 
     const validateEmail  = (email: string) => {
-        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
     };
 
     const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass, newEmail = email) =>
@@ -90,8 +90,10 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 name: firstName + " " + lastName,
                 email: email
             };
-            firebase.addParticipant(props.event.id, participant);
-            firebase.addContact(props.event.id, contact);
+            (async () => {
+                const result1 = await Firebase.addParticipant(props.event.id, participant);
+                const result2 = await Firebase.addContact(props.event.id, contact);
+            })();
             setProgress(2);
         }
         catch (error) {
