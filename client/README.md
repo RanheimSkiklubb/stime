@@ -1,4 +1,4 @@
-# STime Client
+# Simple Race Timer Client
 The STime client was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ### Run in development mode
