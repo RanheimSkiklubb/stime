@@ -21,7 +21,7 @@ import Registration from '../registration/Registration';
 import ParticipantList from './ParticipantList';
 //import StartNumberTab from './StartNumberTab';
 import Club from '../../model/club';
-import firebase from '../Firebase';
+import Firebase from '../Firebase';
 
 interface MatchParams {
     eventId: string
@@ -49,23 +49,23 @@ function TabPanel(props: TabPanelProps) {
 
 const EventPage: React.FC<Props> = (props: Props) => {
 
-    const [event, setEvent] = useState<Event>({id: "", name: "", description: "", eventType: "", startTime: new Date(), registrationStart: new Date(), registrationEnd: new Date(), eventClasses:[], participants: []});
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
     const [clubs, setClubs] = useState<Club[]>([]);
     const [tabIndex, setTabIndex] = useState(0);
 
-    const loadEvent = async () => {
-        const eventId = props.match.params.eventId;
-        const event = await firebase.fetchEvent(eventId);
-        setEvent(event);
-    };
+    // const loadEvent = async () => {
+    //     const eventId = props.match.params.eventId;
+    //     //const event: Event = await firebase.fetchEvent(eventId);
+    //     //setEvent(event);
+    // };
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        firebase.subscribeEvent(eventId, setEvent);
+        return Firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
 
     useEffect(() => {
-        firebase.subscribeClubs(setClubs);
+        return Firebase.subscribeClubs(setClubs);
     }, []);
 
     const useStyles = makeStyles({
@@ -77,13 +77,14 @@ const EventPage: React.FC<Props> = (props: Props) => {
       });
 
     const registrationInfo = () => {
-        if (moment().isBefore(event.registrationStart)) {
+        console.log(event);
+        if (!event.registrationStarted()) {
             return (<>Påmeldingen har ikke åpnet</>);
         }
-        if (moment().isAfter(event.registrationEnd)) {
+        if (event.registrationEnded()) {
             return (<>Påmeldingsfristen er ute. Etteranmelding kan gjøres til paamelding@ranheimskiklubb.no</>);
         }
-        return (<><Registration event={event} clubs={clubs} loadEventCallback={loadEvent}/>
+        return (<><Registration event={event} clubs={clubs} />
             <p style={{marginBottom: '0'}}>Frist: {moment(event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p></>);
     }
     const classes = useStyles();

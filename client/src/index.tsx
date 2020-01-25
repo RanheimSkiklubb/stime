@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import { createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import App from './App';
-import firebase from './components/Firebase';
+import Firebase from './components/Firebase';
 
-firebase.init();
+Firebase.init();
 
 const theme = createMuiTheme({
     typography: {

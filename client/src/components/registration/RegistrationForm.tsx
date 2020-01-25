@@ -14,13 +14,12 @@ import Event from '../../model/event';
 import _ from 'lodash';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
-import firebase from '../Firebase';
+import Firebase from '../Firebase';
 import { compareTwoStrings }  from 'string-similarity';
 
 interface Props {
     event: Event,
-    clubs: Club[],
-    loadEventCallback: () => void
+    clubs: Club[]
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -29,11 +28,13 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [club, setClub] = useState('');
+    const [email, setEmail] = useState('');
     const [eventClass, setEventClass] = useState('');
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [clubValid, setClubValid] = useState(true);
     const [eventClassValid, setEventClassValid] = useState(true);
+    const [emailValid, setEmailValid] = useState(true);
     const [formValid, setFormValid] = useState(false);
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,29 +43,40 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         const newFirstNameValid = value.length > 0;
         setFirstNameValid(newFirstNameValid);
         validate(value);
-    }
+    };
     const lastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;
         setLastName(value);
         const newLastNameValid = value.length > 0;
         setLastNameValid(newLastNameValid);
         validate(undefined, value);
-    }
+    };
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
         const newEventClass = event.target.value as string;
         setEventClass(newEventClass);
         setEventClassValid(newEventClass.length > 0);
         validate(undefined, undefined, undefined, newEventClass);
-    }
-    const clubChange = (newClub:string) => {
+    };
+    const clubChange = (newClub: string) => {
         setClub(newClub);
         const newClubValid = !_.isNil(newClub) && newClub.length > 0;
         setClubValid(newClubValid);
         validate(undefined, undefined, newClub);
-    }
+    };
+    const emailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.currentTarget.value;
+        setEmail(value);
+        const newEmailValid = validateEmail(value) && value.length > 0;
+        setEmailValid(newEmailValid);
+        validate(undefined, value);
+    };
 
-    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass) => 
-        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0);
+    const validateEmail  = (email: string) => {
+        return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    };
+
+    const validate = (newFirstName = firstName, newLastName = lastName, newClub = club, newEventClass = eventClass, newEmail = email) =>
+        setFormValid(newFirstName.length > 0 && newLastName.length > 0 && newClub.length > 0 && newEventClass.length > 0 && newEmail.length > 0);
 
     const handleRegister = () => {
         try {
@@ -74,7 +86,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 club: club,
                 eventClass: eventClass
             };
-            firebase.addParticipant(props.event.id, participant);
+            const contact = {
+                name: firstName + " " + lastName,
+                email: email
+            };
+            (async () => {
+                await Firebase.addParticipant(props.event.id, participant);
+                await Firebase.addContact(props.event.id, contact);
+            })();
             setProgress(2);
         }
         catch (error) {
@@ -95,16 +114,18 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange} error={!firstNameValid} />
+                        <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
+                                   error={!firstNameValid}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange} error={!lastNameValid} />
+                        <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange}
+                                   error={!lastNameValid}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                <FormControl fullWidth>
+                    <FormControl fullWidth>
                         <Autocomplete
                             id="club"
                             freeSolo
@@ -114,7 +135,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                                 clubChange(_.isNil(newValue) ? "" : newValue);
                             }}
                             onInputChange={(event: any, newValue: any) => {
-                                tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directlu
+                                tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directly
                                 validate(undefined, undefined, newValue);
                             }}
                             onClose={(event: any) => {
@@ -123,7 +144,9 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                                 }
                             }}
                             renderInput={params => (
-                                <TextField {...params} label="Klubb" margin="normal" fullWidth InputProps={{ ...params.InputProps, type: 'search' }} error={!clubValid} style={{marginTop: '0'}}/>
+                                <TextField {...params} label="Klubb" margin="normal" fullWidth
+                                           InputProps={{...params.InputProps, type: 'search'}} error={!clubValid}
+                                           style={{marginTop: '0'}}/>
                             )}
                         />
                     </FormControl>
@@ -131,15 +154,24 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 <Grid item xs={6}>
                     <FormControl fullWidth>
                         <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
-                        <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass} onChange={eventClassChange} error={!eventClassValid}>
+                        <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
+                                      onChange={eventClassChange} error={!eventClassValid}>
                             <option value=""></option>
-                            {props.event.eventClasses.map(eventClass => (<option value={eventClass.name} key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
+                            {props.event.eventClasses.map(eventClass => (<option value={eventClass.name}
+                                                                                 key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                         </NativeSelect>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}></Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="email" label="Kontakt e-post" value={email} onChange={emailChange}
+                                   error={!emailValid}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}></Grid><Grid item xs={6}></Grid>
                 <Grid item xs={6} style={{textAlign: 'right'}}>
-                    <Button className="float-right" variant="contained" color="primary" onClick={handleNext} disabled={!formValid}>Neste</Button>
+                    <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
+                            disabled={!formValid}>Neste</Button>
                 </Grid>
             </Grid>
         </form>
@@ -182,7 +214,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                         <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} severity="warning">Merk at det allerede finnes en liknende registrering:</Alert>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RegisteredParticipant participant={similar} className={classes.similar}/>
+                        <RegisteredParticipant participant={similar} email={email} className={classes.similar}/>
                     </Grid>
                 </React.Fragment>
             )
@@ -193,7 +225,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                     <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <RegisteredParticipant participant={participant}/>
+                    <RegisteredParticipant participant={participant} email={email}/>
                 </Grid>
                 {similarNotification}
                 <Grid container style={{marginTop: '20px'}}>

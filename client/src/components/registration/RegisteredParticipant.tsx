@@ -8,6 +8,7 @@ import Participant from '../../model/participant';
 
 interface Props {
     participant: Participant,
+    email: string,
     className?: string
 }
 
@@ -31,6 +32,10 @@ const RegisteredParticipant: React.FC<Props> = (props: Props) => {
                     <TableRow>
                         <TableCell>Klasse</TableCell>
                         <TableCell>{props.participant.eventClass}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>E-post</TableCell>
+                        <TableCell>{props.email}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
