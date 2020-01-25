@@ -75,7 +75,7 @@ const fetchEvent = async (eventId: string) =>  {
 
 const addParticipant = async (eventId: string, participant: Participant) => {
     await eventsRef.doc(eventId).update({
-        participants: firebase.firestore.FieldValue.arrayUnion(participant)
+        participants: firebase.firestore.FieldValue.arrayUnion(Object.assign({}, participant)) //Object.assign converts to regular JS object which is required by Firebase
     });
 };
 
