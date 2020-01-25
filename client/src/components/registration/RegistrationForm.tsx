@@ -91,8 +91,8 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 email: email
             };
             (async () => {
-                const result1 = await Firebase.addParticipant(props.event.id, participant);
-                const result2 = await Firebase.addContact(props.event.id, contact);
+                await Firebase.addParticipant(props.event.id, participant);
+                await Firebase.addContact(props.event.id, contact);
             })();
             setProgress(2);
         }
@@ -205,7 +205,6 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const step1 = () => {
         const participant = {firstName, lastName, club, eventClass};
-        const contact = {name: firstName + ' ' + lastName, email};
         const similar = lookForSimilarRegistrations(participant, props.event);
         let similarNotification = null;
         if (similar) {
