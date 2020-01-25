@@ -77,7 +77,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
       });
 
     const registrationInfo = () => {
-        console.log(event);
         if (!event.registrationStarted()) {
             return (<>Påmeldingen har ikke åpnet</>);
         }

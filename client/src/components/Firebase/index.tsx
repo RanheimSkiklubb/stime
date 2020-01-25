@@ -69,7 +69,6 @@ const fetchEvents = async () => {
 
 const fetchEvent = async (eventId: string) =>  {
     const eventBody = await eventsRef.doc(eventId).get();
-    console.log(eventBody);
     return eventBody.data();
 };
 
@@ -85,7 +84,7 @@ const addContact = async (eventId: string, contact: any) => {
             contacts: firebase.firestore.FieldValue.arrayUnion(contact)
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         await contactRef.doc(eventId).set({
             contacts: firebase.firestore.FieldValue.arrayUnion(contact)
         });
