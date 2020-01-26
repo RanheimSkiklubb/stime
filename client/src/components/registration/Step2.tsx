@@ -50,10 +50,10 @@ const Step2: React.FC<Props> = (props: Props) => {
     if (similar) {
         similarNotification = (
             <React.Fragment>
-                <Grid item xs={12} sm={9}>
+                <Grid item xs={12}>
                     <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} severity="warning">Merk at det allerede finnes en liknende registrering:</Alert>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                     <RegisteredParticipant participant={similar} email="***@***.***" className={classes.similar}/>
                 </Grid>
             </React.Fragment>
@@ -64,7 +64,7 @@ const Step2: React.FC<Props> = (props: Props) => {
             <Grid item xs={12}>
                 <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
                 <RegisteredParticipant participant={props.participant} email={props.email}/>
             </Grid>
             {similarNotification}

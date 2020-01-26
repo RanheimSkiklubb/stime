@@ -146,14 +146,13 @@ const Step1: React.FC<Props> = (props: Props) => {
                         </NativeSelect>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
                         <TextField id="email" label="Kontakt e-post" value={email} onChange={emailChange}
                                 error={!emailValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}></Grid><Grid item xs={6}></Grid>
-                <Grid item xs={6} style={{textAlign: 'right'}}>
+                <Grid item xs={12} style={{textAlign: 'right'}}>
                     <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
                             disabled={!formValid}>Neste</Button>
                 </Grid>
