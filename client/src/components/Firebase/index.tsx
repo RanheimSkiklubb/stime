@@ -78,6 +78,12 @@ const addParticipant = async (eventId: string, participant: Participant) => {
     });
 };
 
+const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) => {
+    await eventsRef.doc(eventId).update({
+        eventClasses: eventClasses.map(ec => Object.assign({}, ec))
+    });
+};
+
 const addContact = async (eventId: string, contact: any) => {
     try {
         await contactRef.doc(eventId).update({
@@ -139,5 +145,6 @@ export default {
     fetchEvents,
     fetchEvent,
     addParticipant,
-    addContact
+    addContact,
+    updateEventClasses
 }

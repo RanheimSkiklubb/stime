@@ -156,7 +156,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                 <ParticipantList event={event}/>
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
-                <StartNumberTab eventClasses={event.eventClasses}/>
+                <StartNumberTab event={event}/>
             </TabPanel>
         </React.Fragment>
     );
