@@ -54,7 +54,8 @@ const subscribeEvent = (eventId: string, callback: any) => {
 const subscribeClubs = (callback: any) => {
     clubsRef.onSnapshot(querySnapshot => {
         const clubs = querySnapshot.docs.map(d => d.data());
-        callback(clubs);
+        const sortedClubs = _.sortBy(clubs, 'name');
+        callback(sortedClubs);
     });
 };
 
