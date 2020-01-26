@@ -19,7 +19,7 @@ import moment from 'moment';
 
 import Registration from '../registration/Registration';
 import ParticipantList from './ParticipantList';
-//import StartNumberTab from './StartNumberTab';
+import StartNumberTab from './StartNumberTab';
 import Club from '../../model/club';
 import Firebase from '../Firebase';
 
@@ -146,7 +146,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Informasjon"/>
                     <Tab label={`Deltakerliste (${event.participants.length})`}/>
-                    {/* <Tab label="Admin: startnummer"/> */}
+                    <Tab label="Admin: startnummer"/>
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIndex} index={0}>
@@ -155,9 +155,9 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <TabPanel value={tabIndex} index={1}>
                 <ParticipantList event={event}/>
             </TabPanel>
-            {/* <TabPanel value={tabIndex} index={2}>
-                <StartNumberTab event={event}/>
-            </TabPanel> */}
+            <TabPanel value={tabIndex} index={2}>
+                <StartNumberTab eventClasses={event.eventClasses}/>
+            </TabPanel>
         </React.Fragment>
     );
     

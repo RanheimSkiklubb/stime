@@ -1,43 +1,78 @@
 import React from 'react';
-import Event from '../../model/event';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
+import MaterialTable, { Column } from 'material-table';
 import EventClass from '../../model/event-class';
 
 
-interface Props {
-    event: Event;
+
+interface TableState {
+  columns: Array<Column<EventClass>>;
+  data: EventClass[];
 }
 
-const StartNumberTab: React.FC<Props> = (props: Props) => {
+interface Props {
+    eventClasses: EventClass[]
+}
+
+const MaterialTab: React.FC<Props> = (props: Props) => {
+    const [state, setState] = React.useState<TableState>({
+        columns: [
+            { title: 'Klasse', field: 'name'},
+            { title: 'Løype', field: 'course'},
+            { title: 'Intervall', field: 'startInterval', lookup: {15: 15, 30: 30, 60: 60}},
+            { title: 'Ant. resevernummer', field: 'reserveNumber', type: 'numeric'}
+        ],
+        data: props.eventClasses,
+      });
 
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Klasse</TableCell>
-                        <TableCell>Intervall</TableCell>
-                        <TableCell>Ant. reservenummer</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {props.event.eventClasses.map((ec:EventClass, idx:number) => 
-                    <TableRow key={idx}>
-                        <TableCell>{`${ec.name} (${ec.course})`}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>)}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <MaterialTable
+            title="Editable Example"
+            columns={state.columns}
+            data={state.data}
+            options={{
+                sorting: true,
+                paging: false,
+                search: false
+            }}
+            editable={{
+                onRowAdd: newData =>
+                new Promise(resolve => {
+                    setTimeout(() => {
+                    resolve();
+                    setState(prevState => {
+                        const data = [...prevState.data];
+                        data.push(newData);
+                        return { ...prevState, data };
+                    });
+                    }, 600);
+                }),
+                onRowUpdate: (newData, oldData) =>
+                new Promise(resolve => {
+                    setTimeout(() => {
+                    resolve();
+                    if (oldData) {
+                        setState(prevState => {
+                        const data = [...prevState.data];
+                        data[data.indexOf(oldData)] = newData;
+                        return { ...prevState, data };
+                        });
+                    }
+                    }, 600);
+                }),
+                onRowDelete: oldData =>
+                new Promise(resolve => {
+                    setTimeout(() => {
+                    resolve();
+                    setState(prevState => {
+                        const data = [...prevState.data];
+                        data.splice(data.indexOf(oldData), 1);
+                        return { ...prevState, data };
+                    });
+                    }, 600);
+                }),
+            }}
+        />
     );
-    
 }
 
-export default StartNumberTab;
+export default MaterialTab;

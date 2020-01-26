@@ -114,7 +114,7 @@ const eventConverter = {
             data.startTime,
             data.registrationStart,
             data.registrationEnd,
-            data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description))),
+            data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers))),
             data.participants.map((d: any) => (new Participant(d.firstName, d.lastName, d.club, d.eventClass))));
     }
 };
