@@ -17,9 +17,8 @@ import EventClass from '../../model/event-class';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import Registration from '../registration/Registration';
+import RegistrationInfo from './RegistrationInfo';
 import ParticipantList from './ParticipantList';
-//import StartNumberTab from './StartNumberTab';
 import Club from '../../model/club';
 import Firebase from '../Firebase';
 
@@ -53,12 +52,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
     const [clubs, setClubs] = useState<Club[]>([]);
     const [tabIndex, setTabIndex] = useState(0);
 
-    // const loadEvent = async () => {
-    //     const eventId = props.match.params.eventId;
-    //     //const event: Event = await firebase.fetchEvent(eventId);
-    //     //setEvent(event);
-    // };
-
     useEffect(() => {
         const eventId = props.match.params.eventId;
         return Firebase.subscribeEvent(eventId, setEvent);
@@ -76,16 +69,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
         },
       });
 
-    const registrationInfo = () => {
-        if (!event.registrationStarted()) {
-            return (<>Påmeldingen har ikke åpnet</>);
-        }
-        if (event.registrationEnded()) {
-            return (<>Påmeldingsfristen er ute. Etteranmelding kan gjøres til paamelding@ranheimskiklubb.no</>);
-        }
-        return (<><Registration event={event} clubs={clubs} />
-            <p style={{marginBottom: '0'}}>Frist: {moment(event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p></>);
-    }
     const classes = useStyles();
     const infoTab = (
         <React.Fragment>
@@ -94,17 +77,12 @@ const EventPage: React.FC<Props> = (props: Props) => {
                     <TableContainer component={Paper}>
                         <Table className={classes.infoTable}>
                             <TableBody>
+                                <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.name}</TableCell></TableRow>
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.description}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
                                 <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell>{event.description}</TableCell></TableRow>
-                                <TableRow>
-                                    <TableCell>Påmelding:</TableCell>
-                                    <TableCell>
-                                        {registrationInfo()}
-                                    </TableCell>
-                                </TableRow>
+                                <RegistrationInfo event={event} clubs={clubs}/>
                             </TableBody>
                         </Table>
                     </TableContainer>
