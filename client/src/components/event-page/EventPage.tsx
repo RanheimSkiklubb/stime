@@ -63,9 +63,13 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     const useStyles = makeStyles({
         infoTable: {
-          '& td': {
-              verticalAlign: "top"
-          }
+            '& td': {
+                verticalAlign: "top"
+            },
+            '& ul': {
+                margin: "0",
+                padding: "0 0 0 16px"
+            }
         },
       });
 
@@ -82,7 +86,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span dangerouslySetInnerHTML={description}/></TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{marginTop: "0"}} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={event} clubs={clubs}/>
                             </TableBody>
                         </Table>
