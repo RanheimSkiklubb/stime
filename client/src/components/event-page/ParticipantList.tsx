@@ -39,6 +39,7 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
                 paging: false,
                 padding: "dense"
             }}
+            style={{marginBottom: '10px'}}
         />
 
 
