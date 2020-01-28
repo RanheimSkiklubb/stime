@@ -70,6 +70,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
       });
 
     const classes = useStyles();
+    const description = {__html: event.description}
     const infoTab = (
         <React.Fragment>
             <Grid container spacing={2}>
@@ -81,7 +82,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell>{event.description}</TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={event} clubs={clubs}/>
                             </TableBody>
                         </Table>
