@@ -20,7 +20,7 @@ const MaterialTab: React.FC<Props> = (props: Props) => {
             { title: 'Klasse', field: 'name'},
             { title: 'Løype', field: 'course'},
             { title: 'Intervall', field: 'startInterval', lookup: {15: 15, 30: 30, 60: 60}},
-            { title: 'Ant. resevernummer', field: 'reserveNumber', type: 'numeric'}
+            { title: 'Ant. resevernummer', field: 'reserveNumbers', type: 'numeric'}
         ],
         data: props.event.eventClasses,
       });
