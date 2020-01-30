@@ -54,7 +54,8 @@ const subscribeEvent = (eventId: string, callback: any) => {
 const subscribeClubs = (callback: any) => {
     clubsRef.onSnapshot(querySnapshot => {
         const clubs = querySnapshot.docs.map(d => d.data());
-        callback(clubs);
+        const sortedClubs = _.sortBy(clubs, 'name');
+        callback(sortedClubs);
     });
 };
 
@@ -103,9 +104,9 @@ const eventConverter = {
             name: event.name,
             eventType: event.eventType,
             description: event.description,
-            startTime: event.startTime,
-            registrationStart: event.registrationStart,
-            registrationEnd: event.registrationEnd,
+            startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
+            registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
+            registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
             eventClasses: event.eventClasses,
             participants: event.participants
         }
@@ -117,9 +118,9 @@ const eventConverter = {
             data.name,
             data.eventType,
             data.description,
-            data.startTime,
-            data.registrationStart,
-            data.registrationEnd,
+            data.startTime.toDate(),
+            data.registrationStart.toDate(),
+            data.registrationEnd.toDate(),
             data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers))),
             data.participants.map((d: any) => (new Participant(d.firstName, d.lastName, d.club, d.eventClass))));
     }

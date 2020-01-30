@@ -51,7 +51,8 @@ const Step2: React.FC<Props> = (props: Props) => {
         similarNotification = (
             <React.Fragment>
                 <Grid item xs={12}>
-                    <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} severity="warning">Merk at det allerede finnes en liknende registrering:</Alert>
+                    <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} 
+                        severity="warning">Det finnes allerede en liknende påmelding</Alert>
                 </Grid>
                 <Grid item xs={12}>
                     <RegisteredParticipant participant={similar} email="***@***.***" className={classes.similar}/>

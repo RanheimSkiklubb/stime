@@ -25,4 +25,8 @@ export default class Event {
     registrationOpen():boolean {
         return moment().isBetween(this.registrationStart, this.registrationEnd);
     };
+
+    eventEnded():boolean {
+        return moment().isAfter(this.startTime);
+    };
 }
