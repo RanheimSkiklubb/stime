@@ -3,8 +3,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
-import EventListPage from './components/event-list-page/EventListPage'
-import EventPage from './components/event-page/EventPage'
+import EventListPage from './components/event-list-page/EventListPage';
+import EventPage from './components/event-page/EventPage';
+import AdminPage from './components/admin-page/AdminPage';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             <Container maxWidth="lg" className={classes.container}>
                 <Router>
                     <Switch>
+                        <Route path="/admin" component={(props:any) => <AdminPage {...props} />} />
                         <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
                         <Route path="/">
                             <EventListPage/>

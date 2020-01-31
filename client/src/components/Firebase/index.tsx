@@ -1,10 +1,13 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 import _ from 'lodash';
+import React from 'react';
 import Event from "../../model/event";
 import EventClass from "../../model/event-class";
 import Participant from '../../model/participant';
 import Club from "../../model/club";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface FirebaseConfig {
     apiKey ?: String;
@@ -15,7 +18,7 @@ interface FirebaseConfig {
     messagingSenderId ?: String;
 }
 
-const config: FirebaseConfig = {
+export const config: FirebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
     databaseURL: process.env.REACT_APP_DATABASE_URL,
@@ -25,6 +28,7 @@ const config: FirebaseConfig = {
 };
 
 let db: firebase.firestore.Firestore;
+let auth: firebase.auth.Auth;
 let eventsRef: firebase.firestore.CollectionReference;
 let clubsRef: firebase.firestore.CollectionReference;
 let contactRef: firebase.firestore.CollectionReference;
@@ -32,9 +36,46 @@ let contactRef: firebase.firestore.CollectionReference;
 const init = () => {
     firebase.initializeApp(config);
     db = firebase.firestore();
+    auth = firebase.auth();
     eventsRef = db.collection('events').withConverter(eventConverter);
     clubsRef = db.collection('clubs').withConverter(clubConverter);
     contactRef = db.collection('contact-info');
+};
+
+const login = async () => {
+    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(googleAuthProvider);
+};
+
+const logout = async () => {
+    await auth.signOut();
+};
+
+export const AdminLogin: React.FC = () => {
+    const [user, initialising, error] = useAuthState(auth);
+    if (initialising) {
+        return (
+            <div>
+                <p>Initialising User...</p>
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div>
+                <p>Error: {error}</p>
+            </div>
+        );
+    }
+    if (user) {
+        return (
+            <div>
+                <p>Logged in as {user.displayName}</p>
+                <button onClick={logout}>Log out</button>
+            </div>
+        );
+    }
+    return <button onClick={login}>Log in</button>;
 };
 
 const subscribeEvents = (callback: any) => {
@@ -134,6 +175,8 @@ const clubConverter = {
 
 export default {
     init,
+    login,
+    logout,
     subscribeEvents,
     subscribeEvent,
     subscribeClubs,
