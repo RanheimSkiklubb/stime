@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
@@ -13,12 +12,12 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Event from '../../model/event';
-import EventClass from '../../model/event-class';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import RegistrationInfo from './RegistrationInfo';
-import ParticipantList from './ParticipantList';
+import RegistrationInfo from '../event-page/RegistrationInfo';
+import ParticipantList from '../event-page/ParticipantList';
+import StartNumberTab from './StartNumberTab';
 import Club from '../../model/club';
 import Firebase from '../Firebase';
 
@@ -34,7 +33,7 @@ interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
     value: any;
-  }
+}
 
 function TabPanel(props: TabPanelProps) {
     const { children, value, index } = props;
@@ -46,7 +45,7 @@ function TabPanel(props: TabPanelProps) {
     );
   }
 
-const EventPage: React.FC<Props> = (props: Props) => {
+const AdminPage: React.FC<Props> = (props: Props) => {
 
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
     const [clubs, setClubs] = useState<Club[]>([]);
@@ -92,28 +91,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
                         </Table>
                     </TableContainer>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <TableContainer component={Paper}>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Klasse</TableCell>
-                                    <TableCell>Løype</TableCell>
-                                    <TableCell>Beskrivelse</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {event.eventClasses.map((ec:EventClass, idx:number) => (
-                                    <TableRow key={ec.name}>
-                                        <TableCell>{ec.name}</TableCell>
-                                        <TableCell>{ec.course}</TableCell>
-                                        <TableCell>{ec.description}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Grid>
             </Grid>
         </React.Fragment>
     );
@@ -124,17 +101,21 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     return (
         <React.Fragment>
-            <h2>{event.name}</h2>
+            <h2>Admin</h2>
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
-                    <Tab label="Informasjon"/>
-                    <Tab label={event.hasStartList ? "Startliste" : `Deltakerliste (${event.participants.length})`}/>
+                    <Tab label="Arrangement"/>
+                    <Tab label="Klasser"/>
+                    <Tab label={event.hasStartList ? "Startliste" : `Deltakere (${event.participants.length})`}/>
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIndex} index={0}>
                 {infoTab}
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
+                <StartNumberTab event={event}/>
+            </TabPanel>
+            <TabPanel value={tabIndex} index={2}>
                 <ParticipantList event={event}/>
             </TabPanel>
         </React.Fragment>
@@ -142,4 +123,4 @@ const EventPage: React.FC<Props> = (props: Props) => {
     
 }
 
-export default EventPage;
+export default AdminPage;
