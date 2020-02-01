@@ -98,6 +98,17 @@ const addContact = async (eventId: string, contact: any) => {
     }
 };
 
+const mapParticipant = (d: any) => {
+    const p:Participant = {firstName: d.firstName, lastName: d.lastName, club: d.club, eventClass: d.eventClass};
+    if (d.startTime !== undefined) {
+        p.startTime = d.startTime;
+    }
+    if (d.startNumber !== undefined) {
+        p.startNumber = d.startNumber;
+    }
+    return p;
+}
+
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
         return {
@@ -122,7 +133,7 @@ const eventConverter = {
             data.registrationStart.toDate(),
             data.registrationEnd.toDate(),
             data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers, d.order))),
-            data.participants.map((d: any) => (new Participant(d.firstName, d.lastName, d.club, d.eventClass))));
+            data.participants.map(mapParticipant));
     }
 };
 

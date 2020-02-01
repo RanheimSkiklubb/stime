@@ -4,6 +4,7 @@ import moment from 'moment';
 // import Club from "./club";
 
 export default class Event {
+    hasStartList?: boolean;
     constructor(readonly id: string,
                 readonly name: string,
                 readonly eventType: string,
