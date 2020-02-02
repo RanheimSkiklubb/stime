@@ -16,7 +16,7 @@ import { match } from "react-router-dom";
 import moment from 'moment';
 
 import ParticipantEdit from './ParticipantEdit';
-import StartNumberTab from './StartNumberTab';
+import EventClassEdit from './EventClassEdit';
 import Firebase from '../Firebase';
 
 interface MatchParams {
@@ -238,7 +238,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 {infoTab}
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
-                <StartNumberTab event={event}/>
+                <EventClassEdit event={event}/>
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
                 <ParticipantEdit event={event}/>

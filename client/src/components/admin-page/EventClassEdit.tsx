@@ -22,7 +22,7 @@ const columns: Array<Column<EventClass>> = [
     { title: 'Ant. resevernummer', field: 'reserveNumbers', type: 'numeric'}
 ]
 
-const MaterialTab: React.FC<Props> = (props: Props) => {
+const EventClassEdit: React.FC<Props> = (props: Props) => {
     const data:EventClass[] = props.event.eventClasses;
 
     const moveUp = (index: number) => {
@@ -145,4 +145,4 @@ const MaterialTab: React.FC<Props> = (props: Props) => {
     );
 }
 
-export default MaterialTab;
+export default EventClassEdit;
