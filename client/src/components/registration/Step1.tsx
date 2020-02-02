@@ -86,7 +86,7 @@ const Step1: React.FC<Props> = (props: Props) => {
     }
 
     const handleNext = () => {
-        const participant = new Participant(firstName, lastName, club, eventClass);
+        const participant: Participant = {firstName, lastName, club, eventClass};
         props.nextCallback(participant, email)
     }
 

@@ -128,8 +128,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Informasjon"/>
-                    <Tab label={`Deltakerliste (${event.participants.length})`}/>
-                    {/* <Tab label="Admin: startnummer"/> */}
+                    <Tab label={event.startListPublished ? "Startliste" : `Deltakerliste (${event.participants.length})`}/>
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIndex} index={0}>
@@ -138,9 +137,6 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <TabPanel value={tabIndex} index={1}>
                 <ParticipantList event={event}/>
             </TabPanel>
-            {/* <TabPanel value={tabIndex} index={2}>
-                <StartNumberTab event={event}/>
-            </TabPanel> */}
         </React.Fragment>
     );
     

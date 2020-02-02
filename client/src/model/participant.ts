@@ -1,7 +1,8 @@
-export default class Participant {
-    constructor(
-        readonly firstName: string,
-        readonly lastName: string,
-        readonly club: string,
-        readonly eventClass: string) {}
+export default interface Participant {
+    startNumber?: number;
+    startTime?: string;
+    firstName: string;
+    lastName: string;
+    club: string;
+    eventClass: string;
 }

@@ -40,10 +40,6 @@ const RegistrationInfo: React.FC<Props> = (props: Props) => {
                     <Registration event={props.event} clubs={props.clubs} />
                 </TableCell>
             </TableRow>
-            {/* <TableRow>
-                <TableCell>Påmelding:</TableCell>
-                <TableCell><Registration event={props.event} clubs={props.clubs} /></TableCell>
-            </TableRow> */}
         </>
     );
 }
