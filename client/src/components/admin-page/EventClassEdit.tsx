@@ -5,9 +5,7 @@ import Firebase from '../Firebase';
 import Event from '../../model/event';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import Button from '@material-ui/core/Button';
 import _ from 'lodash';
-import moment from 'moment';
 
 interface Props {
     event: Event
@@ -57,26 +55,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
 
     const maxOrder = _.max(data.map(ec => ec.order)) || 0;
 
-    const handleGenerate = () => {
-        const participants = props.event.participants;
-        let startNumber = 1;
-        let startTime = moment(props.event.startTime);
-        for (let eventClass of props.event.eventClasses) {
-            const participantsInClass = _.shuffle(participants.filter(p => p.eventClass === eventClass.name));
-            for (let p of participantsInClass) {
-                p.startNumber = startNumber++;
-                p.startTime = startTime.format("HH:mm:ss");
-                startTime = startTime.add(eventClass.startInterval, 's')
-            }
-            startNumber += eventClass.reserveNumbers;
-            startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
-        }
-        props.event.startListGenerated = true;
-        (async () => {
-            Firebase.updateEvent(props.event.id, props.event);
-        })();
-        alert("Startliste generert!");
-    }
+
 
     const typefixInput = (data: any) => {
         data.startInterval = +data.startInterval;
@@ -84,64 +63,61 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <>
-            <MaterialTable
-                title="Klasser"
-                columns={columns}
-                data={_.sortBy(data, 'order')}
-                options={{
-                    sorting: true,
-                    paging: false,
-                    search: false
-                }}
-                actions={[
-                    rowData => ({
-                        icon: () => <ArrowUpwardIcon/>,
-                        tooltip: 'Flytt opp',
-                        onClick: (event, rowData) => moveUp((rowData as EventClass).order),
-                        disabled: (rowData as EventClass).order === 0
+        <MaterialTable
+            title="Klasser"
+            columns={columns}
+            data={_.sortBy(data, 'order')}
+            options={{
+                sorting: true,
+                paging: false,
+                search: false
+            }}
+            actions={[
+                rowData => ({
+                    icon: () => <ArrowUpwardIcon/>,
+                    tooltip: 'Flytt opp',
+                    onClick: (event, rowData) => moveUp((rowData as EventClass).order),
+                    disabled: (rowData as EventClass).order === 0
+                }),
+                rowData => ({
+                    icon: () => <ArrowDownwardIcon/>,
+                    tooltip: 'Flytt ned',
+                    onClick: (event, rowData) => moveDown((rowData as EventClass).order),
+                    disabled: (rowData as EventClass).order === maxOrder
+                })
+            ]}
+            editable={{
+                onRowAdd: newData =>
+                    new Promise(resolve => {
+                        resolve();
+                        typefixInput(newData);
+                        newData.order = maxOrder + 1;
+                        data.push(newData);
+                        (async () => {
+                            await Firebase.updateEventClasses(props.event.id, data)
+                        })();
                     }),
-                    rowData => ({
-                        icon: () => <ArrowDownwardIcon/>,
-                        tooltip: 'Flytt ned',
-                        onClick: (event, rowData) => moveDown((rowData as EventClass).order),
-                        disabled: (rowData as EventClass).order === maxOrder
-                    })
-                ]}
-                editable={{
-                    onRowAdd: newData =>
-                        new Promise(resolve => {
-                            resolve();
+                onRowUpdate: async (newData, oldData) =>
+                    new Promise(resolve => {
+                        resolve();
+                        if (oldData) {
                             typefixInput(newData);
-                            newData.order = maxOrder + 1;
-                            data.push(newData);
+                            data[data.indexOf(oldData)] = newData;
                             (async () => {
                                 await Firebase.updateEventClasses(props.event.id, data)
                             })();
-                        }),
-                    onRowUpdate: async (newData, oldData) =>
-                        new Promise(resolve => {
-                            resolve();
-                            if (oldData) {
-                                typefixInput(newData);
-                                data[data.indexOf(oldData)] = newData;
-                                (async () => {
-                                    await Firebase.updateEventClasses(props.event.id, data)
-                                })();
-                            }
-                        }),
-                    onRowDelete: oldData =>
-                        new Promise(resolve => {
-                            resolve();
-                            data.splice(data.indexOf(oldData), 1);
-                            (async () => {
-                                await Firebase.updateEventClasses(props.event.id, data)
-                            })();
-                        }),
-                }}
-            />
-            <Button variant="contained" color="primary" onClick={handleGenerate}>Generer Startliste</Button>
-        </>
+                        }
+                    }),
+                onRowDelete: oldData =>
+                    new Promise(resolve => {
+                        resolve();
+                        data.splice(data.indexOf(oldData), 1);
+                        (async () => {
+                            await Firebase.updateEventClasses(props.event.id, data)
+                        })();
+                    }),
+            }}
+        />
     );
 }
 

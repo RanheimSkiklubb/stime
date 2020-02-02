@@ -92,21 +92,26 @@ const updateParticipants = async (eventId: string, participants: Participant[]) 
 };
 
 const updateEvent = async (eventId: string, event: Event) => {
-    const updateObj: any = {
+    await eventsRef.doc(eventId).update({
         name: event.name,
         eventType: event.eventType,
         description: event.description,
         startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
         registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
-    };
-    if (event.startListGenerated !== undefined) {
-        updateObj["startListGenerated"] = event.startListGenerated;
-    }
-    if (event.startListPublished !== undefined) {
-        updateObj["startListPublished"] = event.startListPublished;
-    }
-    await eventsRef.doc(eventId).update(updateObj);
+    });
+}
+
+const setStartListGenerated = async (eventId:string) => {
+    await eventsRef.doc(eventId).update({
+        startListGenerated: true
+    });
+}
+
+const setStartListPublished = async (eventId:string) => {
+    await eventsRef.doc(eventId).update({
+        startListPublished: true
+    });
 }
 
 const addContact = async (eventId: string, contact: any) => {
@@ -135,7 +140,7 @@ const mapParticipant = (d: any) => {
 
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
-        const updateObj:any = {
+        const updateObj: any = {
             name: event.name,
             eventType: event.eventType,
             description: event.description,
@@ -198,5 +203,7 @@ export default {
     addContact,
     updateEventClasses,
     updateParticipants,
+    setStartListGenerated,
+    setStartListPublished,
     updateEvent
 }
