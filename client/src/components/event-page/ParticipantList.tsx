@@ -16,10 +16,10 @@ interface Row {
 
 const startListColumns = [
     {title: 'Startnr', field: 'startNumber'},
-    {title: 'Starttid', field: 'startTime'},
     {title: 'Name', field: 'name'},
     {title: 'Klubb', field: 'club'},
-    {title: 'Klasse', field: 'eventClass'}
+    {title: 'Klasse', field: 'eventClass'},
+    {title: 'Starttid', field: 'startTime'}
 ];
 
 const participantListColumns = [
@@ -47,9 +47,11 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
             columns = {props.event.startListPublished ? startListColumns : participantListColumns}
             data = {sortedParticipants}
             options={{
-                sorting: true,
+                sorting: props.event.startListPublished ? false: true,
                 paging: false,
-                padding: "dense"
+                padding: "dense",
+                exportButton: true,
+                exportDelimiter: ';'
             }}
             style={{marginBottom: '10px'}}
         />
