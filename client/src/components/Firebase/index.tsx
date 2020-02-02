@@ -85,6 +85,12 @@ const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) =
     });
 };
 
+const updateParticipants = async (eventId: string, participants: Participant[]) => {
+    await eventsRef.doc(eventId).update({
+        participants: participants.map(p => Object.assign({}, p))
+    });
+};
+
 const updateEvent = async (eventId: string, event: Event) => {
     await eventsRef.doc(eventId).update({
         name: event.name,
@@ -170,5 +176,6 @@ export default {
     addParticipant,
     addContact,
     updateEventClasses,
+    updateParticipants,
     updateEvent
 }

@@ -11,7 +11,7 @@ import Event from '../../model/event';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import ParticipantList from '../event-page/ParticipantList';
+import ParticipantEdit from './ParticipantEdit';
 import StartNumberTab from './StartNumberTab';
 import Firebase from '../Firebase';
 
@@ -161,11 +161,6 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="description" label="Arrangementsinfo" value={description} onChange={descriptionChange} />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                    <FormControl fullWidth>
                     <TextField
                         id="registration-start"
                         label="Påmelding åpner"
@@ -190,6 +185,19 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                             shrink: true,
                         }}
                     />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="description" label="Arrangementsinfo" 
+                            value={description} onChange={descriptionChange} 
+                            multiline rows={4}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="has-start-list" label="Startliste generert" 
+                            value={event.hasStartList} />
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
@@ -221,7 +229,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <StartNumberTab event={event}/>
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
-                <ParticipantList event={event}/>
+                <ParticipantEdit event={event}/>
             </TabPanel>
         </React.Fragment>
     );
