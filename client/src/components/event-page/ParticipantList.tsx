@@ -1,5 +1,6 @@
 import React from 'react';
 import Event from '../../model/event';
+import EventClass from '../../model/event-class';
 import _ from 'lodash';
 import MaterialTable from 'material-table';
 
@@ -29,8 +30,11 @@ const participantListColumns = [
 
 const ParticipantList: React.FC<Props> = (props: Props) => {
 
-    const sortMapping: Record<string, number> = {};
-    props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
+    const sortMapping: Record<string, number> = props.event.eventClasses.reduce((p:any, c:EventClass) => {
+        p[c.name] = c.order; 
+        return p
+    }, {});
+
     const participants = props.event.participants.map(p => {
         const name = `${p.firstName} ${p.lastName}`;
         return {startNumber: p.startNumber, startTime: p.startTime, name, club: p.club, eventClass: p.eventClass, sort1: sortMapping[p.eventClass], sort2: name.toLowerCase()};

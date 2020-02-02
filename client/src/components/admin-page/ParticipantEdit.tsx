@@ -4,6 +4,7 @@ import _ from 'lodash';
 import MaterialTable from 'material-table';
 import Firebase from '../Firebase';
 import Participant from '../../model/participant';
+import EventClass from '../../model/event-class';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
 
@@ -38,12 +39,15 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         {title: 'Klasse', field: 'eventClass', lookup: eventClasses}
     ];
 
-
+    const eventClassOrder:any = props.event.eventClasses.reduce((p:any, c:EventClass) => {
+        p[c.name] = c.order; 
+        return p
+    }, {});
 
     const sortMapping: Record<string, number> = {};
     props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
     const participants = props.event.participants;
-    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startNumber") : _.sortBy(participants, ["sort1", "sort2"]);
+    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startNumber") : _.sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
