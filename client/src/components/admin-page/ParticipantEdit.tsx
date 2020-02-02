@@ -88,7 +88,9 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                 options={{
                     sorting: false,
                     paging: false,
-                    padding: "dense"
+                    padding: "dense",
+                    exportButton: true,
+                    exportDelimiter: ';'
                 }}
                 style={{marginBottom: '10px'}}
                 editable={{
