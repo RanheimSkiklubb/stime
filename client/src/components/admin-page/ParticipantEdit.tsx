@@ -122,6 +122,14 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                                     await Firebase.updateParticipants(props.event.id, data)
                                 })();
                             }
+                        }),
+                    onRowDelete: oldData =>
+                        new Promise(resolve => {
+                            resolve();
+                            data.splice(data.indexOf(oldData), 1);
+                            (async () => {
+                                await Firebase.updateParticipants(props.event.id, data)
+                            })();
                         })
                 }}
             />
