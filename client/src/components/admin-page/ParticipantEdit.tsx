@@ -17,23 +17,28 @@ interface Row {
     eventClass: string
 }
 
-const startListColumns = [
-    {title: 'Startnr', field: 'startNumber'},
-    {title: 'Starttid', field: 'startTime'},
-    {title: 'Fornavn', field: 'firstName'},
-    {title: 'Etternavn', field: 'lastName'},
-    {title: 'Klubb', field: 'club'},
-    {title: 'Klasse', field: 'eventClass'}
-];
-
-const participantListColumns = [
-    {title: 'Fornavn', field: 'firstName'},
-    {title: 'Etternavn', field: 'lastName'},
-    {title: 'Klubb', field: 'club'},
-    {title: 'Klasse', field: 'eventClass'}
-];
-
 const ParticipantEdit: React.FC<Props> = (props: Props) => {
+
+    const eventClasses:any = {};
+    props.event.eventClasses.forEach(ec => eventClasses[ec.name] = ec.name);
+
+    const startListColumns = [
+        {title: 'Startnr', field: 'startNumber', type: 'numeric'},
+        {title: 'Starttid', field: 'startTime'},
+        {title: 'Fornavn', field: 'firstName'},
+        {title: 'Etternavn', field: 'lastName'},
+        {title: 'Klubb', field: 'club'},
+        {title: 'Klasse', field: 'eventClass', lookup: eventClasses}
+    ];
+
+    const participantListColumns = [
+        {title: 'Fornavn', field: 'firstName'},
+        {title: 'Etternavn', field: 'lastName'},
+        {title: 'Klubb', field: 'club'},
+        {title: 'Klasse', field: 'eventClass', lookup: eventClasses}
+    ];
+
+
 
     const sortMapping: Record<string, number> = {};
     props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
