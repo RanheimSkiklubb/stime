@@ -85,6 +85,17 @@ const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) =
     });
 };
 
+const updateEvent = async (eventId: string, event: Event) => {
+    await eventsRef.doc(eventId).update({
+        name: event.name,
+        eventType: event.eventType,
+        description: event.description,
+        startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
+        registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
+        registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+    });
+}
+
 const addContact = async (eventId: string, contact: any) => {
     try {
         await contactRef.doc(eventId).update({
@@ -158,5 +169,6 @@ export default {
     fetchEvent,
     addParticipant,
     addContact,
-    updateEventClasses
+    updateEventClasses,
+    updateEvent
 }

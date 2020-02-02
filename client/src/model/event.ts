@@ -5,15 +5,28 @@ import moment from 'moment';
 
 export default class Event {
     hasStartList?: boolean;
+    name: string;
+    eventType: string;
+    description: string;
+    startTime: Date;
+    registrationStart: Date;
+    registrationEnd: Date;
     constructor(readonly id: string,
-                readonly name: string,
-                readonly eventType: string,
-                readonly description: string,
-                readonly startTime: Date,
-                readonly registrationStart: Date,
-                readonly registrationEnd: Date,
+                name: string,
+                eventType: string,
+                description: string,
+                startTime: Date,
+                registrationStart: Date,
+                registrationEnd: Date,
                 readonly eventClasses: EventClass[],
-                readonly participants: Participant[]) {}
+                readonly participants: Participant[]) {
+                    this.name = name;
+                    this.eventType = eventType;
+                    this.description = description;
+                    this.startTime = startTime;
+                    this.registrationStart = registrationStart;
+                    this.registrationEnd = registrationEnd;
+                }
 
     registrationStarted(): boolean {
         return moment().isAfter(this.registrationStart);

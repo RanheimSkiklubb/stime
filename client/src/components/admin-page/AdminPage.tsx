@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { makeStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 import Event from '../../model/event';
 import { match } from "react-router-dom";
 import moment from 'moment';
 
-import RegistrationInfo from '../event-page/RegistrationInfo';
 import ParticipantList from '../event-page/ParticipantList';
 import StartNumberTab from './StartNumberTab';
-import Club from '../../model/club';
 import Firebase from '../Firebase';
 
 interface MatchParams {
@@ -48,50 +42,161 @@ function TabPanel(props: TabPanelProps) {
 const AdminPage: React.FC<Props> = (props: Props) => {
 
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
-    const [clubs, setClubs] = useState<Club[]>([]);
+    const [eventId, setEventId] = useState("");
     const [tabIndex, setTabIndex] = useState(0);
+    const [name, setName] = useState("");
+    const [eventType, setEventType] = useState("");
+    const [description, setDescription] = useState("");
+    const [startTime, setStartTime] = useState(new Date());
+    const [registrationStart, setRegistrationStart] = useState(new Date());
+    const [registrationEnd, setRegistrationEnd] = useState(new Date());
+
+    const loadEvent = (e: Event) => {
+        setEvent(e);
+        setName(e.name);
+        setEventType(e.eventType);
+        setDescription(e.description);
+        setStartTime(e.startTime);
+        setRegistrationStart(e.registrationStart);
+        setRegistrationEnd(e.registrationEnd);
+    }
+
+
+    const nameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newName = e.currentTarget.value;
+        setName(newName);
+    };
+
+    const eventTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newEventType = e.currentTarget.value;
+        setEventType(newEventType);
+    };
+
+    const descriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newDescription = e.currentTarget.value;
+        setDescription(newDescription);
+    };
+
+    const startDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartTime = `${e.currentTarget.value}T${moment(startTime).format("HH:mm")}`;
+        setStartTime(new Date(newStartTime));
+    };
+
+    const startTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartTime = `${moment(startTime).format("YYYY-MM-DD")}T${e.currentTarget.value}`;
+        setStartTime(new Date(newStartTime));
+    };
+
+    const registrationStartChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newRegistrationStart = e.currentTarget.value;
+        setRegistrationStart(new Date(newRegistrationStart));
+    };
+
+    const registrationEndChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newRegistrationEnd = e.currentTarget.value;
+        setRegistrationEnd(new Date(newRegistrationEnd));
+    };
+
+    const saveEvent = () => {
+        event.name = name;
+        event.eventType = eventType;
+        event.description = description;
+        event.startTime = startTime;
+        event.registrationStart = registrationStart;
+        event.registrationEnd = registrationEnd;
+        Firebase.updateEvent(eventId, event);
+    }
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        return Firebase.subscribeEvent(eventId, setEvent);
+        setEventId(eventId);
+        return Firebase.subscribeEvent(eventId, loadEvent);
     }, [props.match]);
 
-    useEffect(() => {
-        return Firebase.subscribeClubs(setClubs);
-    }, []);
-
-    const useStyles = makeStyles({
-        infoTable: {
-            '& td': {
-                verticalAlign: "top"
-            },
-            '& ul': {
-                margin: "0",
-                padding: "0 0 0 16px"
-            }
-        },
-      });
-
-    const classes = useStyles();
-    const description = {__html: event.description}
     const infoTab = (
+        
         <React.Fragment>
+            <form noValidate autoComplete="off">
             <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                    <TableContainer component={Paper}>
-                        <Table className={classes.infoTable}>
-                            <TableBody>
-                                <TableRow><TableCell>Arrangement:</TableCell><TableCell>{event.name}</TableCell></TableRow>
-                                <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
-                                <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
-                                <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{marginTop: "0"}} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
-                                <RegistrationInfo event={event} clubs={clubs}/>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="name" label="Navn" onChange={nameChange} value={name}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField
+                            id="start-date"
+                            label="Dato"
+                            type="date"
+                            value={moment(startTime).format("YYYY-MM-DD")}
+                            onChange={startDateChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="event-type" label="Øvelse" value={eventType} onChange={eventTypeChange}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="start-time"
+                        label="Første start"
+                        type="time"
+                        value={moment(startTime).format("HH:mm")}
+                        onChange={startTimeChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                            inputProps={{
+                            step: 300, // 5 min
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="description" label="Arrangementsinfo" value={description} onChange={descriptionChange} />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="registration-start"
+                        label="Påmelding åpner"
+                        type="datetime-local"
+                        value={moment(registrationStart).format("YYYY-MM-DDTHH:mm")}
+                        onChange={registrationStartChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="registration-end"
+                        label="Påmeldingsfrist"
+                        type="datetime-local"
+                        value={moment(registrationEnd).format("YYYY-MM-DDTHH:mm")}
+                        onChange={registrationEndChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={saveEvent}>Lagre</Button>
                 </Grid>
             </Grid>
+            </form>
         </React.Fragment>
     );
 
