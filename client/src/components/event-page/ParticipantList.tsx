@@ -35,12 +35,12 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
         const name = `${p.firstName} ${p.lastName}`;
         return {startNumber: p.startNumber, startTime: p.startTime, name, club: p.club, eventClass: p.eventClass, sort1: sortMapping[p.eventClass], sort2: name.toLowerCase()};
     });
-    const sortedParticipants = props.event.hasStartList ? _.sortBy(participants, "startNumber") : _.sortBy(participants, ["sort1", "sort2"]);
+    const sortedParticipants = props.event.startListPublished ? _.sortBy(participants, "startNumber") : _.sortBy(participants, ["sort1", "sort2"]);
 
     return (
         <MaterialTable
             title=""
-            columns = {props.event.hasStartList ? startListColumns : participantListColumns}
+            columns = {props.event.startListPublished ? startListColumns : participantListColumns}
             data = {sortedParticipants}
             options={{
                 sorting: true,

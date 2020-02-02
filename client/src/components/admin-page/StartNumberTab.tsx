@@ -71,7 +71,11 @@ const MaterialTab: React.FC<Props> = (props: Props) => {
             startNumber += eventClass.reserveNumbers;
             startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
         }
-        props.event.hasStartList = true;
+        props.event.startListGenerated = true;
+        (async () => {
+            Firebase.updateEvent(props.event.id, props.event);
+        })();
+        alert("Startliste generert!");
     }
 
     const typefixInput = (data: any) => {

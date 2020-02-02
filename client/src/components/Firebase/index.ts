@@ -7,12 +7,12 @@ import Participant from '../../model/participant';
 import Club from "../../model/club";
 
 interface FirebaseConfig {
-    apiKey ?: String;
-    authDomain ?: String;
-    databaseURL ?: String;
-    projectId ?: String;
-    storageBucket ?: String;
-    messagingSenderId ?: String;
+    apiKey?: String;
+    authDomain?: String;
+    databaseURL?: String;
+    projectId?: String;
+    storageBucket?: String;
+    messagingSenderId?: String;
 }
 
 const config: FirebaseConfig = {
@@ -68,7 +68,7 @@ const fetchEvents = async () => {
     }
 };
 
-const fetchEvent = async (eventId: string) =>  {
+const fetchEvent = async (eventId: string) => {
     const eventBody = await eventsRef.doc(eventId).get();
     return eventBody.data();
 };
@@ -92,14 +92,21 @@ const updateParticipants = async (eventId: string, participants: Participant[]) 
 };
 
 const updateEvent = async (eventId: string, event: Event) => {
-    await eventsRef.doc(eventId).update({
+    const updateObj: any = {
         name: event.name,
         eventType: event.eventType,
         description: event.description,
         startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
         registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
-    });
+    };
+    if (event.startListGenerated !== undefined) {
+        updateObj["startListGenerated"] = event.startListGenerated;
+    }
+    if (event.startListPublished !== undefined) {
+        updateObj["startListPublished"] = event.startListPublished;
+    }
+    await eventsRef.doc(eventId).update(updateObj);
 }
 
 const addContact = async (eventId: string, contact: any) => {
@@ -116,7 +123,7 @@ const addContact = async (eventId: string, contact: any) => {
 };
 
 const mapParticipant = (d: any) => {
-    const p:Participant = {firstName: d.firstName, lastName: d.lastName, club: d.club, eventClass: d.eventClass};
+    const p: Participant = { firstName: d.firstName, lastName: d.lastName, club: d.club, eventClass: d.eventClass };
     if (d.startTime !== undefined) {
         p.startTime = d.startTime;
     }
@@ -128,7 +135,7 @@ const mapParticipant = (d: any) => {
 
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
-        return {
+        const updateObj:any = {
             name: event.name,
             eventType: event.eventType,
             description: event.description,
@@ -137,11 +144,18 @@ const eventConverter = {
             registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
             eventClasses: event.eventClasses,
             participants: event.participants
+        };
+        if (event.startListGenerated !== undefined) {
+            updateObj["startListGenerated"] = event.startListGenerated;
         }
+        if (event.startListPublished !== undefined) {
+            updateObj["startListPublished"] = event.startListPublished;
+        }
+        return updateObj
     },
     fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Event {
         const data = snapshot.data();
-        return new Event(
+        const event = new Event(
             snapshot.id,
             data.name,
             data.eventType,
@@ -151,12 +165,19 @@ const eventConverter = {
             data.registrationEnd.toDate(),
             data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers, d.order))),
             data.participants.map(mapParticipant));
+        if (data.startListGenerated !== undefined) {
+            event.startListGenerated = data.startListGenerated;
+        }
+        if (data.startListPublished !== undefined) {
+            event.startListPublished = data.startListPublished;
+        }
+        return event;
     }
 };
 
 const clubConverter = {
     toFirestore(club: Club): firebase.firestore.DocumentData {
-        return {name: club.name, shortName: club.shortName};
+        return { name: club.name, shortName: club.shortName };
     },
     fromFirestore(
         snapshot: firebase.firestore.QueryDocumentSnapshot,

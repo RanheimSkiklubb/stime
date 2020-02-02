@@ -4,7 +4,8 @@ import moment from 'moment';
 // import Club from "./club";
 
 export default class Event {
-    hasStartList?: boolean;
+    startListGenerated?: boolean;
+    startListPublished?: boolean;
     name: string;
     eventType: string;
     description: string;

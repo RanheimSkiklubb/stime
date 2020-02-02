@@ -6,6 +6,10 @@ import Tab from '@material-ui/core/Tab';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 import Event from '../../model/event';
 import { match } from "react-router-dom";
@@ -195,10 +199,18 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <FormControl fullWidth>
-                        <TextField id="has-start-list" label="Startliste generert" 
-                            value={event.hasStartList} />
-                    </FormControl>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Startliste generert</TableCell>
+                                <TableCell>{event.startListGenerated ? "Ja" : "Nei"}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Startliste publisert</TableCell>
+                                <TableCell>{event.startListPublished ? "Ja" : "Nei"}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </Grid>
                 <Grid item xs={12}>
                     <Button variant="contained" color="primary" onClick={saveEvent}>Lagre</Button>
@@ -219,7 +231,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Arrangement"/>
                     <Tab label="Klasser"/>
-                    <Tab label={event.hasStartList ? "Startliste" : `Deltakere (${event.participants.length})`}/>
+                    <Tab label={`Deltakere (${event.participants.length})`}/>
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIndex} index={0}>

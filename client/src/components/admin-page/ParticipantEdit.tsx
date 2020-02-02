@@ -36,7 +36,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     const sortMapping: Record<string, number> = {};
     props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
     const participants = props.event.participants;
-    const sortedParticipants = props.event.hasStartList ? _.sortBy(participants, "startNumber") : _.sortBy(participants, ["sort1", "sort2"]);
+    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startNumber") : _.sortBy(participants, ["sort1", "sort2"]);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
@@ -48,7 +48,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     return (
         <MaterialTable
             title=""
-            columns = {props.event.hasStartList ? startListColumns : participantListColumns}
+            columns = {props.event.startListGenerated ? startListColumns : participantListColumns}
             data = {data}
             options={{
                 sorting: false,
