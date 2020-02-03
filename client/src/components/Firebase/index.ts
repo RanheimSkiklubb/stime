@@ -37,6 +37,14 @@ const init = () => {
     contactRef = db.collection('contact-info');
 };
 
+const removeUndefinedProps = (obj:any) => 
+    Object.keys(obj).reduce((result:any, key:any) => {
+        if (obj[key] !== undefined) {
+            result[key] = obj[key]; 
+        }
+        return result;
+    }, {});
+
 const subscribeEvents = (callback: any) => {
     eventsRef.onSnapshot(querySnapshot => {
         const events = _.sortBy(querySnapshot.docs.map(d => d.data()), 'startTime');
@@ -75,19 +83,19 @@ const fetchEvent = async (eventId: string) => {
 
 const addParticipant = async (eventId: string, participant: Participant) => {
     await eventsRef.doc(eventId).update({
-        participants: firebase.firestore.FieldValue.arrayUnion(Object.assign({}, participant)) //Object.assign converts to regular JS object which is required by Firebase
+        participants: firebase.firestore.FieldValue.arrayUnion(removeUndefinedProps(participant))
     });
 };
 
 const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) => {
     await eventsRef.doc(eventId).update({
-        eventClasses: eventClasses.map(ec => Object.assign({}, ec))
+        eventClasses: eventClasses.map(removeUndefinedProps)
     });
 };
 
 const updateParticipants = async (eventId: string, participants: Participant[]) => {
     await eventsRef.doc(eventId).update({
-        participants: participants.map(p => Object.assign({}, p))
+        participants: participants.map(removeUndefinedProps)
     });
 };
 
@@ -138,25 +146,24 @@ const mapParticipant = (d: any) => {
     return p;
 }
 
+
+
+
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
-        const updateObj: any = {
+        const updateObj: any = removeUndefinedProps({
             name: event.name,
             eventType: event.eventType,
             description: event.description,
             startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
             registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
             registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
-            eventClasses: event.eventClasses,
-            participants: event.participants
-        };
-        if (event.startListGenerated !== undefined) {
-            updateObj["startListGenerated"] = event.startListGenerated;
-        }
-        if (event.startListPublished !== undefined) {
-            updateObj["startListPublished"] = event.startListPublished;
-        }
-        return updateObj
+            eventClasses: event.eventClasses.map(ec => removeUndefinedProps(ec)),
+            participants: event.participants.map(p => removeUndefinedProps(p)),
+            startListGenerated: event.startListGenerated,
+            startListPublished: event.startListPublished
+        });
+        return updateObj;
     },
     fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Event {
         const data = snapshot.data();
