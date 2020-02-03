@@ -48,7 +48,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     const sortMapping: Record<string, number> = {};
     props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
     const participants = props.event.participants;
-    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startNumber") : _.sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
+    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startTime") : _.sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
@@ -89,8 +89,10 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         <>
             <div style={{padding: '10px'}}>
                 {!props.event.startListGenerated ? <><Registration event={props.event} />&nbsp;</> : null}
-                <Button variant="contained" color="primary" onClick={handleGenerate}>Generer Startliste</Button>&nbsp;
-                <Button variant="contained" color="primary" onClick={handlePublish}>Publiser Startliste</Button>
+                {!props.event.startListPublished ? (<>
+                    <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
+                    <Button variant="contained" color="primary" onClick={handlePublish} >Publiser Startliste</Button>
+                </>) : null}
             </div>
             <MaterialTable
                 title=""
