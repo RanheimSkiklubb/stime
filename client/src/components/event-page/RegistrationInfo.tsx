@@ -2,7 +2,6 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Event from '../../model/event';
-import Club from '../../model/club';
 import moment from 'moment';
 
 import Registration from '../registration/Registration';
@@ -10,7 +9,6 @@ import Registration from '../registration/Registration';
 
 interface Props {
     event: Event,
-    clubs: Club[]
 }
 
 const RegistrationInfo: React.FC<Props> = (props: Props) => {
@@ -37,7 +35,7 @@ const RegistrationInfo: React.FC<Props> = (props: Props) => {
                 <TableCell>Påmeldingsfrist:</TableCell>
                 <TableCell>
                     <p style={{marginTop: '0', marginBottom: '18px'}}>{moment(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
-                    <Registration event={props.event} clubs={props.clubs} />
+                    <Registration event={props.event} />
                 </TableCell>
             </TableRow>
         </>

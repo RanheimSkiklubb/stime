@@ -5,6 +5,7 @@ import MaterialTable from 'material-table';
 import Firebase from '../Firebase';
 import Participant from '../../model/participant';
 import EventClass from '../../model/event-class';
+import Registration from '../registration/Registration';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
 
@@ -87,6 +88,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     return (
         <>
             <div style={{padding: '10px'}}>
+                {!props.event.startListGenerated ? <><Registration event={props.event} />&nbsp;</> : null}
                 <Button variant="contained" color="primary" onClick={handleGenerate}>Generer Startliste</Button>&nbsp;
                 <Button variant="contained" color="primary" onClick={handlePublish}>Publiser Startliste</Button>
             </div>

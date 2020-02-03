@@ -19,7 +19,6 @@ import moment from 'moment';
 
 import RegistrationInfo from './RegistrationInfo';
 import ParticipantList from './ParticipantList';
-import Club from '../../model/club';
 import Firebase from '../Firebase';
 
 interface MatchParams {
@@ -49,17 +48,13 @@ function TabPanel(props: TabPanelProps) {
 const EventPage: React.FC<Props> = (props: Props) => {
 
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
-    const [clubs, setClubs] = useState<Club[]>([]);
+
     const [tabIndex, setTabIndex] = useState(0);
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
         return Firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
-
-    useEffect(() => {
-        return Firebase.subscribeClubs(setClubs);
-    }, []);
 
     const useStyles = makeStyles({
         infoTable: {
@@ -87,7 +82,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
                                 <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{marginTop: "0"}} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
-                                <RegistrationInfo event={event} clubs={clubs}/>
+                                <RegistrationInfo event={event} />
                             </TableBody>
                         </Table>
                     </TableContainer>
