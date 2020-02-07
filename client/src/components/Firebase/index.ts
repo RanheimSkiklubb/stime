@@ -37,13 +37,6 @@ const init = () => {
     contactRef = db.collection('contact-info');
 };
 
-const removeUndefinedProps = (obj:any) => 
-    Object.keys(obj).reduce((result:any, key:any) => {
-        if (obj[key] !== undefined) {
-            result[key] = obj[key]; 
-        }
-        return result;
-    }, {});
 
 const subscribeEvents = (callback: any) => {
     eventsRef.onSnapshot(querySnapshot => {
@@ -83,19 +76,19 @@ const fetchEvent = async (eventId: string) => {
 
 const addParticipant = async (eventId: string, participant: Participant) => {
     await eventsRef.doc(eventId).update({
-        participants: firebase.firestore.FieldValue.arrayUnion(removeUndefinedProps(participant))
+        participants: firebase.firestore.FieldValue.arrayUnion(participant)
     });
 };
 
 const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) => {
     await eventsRef.doc(eventId).update({
-        eventClasses: eventClasses.map(removeUndefinedProps)
+        eventClasses
     });
 };
 
 const updateParticipants = async (eventId: string, participants: Participant[]) => {
     await eventsRef.doc(eventId).update({
-        participants: participants.map(removeUndefinedProps)
+        participants: participants.map(mapParticipant)
     });
 };
 
@@ -110,13 +103,13 @@ const updateEvent = async (eventId: string, event: Event) => {
     });
 }
 
-const setStartListGenerated = async (eventId:string) => {
+const setStartListGenerated = async (eventId: string) => {
     await eventsRef.doc(eventId).update({
         startListGenerated: true
     });
 }
 
-const setStartListPublished = async (eventId:string) => {
+const setStartListPublished = async (eventId: string) => {
     await eventsRef.doc(eventId).update({
         startListPublished: true
     });
@@ -136,34 +129,36 @@ const addContact = async (eventId: string, contact: any) => {
 };
 
 const mapParticipant = (d: any) => {
-    const p: Participant = { firstName: d.firstName, lastName: d.lastName, club: d.club, eventClass: d.eventClass };
-    if (d.startTime !== undefined) {
+    const p: Participant = { 
+        firstName: !_.isNil(d.firstName) ? d.firstName : "", 
+        lastName: !_.isNil(d.lastName) ? d.lastName : "",
+        club: !_.isNil(d.club) ? d.club : "",
+        eventClass: !_.isNil(d.eventClass) ? d.eventClass : ""
+    };
+    if (!_.isNil(d.startTime)) {
         p.startTime = d.startTime;
     }
-    if (d.startNumber !== undefined) {
+    if (!_.isNil(d.startNumber)) {
         p.startNumber = d.startNumber;
     }
     return p;
 }
 
-
-
-
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
-        const updateObj: any = removeUndefinedProps({
+        console.log("for Jørn");
+        return {
             name: event.name,
             eventType: event.eventType,
             description: event.description,
             startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
             registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
             registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
-            eventClasses: event.eventClasses.map(ec => removeUndefinedProps(ec)),
-            participants: event.participants.map(p => removeUndefinedProps(p)),
+            eventClasses: event.eventClasses,
+            participants: event.participants,
             startListGenerated: event.startListGenerated,
             startListPublished: event.startListPublished
-        });
-        return updateObj;
+        };
     },
     fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Event {
         const data = snapshot.data();
