@@ -8,6 +8,7 @@ import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
+import LateRegistration from '../LateRegistration';
 
 interface Props {
     event: Event;
@@ -93,6 +94,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
                     <Button variant="contained" color="primary" onClick={handlePublish} >Publiser Startliste</Button>
                 </>) : null}
+                {props.event.startListPublished ? <LateRegistration event={props.event}/> : null}
             </div>
             <MaterialTable
                 title=""

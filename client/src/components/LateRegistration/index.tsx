@@ -28,9 +28,9 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
     return (
         <React.Fragment>
             <Button variant="contained" color="primary" size="medium" 
-            onClick={handleShow}>Påmelding</Button>
+            onClick={handleShow}>Etteranmelding</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
-                <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
+                <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Etteranmelding</DialogTitle>
                 <DialogContent>
                     <LateRegistrationForm event={props.event} clubs={clubs} />
                 </DialogContent>
