@@ -51,7 +51,16 @@ const AdminPage: React.FC = (props) => {
 
     const history = useHistory();
     const classes = useStyles();
+    const [admin, setAdmin] = useState<boolean>(false);
     const [user, initializing, error] = useAuthState(firebase.auth());
+
+    useEffect(() => {
+        const fetchClaims = async () => {
+            const idTokenResult =  await user?.getIdTokenResult(true);
+            setAdmin(idTokenResult?.claims.admin);
+        };
+        if (user) fetchClaims();
+    }, [user, setAdmin])
 
     const LoginOrUser: React.FC = () => {
         if (initializing) {
@@ -78,23 +87,27 @@ const AdminPage: React.FC = (props) => {
 
     const AdminFunctions: React.FC = () => {
         if (user) {
-            return (
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                    <TableHead></TableHead>
-                    <TableBody>
-                        <TableRow hover key={"Sett opp nytt renn"} onClick={() => history.push('/admin')}>
-                            <TableCell align='center'><PostAdd /></TableCell>
-                            <TableCell><h3>Sett opp nytt renn</h3></TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align='center'><ListAlt /></TableCell>
-                            <TableCell><h3>Lag startliste</h3></TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-                </TableContainer>
-            );
+            console.log(user, admin);
+            if (admin) {
+                return (
+                    <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                            <TableHead></TableHead>
+                            <TableBody>
+                                <TableRow hover key={"Sett opp nytt renn"} onClick={() => history.push('/admin')}>
+                                    <TableCell align='center'><PostAdd/></TableCell>
+                                    <TableCell><h3>Sett opp nytt renn</h3></TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell align='center'><ListAlt/></TableCell>
+                                    <TableCell><h3>Lag startliste</h3></TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                );
+            }
+            return (<div>You need to be admin to see this page.</div>);
         }
         return (<div>Log in to use the administrative functions.</div>);
     };

@@ -44,12 +44,14 @@ const init = () => {
 
 const login = async () => {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(googleAuthProvider);
+    const result = await auth.signInWithPopup(googleAuthProvider);
 };
 
 const logout = async () => {
     await auth.signOut();
 };
+
+
 
 export const AdminLogin: React.FC = () => {
     const [user, initialising, error] = useAuthState(auth);
