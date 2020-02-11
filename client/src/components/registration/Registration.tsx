@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,31 +8,31 @@ import RegistrationForm from './RegistrationForm';
 
 import Event from '../../model/event';
 import Club from '../../model/club';
-import moment from "moment";
+import Firebase from '../Firebase';
 
 
 interface Props {
     event: Event,
-    clubs: Club[]
 }
 
 const Registration: React.FC<Props> = (props: Props) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [clubs, setClubs] = useState<Club[]>([]);
 
-    const registrationOpen = (event: Event):boolean => {
-        return !moment().isBetween(event.registrationStart, event.registrationEnd);
-    };
+    useEffect(() => {
+        return Firebase.subscribeClubs(setClubs);
+    }, []);
 
     return (
         <React.Fragment>
-            <Button variant="contained" disabled={registrationOpen(props.event)} color="primary" size="medium" 
+            <Button variant="contained" color="primary" size="medium" 
             onClick={handleShow}>Påmelding</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Påmelding</DialogTitle>
                 <DialogContent>
-                    <RegistrationForm {...props} />
+                    <RegistrationForm event={props.event} clubs={clubs} />
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>

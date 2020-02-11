@@ -1,58 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import Grid from '@material-ui/core/Grid';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import PostAdd from '@material-ui/icons/PostAdd';
-import ListAlt from '@material-ui/icons/ListAlt';
 
-import { useHistory } from "react-router-dom";
-import moment from 'moment';
 import Event from '../../model/event';
+import {match, useHistory} from "react-router-dom";
+import moment from 'moment';
+
+import ParticipantEdit from './ParticipantEdit';
+import EventClassEdit from './EventClassEdit';
 import Firebase from '../Firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import {useAuthState} from "react-firebase-hooks/auth";
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import {makeStyles} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 
-
-interface State {
-    events: Event[]
+interface MatchParams {
+    eventId: string
 }
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
+interface Props {
+    match: match<MatchParams>
+}
 
-const AdminPage: React.FC = (props) => {
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: any;
+    value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index } = props;
+  
+    return (
+        <div hidden={value !== index}>
+            {value === index && <React.Fragment>{children}</React.Fragment>}
+        </div>
+    );
+  }
+
+const AdminPage: React.FC<Props> = (props: Props) => {
 
     const history = useHistory();
-    const classes = useStyles();
+
     const [admin, setAdmin] = useState<boolean>(false);
     const [user, initializing, error] = useAuthState(firebase.auth());
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
+    const [eventId, setEventId] = useState("");
+    const [tabIndex, setTabIndex] = useState(0);
+    const [name, setName] = useState("");
+    const [eventType, setEventType] = useState("");
+    const [description, setDescription] = useState("");
+    const [startTime, setStartTime] = useState(new Date());
+    const [registrationStart, setRegistrationStart] = useState(new Date());
+    const [registrationEnd, setRegistrationEnd] = useState(new Date());
 
     useEffect(() => {
         const fetchClaims = async () => {
@@ -62,73 +70,207 @@ const AdminPage: React.FC = (props) => {
         if (user) fetchClaims();
     }, [user, setAdmin])
 
-    const LoginOrUser: React.FC = () => {
-        if (initializing) {
-            return (
-                <div>
-                    <p>Initialising User...</p>
-                </div>);
-        }
-        if (error) {
-            return (
-                <div>
-                    <p>Error: {error}</p>
-                </div>);
-        }
-        if (user) {
-            return (
-                <div style={{float: 'right'}}>
-                    Logged in as {user.displayName}
-                    <Button color={"inherit"} onClick={Firebase.logout}>Log out</Button>
-                </div>);
-        }
-        return (<Button color={"inherit"} onClick={Firebase.login}>Log in</Button>);
+    const loadEvent = (e: Event) => {
+        setEvent(e);
+        setName(e.name);
+        setEventType(e.eventType);
+        setDescription(e.description);
+        setStartTime(e.startTime);
+        setRegistrationStart(e.registrationStart);
+        setRegistrationEnd(e.registrationEnd);
+    }
+
+
+    const nameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newName = e.currentTarget.value;
+        setName(newName);
     };
 
-    const AdminFunctions: React.FC = () => {
-        if (user) {
-            console.log(user, admin);
-            if (admin) {
-                return (
-                    <TableContainer component={Paper}>
-                        <Table aria-label="simple table">
-                            <TableHead></TableHead>
-                            <TableBody>
-                                <TableRow hover key={"Sett opp nytt renn"} onClick={() => history.push('/admin')}>
-                                    <TableCell align='center'><PostAdd/></TableCell>
-                                    <TableCell><h3>Sett opp nytt renn</h3></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell align='center'><ListAlt/></TableCell>
-                                    <TableCell><h3>Lag startliste</h3></TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                );
-            }
-            return (<div>You need to be admin to see this page.</div>);
-        }
-        return (<div>Log in to use the administrative functions.</div>);
+    const eventTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newEventType = e.currentTarget.value;
+        setEventType(newEventType);
     };
 
-    return (
+    const descriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newDescription = e.currentTarget.value;
+        setDescription(newDescription);
+    };
+
+    const startDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartTime = `${e.currentTarget.value}T${moment(startTime).format("HH:mm")}`;
+        setStartTime(new Date(newStartTime));
+    };
+
+    const startTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartTime = `${moment(startTime).format("YYYY-MM-DD")}T${e.currentTarget.value}`;
+        setStartTime(new Date(newStartTime));
+    };
+
+    const registrationStartChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newRegistrationStart = e.currentTarget.value;
+        setRegistrationStart(new Date(newRegistrationStart));
+    };
+
+    const registrationEndChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const newRegistrationEnd = e.currentTarget.value;
+        setRegistrationEnd(new Date(newRegistrationEnd));
+    };
+
+    const saveEvent = () => {
+        event.name = name;
+        event.eventType = eventType;
+        event.description = description;
+        event.startTime = startTime;
+        event.registrationStart = registrationStart;
+        event.registrationEnd = registrationEnd;
+        Firebase.updateEvent(eventId, event);
+    }
+
+    useEffect(() => {
+        const eventId = props.match.params.eventId;
+        setEventId(eventId);
+        return Firebase.subscribeEvent(eventId, loadEvent);
+    }, [props.match]);
+
+
+    const infoTab = (
+        
         <React.Fragment>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Administrative functions
-                    </Typography>
-                    <LoginOrUser />
-                </Toolbar>
-            </AppBar>
-            <p></p>
-            <AdminFunctions />
+            <form noValidate autoComplete="off">
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="name" label="Navn" onChange={nameChange} value={name}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField
+                            id="start-date"
+                            label="Dato"
+                            type="date"
+                            value={moment(startTime).format("YYYY-MM-DD")}
+                            onChange={startDateChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="event-type" label="Øvelse" value={eventType} onChange={eventTypeChange}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="start-time"
+                        label="Første start"
+                        type="time"
+                        value={moment(startTime).format("HH:mm")}
+                        onChange={startTimeChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                            inputProps={{
+                            step: 300, // 5 min
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="registration-start"
+                        label="Påmelding åpner"
+                        type="datetime-local"
+                        value={moment(registrationStart).format("YYYY-MM-DDTHH:mm")}
+                        onChange={registrationStartChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                    <TextField
+                        id="registration-end"
+                        label="Påmeldingsfrist"
+                        type="datetime-local"
+                        value={moment(registrationEnd).format("YYYY-MM-DDTHH:mm")}
+                        onChange={registrationEndChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="description" label="Arrangementsinfo" 
+                            value={description} onChange={descriptionChange} 
+                            multiline rows={4}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Startliste generert</TableCell>
+                                <TableCell>{event.startListGenerated ? "Ja" : "Nei"}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Startliste publisert</TableCell>
+                                <TableCell>{event.startListPublished ? "Ja" : "Nei"}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" color="primary" onClick={saveEvent}>Lagre</Button>
+                </Grid>
+            </Grid>
+            </form>
         </React.Fragment>
     );
-};
+
+    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setTabIndex(newValue);
+    };
+
+    if (admin) {
+        return (
+            <React.Fragment>
+                <h2>Admin</h2>
+                <AppBar position="static">
+                    <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
+                        <Tab label="Arrangement"/>
+                        <Tab label="Klasser"/>
+                        <Tab label={`Deltakere (${event.participants.length})`}/>
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={tabIndex} index={0}>
+                    {infoTab}
+                </TabPanel>
+                <TabPanel value={tabIndex} index={1}>
+                    <EventClassEdit event={event}/>
+                </TabPanel>
+                <TabPanel value={tabIndex} index={2}>
+                    <ParticipantEdit event={event}/>
+                </TabPanel>
+            </React.Fragment>
+        );
+    }
+    return (
+        <React.Fragment>
+            <h2>Admin</h2>
+            <div>You need to be an administrator to see this page</div>
+            <div><Button variant="contained" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
+        </React.Fragment>
+    )
+    
+}
 
 export default AdminPage;

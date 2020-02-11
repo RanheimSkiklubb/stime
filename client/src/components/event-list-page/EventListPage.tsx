@@ -6,12 +6,27 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import CheckCircle from '@material-ui/icons/CheckCircle';
-
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Login from '../login/Login';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import {makeStyles} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
+import {CheckCircle} from "@material-ui/icons";
+import {useAuthState} from "react-firebase-hooks/auth";
+import firebase from "firebase";
 
 interface State {
     events: Event[]
@@ -20,15 +35,40 @@ interface State {
 const EventListPage: React.FC = (props) => {
 
     const history = useHistory();
+    const [admin, setAdmin] = useState<boolean>(false);
+    const [user, initializing, error] = useAuthState(firebase.auth());
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
         return Firebase.subscribeEvents(setEvents);
     }, []);
 
+    useEffect(() => {
+        const fetchClaims = async () => {
+            const idTokenResult =  await user?.getIdTokenResult(true);
+            setAdmin(idTokenResult?.claims.admin);
+        };
+        if (user) fetchClaims();
+    }, [user, setAdmin])
+
+    const eventLink = (event: Event): string => {
+        return admin ? `/admin/${event.id}` : `/event/${event.id}`
+
+    };
+
     return (
         <React.Fragment>
-            <h1>Arrangement</h1><br/>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h4" style={{flexGrow: 1}}>
+                        Arrangement
+                    </Typography>
+                    <Login />
+                </Toolbar>
+            </AppBar>
 
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -36,13 +76,13 @@ const EventListPage: React.FC = (props) => {
                         <TableRow>
                             <TableCell align='center' style={{width: '10%'}}>Påmelding åpen</TableCell>
                             <TableCell>Dato</TableCell>
-                            <TableCell>Arrangment</TableCell>
+                            <TableCell>Arrangement</TableCell>
                             <TableCell>Øvelse</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                     {events.map((event:Event) => (
-                        <TableRow hover key={event.name} onClick={() => history.push(`/event/${event.id}`)}>
+                        <TableRow hover key={event.name} onClick={() => history.push(eventLink(event))}>
                             <TableCell align='center'>{event.registrationOpen() ? <CheckCircle style={{ color: 'green' }} /> : <div></div>}</TableCell>
                             <TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
