@@ -12,14 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Login from '../login/Login';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import {makeStyles} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import Event from '../../model/event';
@@ -36,7 +28,7 @@ const EventListPage: React.FC = (props) => {
 
     const history = useHistory();
     const [admin, setAdmin] = useState<boolean>(false);
-    const [user, initializing, error] = useAuthState(firebase.auth());
+    const [user] = useAuthState(firebase.auth());
     const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {

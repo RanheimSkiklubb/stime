@@ -2,12 +2,10 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import _ from 'lodash';
-import React from 'react';
 import Event from "../../model/event";
 import EventClass from "../../model/event-class";
 import Participant from '../../model/participant';
 import Club from "../../model/club";
-import { useAuthState } from 'react-firebase-hooks/auth';
 
 interface FirebaseConfig {
     apiKey?: String;
@@ -44,7 +42,7 @@ const init = () => {
 
 const login = async () => {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(googleAuthProvider);
+    await auth.signInWithPopup(googleAuthProvider);
 };
 
 const logout = async () => {
