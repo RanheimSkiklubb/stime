@@ -20,11 +20,7 @@ import moment from 'moment';
 import RegistrationInfo from './RegistrationInfo';
 import ParticipantList from './ParticipantList';
 import Firebase from '../Firebase';
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
-import Login from "../login/Login";
+import HeaderBar from "../headerbar/HeaderBar";
 
 interface MatchParams {
     eventId: string
@@ -124,17 +120,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     return (
         <React.Fragment>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h4" style={{flexGrow: 1}}>
-                        {event.name}
-                    </Typography>
-                    <Login />
-                </Toolbar>
-            </AppBar>
+            <HeaderBar heading={event.name}/>
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Informasjon"/>

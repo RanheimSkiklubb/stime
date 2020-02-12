@@ -6,12 +6,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Login from '../login/Login';
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import Event from '../../model/event';
@@ -19,6 +13,7 @@ import Firebase from '../Firebase';
 import {CheckCircle} from "@material-ui/icons";
 import {useAuthState} from "react-firebase-hooks/auth";
 import firebase from "firebase";
+import HeaderBar from "../headerbar/HeaderBar";
 
 interface State {
     events: Event[]
@@ -50,18 +45,7 @@ const EventListPage: React.FC = (props) => {
 
     return (
         <React.Fragment>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h4" style={{flexGrow: 1}}>
-                        Arrangement
-                    </Typography>
-                    <Login />
-                </Toolbar>
-            </AppBar>
-
+            <HeaderBar heading="Arrangement" />
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                     <TableHead>

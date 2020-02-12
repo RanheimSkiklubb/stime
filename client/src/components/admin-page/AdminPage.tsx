@@ -26,6 +26,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import Login from "../login/Login";
+import HeaderBar from "../headerbar/HeaderBar";
 
 interface MatchParams {
     eventId: string
@@ -128,13 +129,15 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         event.startTime = startTime;
         event.registrationStart = registrationStart;
         event.registrationEnd = registrationEnd;
-        Firebase.updateEvent(eventId, event);
-    }
+        eventId ? Firebase.updateEvent(eventId, event) : Firebase.addEvent(event);
+    };
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        setEventId(eventId);
-        return Firebase.subscribeEvent(eventId, loadEvent);
+        if (eventId) {
+            setEventId(eventId);
+            return Firebase.subscribeEvent(eventId, loadEvent);
+        }
     }, [props.match]);
 
 
@@ -248,17 +251,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     if (admin) {
         return (
             <React.Fragment>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h4" style={{flexGrow: 1}}>
-                            Edit Event
-                        </Typography>
-                        <Login />
-                    </Toolbar>
-                </AppBar>
+                <HeaderBar heading={eventId ? "Edit Event" : "New Event"}/>
 
                 <AppBar position="static">
                     <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">

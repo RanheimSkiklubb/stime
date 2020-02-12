@@ -23,6 +23,7 @@ const App: React.FC = () => {
                     <Switch>
                         <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
                         <Route path="/admin/:eventId" component={(props:any) => <AdminPage {...props} />} />
+                        <Route path="/admin/" component={(props:any) => <AdminPage {...props} />} />
                         <Route path="/">
                             <EventListPage/>
                         </Route>
