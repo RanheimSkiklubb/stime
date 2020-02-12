@@ -47,7 +47,7 @@ const HeaderBar: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <AppBar position="sticky">
+        <AppBar position="sticky" style={{marginBottom: 10}}>
             <Toolbar>
                 <IconButton edge="start" color="inherit" aria-label="menu-icon" aria-controls="menu" aria-haspopup="true" onClick={handleClick}>
                     <MenuIcon/>
