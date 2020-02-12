@@ -67,9 +67,12 @@ const EventPage: React.FC<Props> = (props: Props) => {
                 padding: "0 0 0 16px"
             }
         },
+        noMargin:  {
+            marginTop: "0",
+        }
       });
 
-    const classes = useStyles();
+    const classes = useStyles({});
     const description = {__html: event.description}
     const infoTab = (
         <React.Fragment>
@@ -82,7 +85,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{marginTop: "0"}} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={event} />
                             </TableBody>
                         </Table>

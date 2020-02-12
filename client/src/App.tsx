@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 });
 
 const App: React.FC = () => {
-    const classes = useStyles();
+    const classes = useStyles({});
     return (
         <React.Fragment>
             <CssBaseline />

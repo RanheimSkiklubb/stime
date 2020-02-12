@@ -1,13 +1,14 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles, Theme} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
 
 import { compareTwoStrings }  from 'string-similarity';
+import {createStyles} from "@material-ui/styles";
 
 interface Props {
     event: Event,
@@ -37,14 +38,18 @@ const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null
 
 const Step2: React.FC<Props> = (props: Props) => {
 
-    const useStyles = makeStyles({
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
         similar: {
             '& td': {
                 color: "grey"
             }
         },
-    });
-    const classes = useStyles();
+        emphasize: {
+            fontWeight: 'bold',
+        },
+    }));
+    const classes = useStyles({});
     const similar = lookForSimilarRegistrations(props.participant, props.event);
     let similarNotification = null;
     if (similar) {
@@ -63,7 +68,7 @@ const Step2: React.FC<Props> = (props: Props) => {
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <Grid item xs={12}>
-                <p style={{fontWeight: 'bold'}}>Du har registrert følgende: </p>
+                <p className={classes.emphasize}>Du har registrert følgende: </p>
             </Grid>
             <Grid item xs={12}>
                 <RegisteredParticipant participant={props.participant} email={props.email}/>

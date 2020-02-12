@@ -14,13 +14,29 @@ import {CheckCircle} from "@material-ui/icons";
 import {useAuthState} from "react-firebase-hooks/auth";
 import firebase from "firebase";
 import HeaderBar from "../headerbar/HeaderBar";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
 
 interface State {
     events: Event[]
 }
 
-const EventListPage: React.FC = (props) => {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+        },
+        narrowCell: {
+            width: '10%',
+        },
+        icon: {
+            color: 'green',
+        },
+    }));
 
+
+const EventListPage: React.FC = (props) => {
+    const classes = useStyles({});
     const history = useHistory();
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(firebase.auth());
@@ -50,7 +66,7 @@ const EventListPage: React.FC = (props) => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align='center' style={{width: '10%'}}>Påmelding åpen</TableCell>
+                            <TableCell align='center' className={classes.narrowCell}>Påmelding åpen</TableCell>
                             <TableCell>Dato</TableCell>
                             <TableCell>Arrangement</TableCell>
                             <TableCell>Øvelse</TableCell>
@@ -59,7 +75,7 @@ const EventListPage: React.FC = (props) => {
                     <TableBody>
                     {events.map((event:Event) => (
                         <TableRow hover key={event.name} onClick={() => history.push(eventLink(event))}>
-                            <TableCell align='center'>{event.registrationOpen() ? <CheckCircle style={{ color: 'green' }} /> : <div></div>}</TableCell>
+                            <TableCell align='center'>{event.registrationOpen() ? <CheckCircle className={classes.icon} /> : <div></div>}</TableCell>
                             <TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell>{event.eventType}</TableCell>

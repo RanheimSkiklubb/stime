@@ -21,12 +21,9 @@ import Firebase from '../Firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import {useAuthState} from "react-firebase-hooks/auth";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
-import Login from "../login/Login";
 import HeaderBar from "../headerbar/HeaderBar";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
 
 interface MatchParams {
     eventId: string
@@ -52,8 +49,22 @@ function TabPanel(props: TabPanelProps) {
     );
   }
 
-const AdminPage: React.FC<Props> = (props: Props) => {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+        },
+        appBar: {
+            marginBottom: theme.spacing(1),
+        },
+        info: {
+            marginTop: 32,
+            fontWeight: "bold",
+        },
+    }));
 
+const AdminPage: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
     const history = useHistory();
 
     const [admin, setAdmin] = useState<boolean>(false);
@@ -253,7 +264,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
             <React.Fragment>
                 <HeaderBar heading={eventId ? "Edit Event" : "New Event"}/>
 
-                <AppBar position="static">
+                <AppBar position="static" className={classes.appBar}>
                     <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                         <Tab label="Arrangement"/>
                         <Tab label="Klasser"/>
@@ -274,20 +285,10 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     }
     return (
         <React.Fragment>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h4" style={{flexGrow: 1}}>
-                        Admin
-                    </Typography>
-                    <Login />
-                </Toolbar>
-            </AppBar>
+            <HeaderBar heading="Admin" />
 
-            <div style={{marginTop: 32, fontWeight: "bold"}}>You need to be an administrator to see this page</div>
-            <div><Button variant="contained" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
+            <div className={classes.info}>You need to be an administrator to see this page</div>
+            <div><Button variant="text" color="primary" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
         </React.Fragment>
     )
     

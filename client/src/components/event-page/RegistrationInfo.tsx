@@ -5,13 +5,25 @@ import Event from '../../model/event';
 import moment from 'moment';
 
 import Registration from '../registration/Registration';
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
 
 
 interface Props {
     event: Event,
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        registrationDate: {
+            marginTop: '0',
+            marginBottom: theme.spacing(3),
+        },
+    }));
+
+
 const RegistrationInfo: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
     if (!props.event.registrationStarted()) {
         return (
             <TableRow>
@@ -34,7 +46,7 @@ const RegistrationInfo: React.FC<Props> = (props: Props) => {
             <TableRow>
                 <TableCell>Påmeldingsfrist:</TableCell>
                 <TableCell>
-                    <p style={{marginTop: '0', marginBottom: '18px'}}>{moment(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
+                    <p className={classes.registrationDate}>{moment(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
                     <Registration event={props.event} />
                 </TableCell>
             </TableRow>

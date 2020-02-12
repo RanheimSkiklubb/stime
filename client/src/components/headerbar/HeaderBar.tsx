@@ -5,7 +5,10 @@ import Typography from "@material-ui/core/Typography";
 import Login from "../login/Login";
 import AppBar from "@material-ui/core/AppBar";
 import React, {useEffect, useState} from "react";
-import {Menu, MenuItem} from "@material-ui/core";
+import {ListItemIcon, Menu, MenuItem} from "@material-ui/core";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
+import {Home, Create} from "@material-ui/icons";
 import {useHistory} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
 import firebase from "firebase";
@@ -14,7 +17,25 @@ interface Props {
     heading: string
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+    root: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+    },
+    appBar: {
+        marginBottom: theme.spacing(1),
+    }
+}));
+
 const HeaderBar: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
+
     const history = useHistory();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [admin, setAdmin] = useState<boolean>(false);
@@ -47,27 +68,49 @@ const HeaderBar: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <AppBar position="sticky" style={{marginBottom: 10}}>
-            <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu-icon" aria-controls="menu" aria-haspopup="true" onClick={handleClick}>
-                    <MenuIcon/>
-                </IconButton>
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={goHome}>Home</MenuItem>
-                    {admin ? <MenuItem onClick={newEvent}>Create event</MenuItem> : <div></div>}
-                </Menu>
-                <Typography variant="h5" style={{flexGrow: 1}}>
-                    {props.heading}
-                </Typography>
-                <Login/>
-            </Toolbar>
-        </AppBar>);
+        <div className={classes.root}>
+            <AppBar position="sticky" className={classes.appBar}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="menu-icon"
+                        aria-controls="menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}>
+                        <MenuIcon/>
+                    </IconButton>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={goHome}>
+                            <ListItemIcon>
+                                <Home />
+                            </ListItemIcon>
+                            Home
+                        </MenuItem>
+                        {admin ?
+                            <MenuItem onClick={newEvent}>
+                                <ListItemIcon>
+                                    <Create />
+                                </ListItemIcon>
+                                Create event
+                            </MenuItem>
+                            :
+                            <div></div>}
+                    </Menu>
+                    <Typography variant="h5" className={classes.title}>
+                        {props.heading}
+                    </Typography>
+                    <Login/>
+                </Toolbar>
+            </AppBar>
+        </div>);
 };
 
 export default HeaderBar;
