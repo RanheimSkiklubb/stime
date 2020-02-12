@@ -49,14 +49,6 @@ const logout = async () => {
     await auth.signOut();
 };
 
-const removeUndefinedProps = (obj:any) =>
-    Object.keys(obj).reduce((result:any, key:any) => {
-        if (obj[key] !== undefined) {
-            result[key] = obj[key]; 
-        }
-        return result;
-    }, {});
-
 const subscribeEvents = (callback: any) => {
     return eventsRef.onSnapshot(querySnapshot => {
         const events = _.sortBy(querySnapshot.docs.map(d => d.data()), 'startTime');
