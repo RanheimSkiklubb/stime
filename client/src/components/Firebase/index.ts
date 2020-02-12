@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/auth';
 import _ from 'lodash';
 import Event from "../../model/event";
 import EventClass from "../../model/event-class";
@@ -15,7 +16,7 @@ interface FirebaseConfig {
     messagingSenderId?: String;
 }
 
-const config: FirebaseConfig = {
+export const config: FirebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
     databaseURL: process.env.REACT_APP_DATABASE_URL,
@@ -25,6 +26,7 @@ const config: FirebaseConfig = {
 };
 
 let db: firebase.firestore.Firestore;
+let auth: firebase.auth.Auth;
 let eventsRef: firebase.firestore.CollectionReference;
 let clubsRef: firebase.firestore.CollectionReference;
 let contactRef: firebase.firestore.CollectionReference;
@@ -32,28 +34,45 @@ let contactRef: firebase.firestore.CollectionReference;
 const init = () => {
     firebase.initializeApp(config);
     db = firebase.firestore();
+    auth = firebase.auth();
     eventsRef = db.collection('events').withConverter(eventConverter);
     clubsRef = db.collection('clubs').withConverter(clubConverter);
     contactRef = db.collection('contact-info');
 };
 
+const login = async () => {
+    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(googleAuthProvider);
+};
+
+const logout = async () => {
+    await auth.signOut();
+};
+
+const removeUndefinedProps = (obj:any) =>
+    Object.keys(obj).reduce((result:any, key:any) => {
+        if (obj[key] !== undefined) {
+            result[key] = obj[key]; 
+        }
+        return result;
+    }, {});
 
 const subscribeEvents = (callback: any) => {
-    eventsRef.onSnapshot(querySnapshot => {
+    return eventsRef.onSnapshot(querySnapshot => {
         const events = _.sortBy(querySnapshot.docs.map(d => d.data()), 'startTime');
         callback(events);
     });
 };
 
 const subscribeEvent = (eventId: string, callback: any) => {
-    eventsRef.doc(eventId).onSnapshot(documentSnapshot => {
+    return eventsRef.doc(eventId).onSnapshot(documentSnapshot => {
         const event = documentSnapshot.data();
         callback(event);
     });
 };
 
 const subscribeClubs = (callback: any) => {
-    clubsRef.onSnapshot(querySnapshot => {
+    return clubsRef.onSnapshot(querySnapshot => {
         const clubs = querySnapshot.docs.map(d => d.data());
         const sortedClubs = _.sortBy(clubs, 'name');
         callback(sortedClubs);
@@ -97,23 +116,38 @@ const updateEvent = async (eventId: string, event: Event) => {
         name: event.name,
         eventType: event.eventType,
         description: event.description,
-        startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
-        registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
-        registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+        startTime: event.startTime, //firebase.firestore.Timestamp.fromDate(event.startTime),
+        registrationStart: event.registrationStart, //firebase.firestore.Timestamp.fromDate(event.registrationStart),
+        registrationEnd: event.registrationEnd, //firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+        eventClasses: event.eventClasses,
+        participants: event.participants
     });
-}
+};
+
+const addEvent = async (event: Event) => {
+    await eventsRef.add({
+        name: event.name,
+        eventType: event.eventType,
+        description: event.description,
+        startTime: event.startTime, // firebase.firestore.Timestamp.fromDate(event.startTime),
+        registrationStart: event.registrationStart, // firebase.firestore.Timestamp.fromDate(event.registrationStart),
+        registrationEnd: event.registrationEnd, // firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+        eventClasses: event.eventClasses,
+        participants: event.participants
+    });
+};
 
 const setStartListGenerated = async (eventId: string) => {
     await eventsRef.doc(eventId).update({
         startListGenerated: true
     });
-}
+};
 
 const setStartListPublished = async (eventId: string) => {
     await eventsRef.doc(eventId).update({
         startListPublished: true
     });
-}
+};
 
 const addContact = async (eventId: string, contact: any) => {
     try {
@@ -142,7 +176,7 @@ const mapParticipant = (d: any) => {
         p.startNumber = d.startNumber;
     }
     return p;
-}
+};
 
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
@@ -196,6 +230,8 @@ const clubConverter = {
 
 export default {
     init,
+    login,
+    logout,
     subscribeEvents,
     subscribeEvent,
     subscribeClubs,
@@ -207,5 +243,6 @@ export default {
     updateParticipants,
     setStartListGenerated,
     setStartListPublished,
-    updateEvent
+    updateEvent,
+    addEvent
 }

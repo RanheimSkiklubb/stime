@@ -8,6 +8,8 @@ import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
 
 interface Props {
     event: Event;
@@ -19,8 +21,15 @@ interface Row {
     eventClass: string
 }
 
-const ParticipantEdit: React.FC<Props> = (props: Props) => {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            padding: theme.spacing(1),
+        },
+    }));
 
+const ParticipantEdit: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
     const eventClasses:any = {};
     props.event.eventClasses.forEach(ec => eventClasses[ec.name] = ec.name);
 
@@ -87,7 +96,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            <div style={{padding: '10px'}}>
+            <div className={classes.root}>
                 {!props.event.startListGenerated ? <><Registration event={props.event} />&nbsp;</> : null}
                 {!props.event.startListPublished ? (<>
                     <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
@@ -105,7 +114,6 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     exportButton: true,
                     exportDelimiter: ';'
                 }}
-                style={{marginBottom: '10px'}}
                 editable={{
                     onRowAdd: newData =>
                         new Promise(resolve => {

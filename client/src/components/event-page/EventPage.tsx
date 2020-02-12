@@ -20,6 +20,7 @@ import moment from 'moment';
 import RegistrationInfo from './RegistrationInfo';
 import ParticipantList from './ParticipantList';
 import Firebase from '../Firebase';
+import HeaderBar from "../headerbar/HeaderBar";
 
 interface MatchParams {
     eventId: string
@@ -66,9 +67,12 @@ const EventPage: React.FC<Props> = (props: Props) => {
                 padding: "0 0 0 16px"
             }
         },
+        noMargin:  {
+            marginTop: "0",
+        }
       });
 
-    const classes = useStyles();
+    const classes = useStyles({});
     const description = {__html: event.description}
     const infoTab = (
         <React.Fragment>
@@ -81,7 +85,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{marginTop: "0"}} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={event} />
                             </TableBody>
                         </Table>
@@ -119,7 +123,7 @@ const EventPage: React.FC<Props> = (props: Props) => {
 
     return (
         <React.Fragment>
-            <h2>{event.name}</h2>
+            <HeaderBar heading={event.name}/>
             <AppBar position="static">
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                     <Tab label="Informasjon"/>

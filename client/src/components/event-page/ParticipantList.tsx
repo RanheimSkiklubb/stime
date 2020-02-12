@@ -53,7 +53,6 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
                 exportButton: true,
                 exportDelimiter: ';'
             }}
-            style={{marginBottom: '10px'}}
         />
 
 

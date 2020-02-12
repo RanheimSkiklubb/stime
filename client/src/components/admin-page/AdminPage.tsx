@@ -12,12 +12,18 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import Event from '../../model/event';
-import { match } from "react-router-dom";
+import {match, useHistory} from "react-router-dom";
 import moment from 'moment';
 
 import ParticipantEdit from './ParticipantEdit';
 import EventClassEdit from './EventClassEdit';
 import Firebase from '../Firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import {useAuthState} from "react-firebase-hooks/auth";
+import HeaderBar from "../headerbar/HeaderBar";
+import {makeStyles, Theme} from "@material-ui/core/styles";
+import {createStyles} from "@material-ui/styles";
 
 interface MatchParams {
     eventId: string
@@ -43,8 +49,26 @@ function TabPanel(props: TabPanelProps) {
     );
   }
 
-const AdminPage: React.FC<Props> = (props: Props) => {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+        },
+        appBar: {
+            marginBottom: theme.spacing(1),
+        },
+        info: {
+            marginTop: 32,
+            fontWeight: "bold",
+        },
+    }));
 
+const AdminPage: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
+    const history = useHistory();
+
+    const [admin, setAdmin] = useState<boolean>(false);
+    const [user] = useAuthState(firebase.auth());
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
     const [eventId, setEventId] = useState("");
     const [tabIndex, setTabIndex] = useState(0);
@@ -54,6 +78,14 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     const [startTime, setStartTime] = useState(new Date());
     const [registrationStart, setRegistrationStart] = useState(new Date());
     const [registrationEnd, setRegistrationEnd] = useState(new Date());
+
+    useEffect(() => {
+        const fetchClaims = async () => {
+            const idTokenResult =  await user?.getIdTokenResult(true);
+            setAdmin(idTokenResult?.claims.admin);
+        };
+        if (user) fetchClaims();
+    }, [user, setAdmin])
 
     const loadEvent = (e: Event) => {
         setEvent(e);
@@ -108,14 +140,17 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         event.startTime = startTime;
         event.registrationStart = registrationStart;
         event.registrationEnd = registrationEnd;
-        Firebase.updateEvent(eventId, event);
-    }
+        eventId ? Firebase.updateEvent(eventId, event) : Firebase.addEvent(event);
+    };
 
     useEffect(() => {
         const eventId = props.match.params.eventId;
-        setEventId(eventId);
-        return Firebase.subscribeEvent(eventId, loadEvent);
+        if (eventId) {
+            setEventId(eventId);
+            return Firebase.subscribeEvent(eventId, loadEvent);
+        }
     }, [props.match]);
+
 
     const infoTab = (
         
@@ -224,27 +259,38 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         setTabIndex(newValue);
     };
 
+    if (admin) {
+        return (
+            <React.Fragment>
+                <HeaderBar heading={eventId ? "Edit Event" : "New Event"}/>
+
+                <AppBar position="static" className={classes.appBar}>
+                    <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
+                        <Tab label="Arrangement"/>
+                        <Tab label="Klasser"/>
+                        <Tab label={`Deltakere (${event.participants.length})`}/>
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={tabIndex} index={0}>
+                    {infoTab}
+                </TabPanel>
+                <TabPanel value={tabIndex} index={1}>
+                    <EventClassEdit event={event}/>
+                </TabPanel>
+                <TabPanel value={tabIndex} index={2}>
+                    <ParticipantEdit event={event}/>
+                </TabPanel>
+            </React.Fragment>
+        );
+    }
     return (
         <React.Fragment>
-            <h2>Admin</h2>
-            <AppBar position="static">
-                <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
-                    <Tab label="Arrangement"/>
-                    <Tab label="Klasser"/>
-                    <Tab label={`Deltakere (${event.participants.length})`}/>
-                </Tabs>
-            </AppBar>
-            <TabPanel value={tabIndex} index={0}>
-                {infoTab}
-            </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
-                <EventClassEdit event={event}/>
-            </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
-                <ParticipantEdit event={event}/>
-            </TabPanel>
+            <HeaderBar heading="Admin" />
+
+            <div className={classes.info}>You need to be an administrator to see this page</div>
+            <div><Button variant="text" color="primary" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
         </React.Fragment>
-    );
+    )
     
 }
 
