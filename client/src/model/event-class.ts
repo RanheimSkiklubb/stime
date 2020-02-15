@@ -1,16 +1,10 @@
-export default class EventClass {
+export default interface EventClass {
     startInterval: number;
     reserveNumbers: number;
     order: number;
-    constructor(
-        readonly name: string,
-        readonly course: string,
-        readonly description: string,
-        startInterval: number,
-        reserveNumbers: number, 
-        order: number) {
-            this.startInterval = startInterval;
-            this.reserveNumbers = reserveNumbers;
-            this.order = order;
-        }
+    name: string;
+    course: string;
+    description: string;
+    firstStartNumber?: number;
+    lastStartNumber?: number 
 }

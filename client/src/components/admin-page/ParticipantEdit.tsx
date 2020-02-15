@@ -63,6 +63,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         let startNumber = 1;
         let startTime = moment(props.event.startTime);
         for (let eventClass of props.event.eventClasses) {
+            eventClass.firstStartNumber = startNumber;
             const participantsInClass = _.shuffle(participants.filter(p => p.eventClass === eventClass.name));
             for (let p of participantsInClass) {
                 p.startNumber = startNumber++;
@@ -70,11 +71,13 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                 startTime = startTime.add(eventClass.startInterval, 's')
             }
             startNumber += eventClass.reserveNumbers;
+            eventClass.lastStartNumber = startNumber;
             startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
         }
         props.event.startListGenerated = true;
         (async () => {
             await Firebase.updateParticipants(props.event.id, props.event.participants);
+            await Firebase.updateEventClasses(props.event.id, props.event.eventClasses)
             await Firebase.setStartListGenerated(props.event.id);
         })();
     }

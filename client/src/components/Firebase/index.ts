@@ -146,6 +146,24 @@ const mapParticipant = (d: any) => {
     return p;
 }
 
+const mapEventClass = (d: any) => {
+    const eventClass: EventClass = {
+        name: d.name, 
+        course: d.course, 
+        description: d.description,
+        order: d.order,
+        startInterval: d.startInterval,
+        reserveNumbers: d.reserveNumbers
+     };
+     if (d.firstStartNumber !== undefined) {
+         eventClass.firstStartNumber = d.firstStartNumber;
+     } 
+     if (d.lastStartNumber !== undefined) {
+         eventClass.lastStartNumber = d.lastStartNumber;
+     } 
+     return eventClass;
+}
+
 
 
 
@@ -175,7 +193,7 @@ const eventConverter = {
             data.startTime.toDate(),
             data.registrationStart.toDate(),
             data.registrationEnd.toDate(),
-            data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers, d.order))),
+            data.eventClasses.map(mapEventClass),
             data.participants.map(mapParticipant));
         if (data.startListGenerated !== undefined) {
             event.startListGenerated = data.startListGenerated;
