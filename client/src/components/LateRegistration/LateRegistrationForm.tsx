@@ -6,6 +6,7 @@ import Participant from '../../model/participant';
 import Firebase from '../Firebase';
 import ParticipantDetails from './ParticipantDetails';
 import SelectClass from './SelectClass';
+import Confirmation from './Confirmation';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -20,12 +21,22 @@ interface StartItem {
     startTime: string;
 }
 
+enum Progress {
+    SelectClass,
+    ParticipantDetails,
+    Confirmation,
+    NoAvailableStartNumbers,
+}
+
 const RegistrationForm: React.FC<Props> = (props: Props) => {
 
-    const [progress, setProgress] = useState(1);
+    const [progress, setProgress] = useState<Progress>(Progress.SelectClass);
     const [eventClass, setEventClass] = useState("");
     const [startTime, setStartTime] = useState("");
     const [startNumber, setStartNumber] = useState(-1);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [club, setClub] = useState("");
     
     const findFirstAvailableStartItem = (eventClassName: string):StartItem|null => {
         const eventClass = props.event.eventClasses.find(ec => ec.name === eventClassName);
@@ -58,39 +69,45 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         setEventClass(eventClassName);
         const startItem = findFirstAvailableStartItem(eventClassName);
         if (!startItem) {
-            setProgress(2);
+            setProgress(Progress.NoAvailableStartNumbers);
         }
         else {
             setStartTime(startItem.startTime);
             setStartNumber(startItem?.startNumber);
-            setProgress(3);
+            setProgress(Progress.ParticipantDetails);
         }
     };
 
     const handleRegister = (participant: Participant) => {
+        setFirstName(participant.firstName);
+        setLastName(participant.lastName);
+        setClub(participant.club);
         try {
             (async () => {
                 await Firebase.addParticipant(props.event.id, participant);
             })();
-            alert("Deltaker påmeldt!");
         }
         catch (error) {
             console.error(error);
         }
-        props.closeCallback();
+        setProgress(Progress.Confirmation);
     }
 
-    if (progress === 1) {
+    if (progress === Progress.SelectClass) {
         return (<SelectClass event={props.event} nextCallback={handleNext}/>)
     }
-    if (progress === 2) {
+    if (progress === Progress.NoAvailableStartNumbers) {
         return (<p>Det er ingen ledige startnummer i klassen. Ta kontakt med sekretæriatet.</p>)
     }
-    else {
+    if (progress === Progress.ParticipantDetails) {
         return (<ParticipantDetails eventClass={eventClass} startNumber={startNumber} 
             startTime={startTime} clubs={props.clubs} registerCallback={handleRegister}
             event={props.event}/>);
     }
+    if (progress === Progress.Confirmation) {
+        return (<Confirmation participant={{firstName, lastName, club, startNumber, startTime, eventClass}}/>)
+    }
+    throw new Error("Illegal state");
 }
 
 export default RegistrationForm;
