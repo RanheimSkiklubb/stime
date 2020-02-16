@@ -32,7 +32,7 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Etteranmelding</DialogTitle>
                 <DialogContent>
-                    <LateRegistrationForm event={props.event} clubs={clubs} />
+                    <LateRegistrationForm event={props.event} clubs={clubs} closeCallback={handleClose}/>
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>

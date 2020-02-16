@@ -73,6 +73,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         let startTime = moment(props.event.startTime);
         for (let eventClass of props.event.eventClasses) {
             eventClass.firstStartNumber = startNumber;
+            eventClass.firstStartTime = startTime.toDate();
             const participantsInClass = _.shuffle(participants.filter(p => p.eventClass === eventClass.name));
             for (let p of participantsInClass) {
                 p.startNumber = startNumber++;
@@ -80,7 +81,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                 startTime = startTime.add(eventClass.startInterval, 's')
             }
             startNumber += eventClass.reserveNumbers;
-            eventClass.lastStartNumber = startNumber;
+            eventClass.lastStartNumber = startNumber - 1;
             startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
         }
         props.event.startListGenerated = true;

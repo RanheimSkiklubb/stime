@@ -6,5 +6,6 @@ export default interface EventClass {
     course: string;
     description: string;
     firstStartNumber?: number;
+    firstStartTime?: Date;
     lastStartNumber?: number 
 }

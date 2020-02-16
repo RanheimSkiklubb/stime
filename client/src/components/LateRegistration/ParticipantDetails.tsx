@@ -72,6 +72,16 @@ const ParticipantDetails: React.FC<Props> = (props: Props) => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
+                        <TextField disabled id="startNumber" label="Startnummer" defaultValue={props.startNumber}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField disabled id="startTime" label="Startnummer" defaultValue={props.startTime}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
                         <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
                                 error={!firstNameValid}/>
                     </FormControl>
