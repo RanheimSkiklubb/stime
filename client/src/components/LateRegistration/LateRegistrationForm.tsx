@@ -8,7 +8,6 @@ import ParticipantDetails from './ParticipantDetails';
 import SelectClass from './SelectClass';
 import Confirmation from './Confirmation';
 import moment from 'moment';
-import _ from 'lodash';
 
 interface Props {
     event: Event,
@@ -50,14 +49,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
                 .add(eventClass.startInterval * (startNumber - firstStartNumber), 's')
                 .format("HH:mm:ss");
         
-        let startItemsForClass = props.event.participants
+        let startNumbersForClass:number[] = props.event.participants
             .filter(p => p.eventClass === eventClassName)
-            .map(p => ({startNumber: p.startNumber, startTime: p.startTime} as StartItem))
-        startItemsForClass = _.sortBy(startItemsForClass, "startNumber");
+            .map<number>(p => p.startNumber || 0)
+            .sort((a, b) => a - b);
 
         let index = 0;        
         for (let i = eventClass.firstStartNumber; i <= lastStartNumber; i++) {
-            if (startItemsForClass[index] === undefined || startItemsForClass[index].startNumber !== i) {
+            if (startNumbersForClass[index] === undefined || startNumbersForClass[index] !== i) {
                 return {startNumber: i, startTime: findStartTime(i)}
             }
             index += 1;
