@@ -4,8 +4,8 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
-
 import Event from '../../model/event';
+import Box from '@material-ui/core/Box';
 
 
 interface Props {
@@ -39,11 +39,11 @@ const SelectClass: React.FC<Props> = (props: Props) => {
                         </NativeSelect>
                     </FormControl>
                 </Grid>
-                <Grid container style={{marginTop: '20px'}}>
-                    <Grid item xs={12} style={{textAlign: 'right'}}>
+                <Grid item xs={12}>
+                    <Box m={2}>
                         <Button variant="contained" color="primary" onClick={handleNext}
                                 disabled={eventClass === ""}>Neste</Button>
-                    </Grid>
+                    </Box>
                 </Grid>
             </Grid>
         </form>

@@ -1,9 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
@@ -17,14 +19,16 @@ interface Props {
     eventClass: string;
     startNumber: number;
     startTime: string;
+    lastName: string;
+    club: string;
     registerCallback: (participant: Participant) => void;
 }
 
 const ParticipantDetails: React.FC<Props> = (props: Props) => {
 
     const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [club, setClub] = useState("");
+    const [lastName, setLastName] = useState(props.lastName);
+    const [club, setClub] = useState(props.club);
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [formValid, setFormValid] = useState(false);
@@ -66,18 +70,36 @@ const ParticipantDetails: React.FC<Props> = (props: Props) => {
         props.registerCallback(participant);
     };
 
+    const useStyles = makeStyles(theme => ({
+        root: {
+            '&$disabled': {
+                color: 'dimgray' 
+            }
+        },
+        disabled: {}
+    }));
+
+    const classes = useStyles();
     let tempValue: string;
     return (
         <form noValidate autoComplete="off">
             <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <FormControl fullWidth>
-                        <TextField disabled id="startNumber" label="Startnummer" defaultValue={props.startNumber}/>
+                        <TextField disabled id="eventClass" label="Klasse" defaultValue={props.eventClass} 
+                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField disabled id="startTime" label="Startnummer" defaultValue={props.startTime}/>
+                        <TextField disabled id="startNumber" label="Startnummer" defaultValue={props.startNumber}
+                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField disabled id="startTime" label="Startnummer" defaultValue={props.startTime}
+                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
@@ -118,10 +140,11 @@ const ParticipantDetails: React.FC<Props> = (props: Props) => {
                         />
                     </FormControl>
                 </Grid>
-                
-                <Grid item xs={12} style={{textAlign: 'right'}}>
-                    <Button className="float-right" variant="contained" color="primary" onClick={handleRegister}
+                <Grid item xs={12} style={{textAlign: 'center'}}>
+                    <Box m={2}>
+                        <Button variant="contained" color="primary" onClick={handleRegister}
                             disabled={!formValid}>Meld på</Button>
+                    </Box>
                 </Grid>
             </Grid>
         </form>

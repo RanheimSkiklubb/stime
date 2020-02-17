@@ -8,9 +8,12 @@ import Participant from '../../model/participant';
 import Grid from '@material-ui/core/Grid';
 import {makeStyles, Theme} from '@material-ui/core/styles';
 import {createStyles} from "@material-ui/styles";
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
 interface Props {
     participant: Participant,
+    registerMoreCallback: () => void
 }
 
 const Confirmation: React.FC<Props> = (props: Props) => {
@@ -60,6 +63,11 @@ const Confirmation: React.FC<Props> = (props: Props) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+            </Grid>
+            <Grid item xs={12}>
+                <Box m={2}>
+                    <Button variant="contained" color="primary" onClick={props.registerMoreCallback}>Meld på flere</Button>
+                </Box>
             </Grid>
         </Grid>
         

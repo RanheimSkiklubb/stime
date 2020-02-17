@@ -93,6 +93,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         setProgress(Progress.Confirmation);
     }
 
+    const handleRegisterMore = () => {
+        setFirstName("");
+        setEventClass("");
+        setStartTime("");
+        setStartNumber(-1);
+        setProgress(Progress.SelectClass);
+    }
+
     if (progress === Progress.SelectClass) {
         return (<SelectClass event={props.event} nextCallback={handleNext}/>)
     }
@@ -101,11 +109,14 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     }
     if (progress === Progress.ParticipantDetails) {
         return (<ParticipantDetails eventClass={eventClass} startNumber={startNumber} 
-            startTime={startTime} clubs={props.clubs} registerCallback={handleRegister}
-            event={props.event}/>);
+            startTime={startTime} clubs={props.clubs} lastName={lastName}
+            club={club} registerCallback={handleRegister} event={props.event}/>);
     }
     if (progress === Progress.Confirmation) {
-        return (<Confirmation participant={{firstName, lastName, club, startNumber, startTime, eventClass}}/>)
+        return (
+            <Confirmation participant={{firstName, lastName, club, startNumber, startTime, eventClass}} 
+                registerMoreCallback={handleRegisterMore}/>
+        )
     }
     throw new Error("Illegal state");
 }
