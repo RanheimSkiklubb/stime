@@ -69,7 +69,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
 
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(firebase.auth());
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), [], []));
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), false, false, [], []));
     const [eventId, setEventId] = useState("");
     const [tabIndex, setTabIndex] = useState(0);
     const [name, setName] = useState("");

@@ -125,7 +125,9 @@ const addEvent = async (event: Event) => {
         registrationStart: event.registrationStart, // firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: event.registrationEnd, // firebase.firestore.Timestamp.fromDate(event.registrationEnd),
         eventClasses: event.eventClasses,
-        participants: event.participants
+        participants: event.participants,
+        startListGenerated: false,
+        startListPublished: false
     });
 };
 
@@ -214,7 +216,6 @@ const mapEventClassFromFirestore = (d: any) => {
 
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
-        console.log("for Jørn");
         return {
             name: event.name,
             eventType: event.eventType,
@@ -238,14 +239,11 @@ const eventConverter = {
             data.startTime.toDate(),
             data.registrationStart.toDate(),
             data.registrationEnd.toDate(),
+            data.startListGenerated,
+            data.startListPublished,
             data.eventClasses.map(mapEventClassFromFirestore),
-            data.participants.map(mapParticipant));
-        if (data.startListGenerated !== undefined) {
-            event.startListGenerated = data.startListGenerated;
-        }
-        if (data.startListPublished !== undefined) {
-            event.startListPublished = data.startListPublished;
-        }
+            data.participants.map(mapParticipant)
+        );
         return event;
     }
 };
