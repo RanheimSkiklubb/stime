@@ -8,6 +8,7 @@ import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
+import LateRegistration from '../LateRegistration';
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
 
@@ -71,6 +72,8 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         let startNumber = 1;
         let startTime = moment(props.event.startTime);
         for (let eventClass of props.event.eventClasses) {
+            eventClass.firstStartNumber = startNumber;
+            eventClass.firstStartTime = startTime.toDate();
             const participantsInClass = _.shuffle(participants.filter(p => p.eventClass === eventClass.name));
             for (let p of participantsInClass) {
                 p.startNumber = startNumber++;
@@ -78,11 +81,13 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                 startTime = startTime.add(eventClass.startInterval, 's')
             }
             startNumber += eventClass.reserveNumbers;
+            eventClass.lastStartNumber = startNumber - 1;
             startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
         }
         props.event.startListGenerated = true;
         (async () => {
             await Firebase.updateParticipants(props.event.id, props.event.participants);
+            await Firebase.updateEventClasses(props.event.id, props.event.eventClasses)
             await Firebase.setStartListGenerated(props.event.id);
         })();
     }
@@ -102,6 +107,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
                     <Button variant="contained" color="primary" onClick={handlePublish} >Publiser Startliste</Button>
                 </>) : null}
+                {props.event.startListPublished ? <LateRegistration event={props.event}/> : null}
             </div>
             <MaterialTable
                 title=""

@@ -1,17 +1,16 @@
 import Participant from './participant';
 import EventClass from './event-class';
 import moment from 'moment';
-// import Club from "./club";
 
 export default class Event {
-    startListGenerated?: boolean;
-    startListPublished?: boolean;
     name: string;
     eventType: string;
     description: string;
     startTime: Date;
     registrationStart: Date;
     registrationEnd: Date;
+    startListGenerated: boolean;
+    startListPublished: boolean;
     constructor(readonly id: string,
                 name: string,
                 eventType: string,
@@ -19,6 +18,8 @@ export default class Event {
                 startTime: Date,
                 registrationStart: Date,
                 registrationEnd: Date,
+                startListGenerated: boolean,
+                startListPublished: boolean,
                 readonly eventClasses: EventClass[],
                 readonly participants: Participant[]) {
                     this.name = name;
@@ -27,6 +28,8 @@ export default class Event {
                     this.startTime = startTime;
                     this.registrationStart = registrationStart;
                     this.registrationEnd = registrationEnd;
+                    this.startListGenerated = startListGenerated;
+                    this.startListPublished = startListPublished;
                 }
 
     registrationStarted(): boolean {
