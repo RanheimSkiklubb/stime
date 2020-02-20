@@ -16,11 +16,17 @@
     ]
   },
   "hosting": {
-    "public": "public",
+    "public": "../client/build",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   },
   "emulators": {
