@@ -17,7 +17,10 @@ const columns: Array<Column<EventClass>> = [
     { title: 'Løype', field: 'course'},
     { title: 'Beskrivelse', field: 'description'},
     { title: 'Intervall', field: 'startInterval', lookup: {15: 15, 30: 30, 60: 60}},
-    { title: 'Ant. resevernummer', field: 'reserveNumbers', type: 'numeric'}
+    { title: 'Ant. resevernummer', field: 'reserveNumbers', type: 'numeric'},
+    { title: 'Første startnummer', field: 'firstStartNumber', type: 'numeric', hidden: true},
+    { title: 'Første starttid', field: 'firstStartTime', type: 'date', hidden: true},
+    { title: 'Siste startnummer', field: 'lastStartNumber', type: 'numeric', hidden: true}
 ]
 
 const EventClassEdit: React.FC<Props> = (props: Props) => {
@@ -60,6 +63,9 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
     const typefixInput = (data: any) => {
         data.startInterval = +data.startInterval;
         data.reserveNumbers = +data.reserveNumbers;
+        if (data.firstStartTime !== undefined) {
+            data.firstStartTime = new Date(data.firstStartTime);
+        }
     }
 
     return (

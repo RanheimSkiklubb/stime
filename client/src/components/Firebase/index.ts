@@ -49,14 +49,6 @@ const logout = async () => {
     await auth.signOut();
 };
 
-const removeUndefinedProps = (obj:any) =>
-    Object.keys(obj).reduce((result:any, key:any) => {
-        if (obj[key] !== undefined) {
-            result[key] = obj[key]; 
-        }
-        return result;
-    }, {});
-
 const subscribeEvents = (callback: any) => {
     return eventsRef.onSnapshot(querySnapshot => {
         const events = _.sortBy(querySnapshot.docs.map(d => d.data()), 'startTime');
@@ -101,7 +93,7 @@ const addParticipant = async (eventId: string, participant: Participant) => {
 
 const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) => {
     await eventsRef.doc(eventId).update({
-        eventClasses
+        eventClasses: eventClasses.map(mapEventClassToFirestore)
     });
 };
 
@@ -176,7 +168,49 @@ const mapParticipant = (d: any) => {
         p.startNumber = d.startNumber;
     }
     return p;
-};
+}
+
+const mapEventClassToFirestore = (eventClass: EventClass) => {
+    const obj:any = {
+        name: eventClass.name, 
+        course: eventClass.course, 
+        description: eventClass.description,
+        order: eventClass.order,
+        startInterval: eventClass.startInterval,
+        reserveNumbers: eventClass.reserveNumbers
+    };
+    if (eventClass.firstStartNumber !== undefined) {
+        obj.firstStartNumber = eventClass.firstStartNumber;
+    } 
+    if (eventClass.firstStartTime !== undefined) {
+        obj.firstStartTime = firebase.firestore.Timestamp.fromDate(eventClass.firstStartTime);
+    } 
+    if (eventClass.lastStartNumber !== undefined) {
+        obj.lastStartNumber = eventClass.lastStartNumber;
+    } 
+     return eventClass;
+}
+
+const mapEventClassFromFirestore = (d: any) => {
+    const eventClass: EventClass = {
+        name: d.name, 
+        course: d.course, 
+        description: d.description,
+        order: d.order,
+        startInterval: d.startInterval,
+        reserveNumbers: d.reserveNumbers
+    };
+    if (d.firstStartNumber !== undefined) {
+        eventClass.firstStartNumber = d.firstStartNumber;
+    } 
+    if (d.firstStartTime !== undefined) {
+        eventClass.firstStartTime = d.firstStartTime.toDate();
+    } 
+    if (d.lastStartNumber !== undefined) {
+        eventClass.lastStartNumber = d.lastStartNumber;
+    } 
+     return eventClass;
+}
 
 const eventConverter = {
     toFirestore(event: Event): firebase.firestore.DocumentData {
@@ -204,7 +238,7 @@ const eventConverter = {
             data.startTime.toDate(),
             data.registrationStart.toDate(),
             data.registrationEnd.toDate(),
-            data.eventClasses.map((d: any) => (new EventClass(d.name, d.course, d.description, d.startInterval, d.reserveNumbers, d.order))),
+            data.eventClasses.map(mapEventClassFromFirestore),
             data.participants.map(mapParticipant));
         if (data.startListGenerated !== undefined) {
             event.startListGenerated = data.startListGenerated;
