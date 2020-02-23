@@ -15,8 +15,8 @@ import Event from '../../model/event';
 import {match, useHistory} from "react-router-dom";
 import moment from 'moment';
 
-import ParticipantEdit from '../ParticipantEdit/ParticipantEdit';
-import EventClassEdit from '../EventClassEdit/EventClassEdit';
+import ParticipantEdit from '../ParticipantEdit';
+import EventClassEdit from '../EventClassEdit';
 import Firebase from '../Firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
