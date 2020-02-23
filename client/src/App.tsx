@@ -3,7 +3,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import EventListPage from './components/event-list-page/EventListPage';
-import EventPage from './components/event-page/EventPage';
+import EventPage from './components/EventPage';
 import AdminPage from './components/admin-page/AdminPage';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 

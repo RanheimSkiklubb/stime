@@ -18,7 +18,7 @@ import { match } from "react-router-dom";
 import moment from 'moment';
 
 import RegistrationInfo from './RegistrationInfo';
-import ParticipantList from '../ParticipantList/ParticipantList';
+import ParticipantList from '../ParticipantList';
 import Firebase from '../Firebase';
 import HeaderBar from "../headerbar/HeaderBar";
 
