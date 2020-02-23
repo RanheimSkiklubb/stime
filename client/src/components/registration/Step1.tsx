@@ -12,7 +12,6 @@ import Event from '../../model/event';
 import _ from 'lodash';
 import Participant from '../../model/participant';
 
-
 interface Props {
     event: Event;
     clubs: Club[];
@@ -30,60 +29,46 @@ const Step1: React.FC<Props> = (props: Props) => {
     const [email, setEmail] = useState(props.email);
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
-    const [clubValid, setClubValid] = useState(true);
     const [eventClassValid, setEventClassValid] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
-    const [formValid, setFormValid] = useState(false);
 
+    const formValid = (firstName.length > 0 && lastName.length > 0 && 
+        eventClass.length > 0 && email.length > 0 && emailValid)
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newFirstName = event.currentTarget.value;
         setFirstName(newFirstName);
         const newFirstNameValid = newFirstName.length > 0;
         setFirstNameValid(newFirstNameValid);
-        validateForm({firstName: newFirstName});
     };
+
     const lastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newLastName = event.currentTarget.value;
         setLastName(newLastName);
         const newLastNameValid = newLastName.length > 0;
         setLastNameValid(newLastNameValid);
-        validateForm({lastName: newLastName});
     };
+
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {
         const newEventClass = event.target.value as string;
         setEventClass(newEventClass);
         setEventClassValid(newEventClass.length > 0);
-        validateForm({eventClass: newEventClass});
     };
+
     const clubChange = (newClub: string) => {
         setClub(newClub);
-        const newClubValid = !_.isNil(newClub) && newClub.length > 0;
-        setClubValid(newClubValid);
-        validateForm({club: newClub});
     };
+
     const emailChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newEmail = event.currentTarget.value;
         setEmail(newEmail);
         const newEmailValid = validateEmail(newEmail) && newEmail.length > 0;
         setEmailValid(newEmailValid);
-        validateForm({email: newEmail, emailValid: newEmailValid});
     };
 
     const validateEmail  = (email: string) => {
         return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
     };
-
-    const validateForm = (changedValue: any) => {
-        const firstNameValue = changedValue['firstName'] || firstName;
-        const lastNameValue = changedValue['lastName'] || lastName;
-        const clubValue = changedValue['club'] || club;
-        const eventClassValue = changedValue['eventClass'] || eventClass;
-        const emailValue = changedValue['email'] || email;
-        const emailValidValue = changedValue['emailValid'] !== undefined ? changedValue['emailValid'] : emailValid;
-        setFormValid(firstNameValue.length > 0 && lastNameValue.length > 0 && clubValue.length > 0 
-            && eventClassValue.length > 0 && emailValue.length > 0 && emailValidValue);
-    }
 
     const handleNext = () => {
         const participant: Participant = {firstName, lastName, club, eventClass};
@@ -96,13 +81,13 @@ const Step1: React.FC<Props> = (props: Props) => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
+                        <TextField required id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
                                 error={!firstNameValid}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange}
+                        <TextField required id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange}
                                 error={!lastNameValid}/>
                     </FormControl>
                 </Grid>
@@ -118,9 +103,6 @@ const Step1: React.FC<Props> = (props: Props) => {
                             }}
                             onInputChange={(event: any, newValue: any) => {
                                 tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directly
-                                const newClubValid = !_.isNil(newValue) && newValue.length > 0;
-                                setClubValid(newClubValid);
-                                validateForm({club: newValue});
                             }}
                             onClose={(event: any) => {
                                 if (tempValue) {
@@ -129,7 +111,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                             }}
                             renderInput={params => (
                                 <TextField {...params} label="Klubb" margin="normal" fullWidth
-                                        InputProps={{...params.InputProps, type: 'search'}} error={!clubValid}
+                                        InputProps={{...params.InputProps, type: 'search'}}
                                         style={{marginTop: '0'}}/>
                             )}
                         />
@@ -137,7 +119,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
+                        <InputLabel required htmlFor="event-class-label">Klasse</InputLabel>
                         <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
                                     onChange={eventClassChange} error={!eventClassValid}>
                             <option value=""></option>
@@ -148,7 +130,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
-                        <TextField id="email" label="Kontakt e-post" value={email} onChange={emailChange}
+                        <TextField required id="email" label="Kontakt e-post" value={email} onChange={emailChange}
                                 error={!emailValid}/>
                     </FormControl>
                 </Grid>
