@@ -107,7 +107,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
                     <Button variant="contained" color="primary" onClick={handlePublish} >Publiser Startliste</Button>
                 </>) : null}
-                {props.event.startListPublished ? <LateRegistration event={props.event}/> : null}
+                {props.event.startListPublished ? <LateRegistration event={props.event} caption="Etteranmelding"/> : null}
             </div>
             <MaterialTable
                 title=""
