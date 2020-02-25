@@ -7,6 +7,7 @@ import Firebase from '../Firebase';
 import ParticipantDetails from './ParticipantDetails';
 import SelectClass from './SelectClass';
 import Confirmation from './Confirmation';
+import NoLongerAvailable from './NoLongerAvailable';
 import moment from 'moment';
 
 interface Props {
@@ -25,6 +26,7 @@ enum Progress {
     ParticipantDetails,
     Confirmation,
     NoAvailableStartNumbers,
+    StartNumberNoLongerAvailable
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -77,7 +79,16 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         }
     };
 
+    const handleRestart = () => {
+        setProgress(Progress.SelectClass);
+    }
+
     const handleRegister = (participant: Participant) => {
+        const verificationStartItem = findFirstAvailableStartItem(participant.eventClass);
+        if (verificationStartItem?.startNumber !== participant.startNumber) {
+            setProgress(Progress.StartNumberNoLongerAvailable);
+            return;
+        }
         setFirstName(participant.firstName);
         setLastName(participant.lastName);
         setClub(participant.club);
@@ -116,6 +127,11 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
             <Confirmation participant={{firstName, lastName, club, startNumber, startTime, eventClass}} 
                 registerMoreCallback={handleRegisterMore}/>
         )
+    }
+    if (progress === Progress.StartNumberNoLongerAvailable) {
+        return (
+            <NoLongerAvailable startNumber={startNumber} restartCallback={handleRestart}/>
+        );
     }
     throw new Error("Illegal state");
 }

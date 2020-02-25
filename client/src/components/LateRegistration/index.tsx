@@ -13,6 +13,8 @@ import Firebase from '../Firebase';
 
 interface Props {
     event: Event,
+    className?: string,
+    caption: string
 }
 
 const LateRegistration: React.FC<Props> = (props: Props) => {
@@ -28,7 +30,7 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
     return (
         <React.Fragment>
             <Button variant="contained" color="primary" size="medium" 
-            onClick={handleShow}>Etteranmelding</Button>
+                onClick={handleShow} className={props.className}>{props.caption}</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Etteranmelding</DialogTitle>
                 <DialogContent>

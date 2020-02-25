@@ -12,15 +12,15 @@ interface Props {
 }
 
 const columns: Array<Column<EventClass>> = [
-    { title: 'Rekkefølge', field: 'order', editable: 'never'},
+    { title: 'Rekkefølge', field: 'order', editable: 'never', hidden: true},
     { title: 'Klasse', field: 'name'},
     { title: 'Løype', field: 'course'},
     { title: 'Beskrivelse', field: 'description'},
     { title: 'Intervall', field: 'startInterval', lookup: {15: 15, 30: 30, 60: 60}},
-    { title: 'Ant. resevernummer', field: 'reserveNumbers', type: 'numeric'},
-    { title: 'Første startnummer', field: 'firstStartNumber', type: 'numeric', hidden: true},
-    { title: 'Første starttid', field: 'firstStartTime', type: 'date', hidden: true},
-    { title: 'Siste startnummer', field: 'lastStartNumber', type: 'numeric', hidden: true}
+    { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
+    { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
+    { title: 'Første starttid', field: 'firstStartTime', type: 'datetime', hidden: false},
+    { title: 'Siste startnr.', field: 'lastStartNumber', type: 'numeric', hidden: false}
 ]
 
 const EventClassEdit: React.FC<Props> = (props: Props) => {
@@ -83,7 +83,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                     icon: () => <ArrowUpwardIcon/>,
                     tooltip: 'Flytt opp',
                     onClick: (event, rowData) => moveUp((rowData as EventClass).order),
-                    disabled: (rowData as EventClass).order === 0
+                    disabled: (rowData as EventClass).order === 1
                 }),
                 rowData => ({
                     icon: () => <ArrowDownwardIcon/>,
