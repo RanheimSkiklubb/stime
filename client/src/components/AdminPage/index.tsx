@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import { Redirect } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -78,6 +79,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     const [startTime, setStartTime] = useState(new Date());
     const [registrationStart, setRegistrationStart] = useState(new Date());
     const [registrationEnd, setRegistrationEnd] = useState(new Date());
+    const [redirect, setRedirect] = useState(false);
 
     useEffect(() => {
         const fetchClaims = async () => {
@@ -133,14 +135,22 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         setRegistrationEnd(new Date(newRegistrationEnd));
     };
 
-    const saveEvent = () => {
+    const saveEvent = async () => {
         event.name = name;
         event.eventType = eventType;
         event.description = description;
         event.startTime = startTime;
         event.registrationStart = registrationStart;
         event.registrationEnd = registrationEnd;
-        eventId ? Firebase.updateEvent(eventId, event) : Firebase.addEvent(event);
+        if (eventId) {
+            Firebase.updateEvent(eventId, event);
+            alert("Arrangmentet ble lagret");
+        }
+        else {
+            const doc = await Firebase.addEvent(event)
+            setEventId(doc.id);
+            setRedirect(true);
+        }
     };
 
     useEffect(() => {
@@ -260,6 +270,10 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     };
 
     if (admin) {
+        if (redirect) {
+            const url = `/admin/${eventId}`;
+            return (<Redirect to={url}/>);
+        }
         return (
             <React.Fragment>
                 <HeaderBar heading={eventId ? "Edit Event" : "New Event"}/>
