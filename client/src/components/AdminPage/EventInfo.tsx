@@ -38,8 +38,12 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     };
 
     const startDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newStartTime = `${e.currentTarget.value}T${moment(startTime).format("HH:mm")}`;
-        setStartTime(new Date(newStartTime));
+        const isValidDate = (d:Date) => !isNaN(d.getTime());
+        const timeComponent = isValidDate(startTime) ? `T${moment(startTime).format("HH:mm")}` : '';
+        const newStartTime = new Date(`${e.currentTarget.value}${timeComponent}`);
+        if (isValidDate(newStartTime)) {
+            setStartTime(new Date(newStartTime));
+        }
     };
 
     const startTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
