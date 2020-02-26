@@ -5,7 +5,9 @@ import Firebase from '../Firebase';
 import Event from '../../model/event';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import _ from 'lodash';
+import {max, find, sortBy} from 'lodash';
+import {makeStyles, Theme} from '@material-ui/core/styles';
+import {createStyles} from "@material-ui/styles";
 
 interface Props {
     event: Event
@@ -28,8 +30,8 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
 
     const moveUp = (index: number) => {
         if (index === 0) return;
-        const eventClassToMoveDown = _.find(data, {order: (index - 1)});
-        const eventClassToMoveUp = _.find(data, {order: (index)});
+        const eventClassToMoveDown = find(data, {order: (index - 1)});
+        const eventClassToMoveUp = find(data, {order: (index)});
         if (!eventClassToMoveDown || !eventClassToMoveUp) {
             console.error("Cannot find event class to move!");
             return;
@@ -43,8 +45,8 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
 
     const moveDown = (index: number) => {
         if (index === maxOrder) return;
-        const eventClassToMoveDown = _.find(data, {order: (index)});
-        const eventClassToMoveUp = _.find(data, {order: (index + 1)});
+        const eventClassToMoveDown = find(data, {order: (index)});
+        const eventClassToMoveUp = find(data, {order: (index + 1)});
         if (!eventClassToMoveDown || !eventClassToMoveUp) {
             console.error("Cannot find event class to move!");
             return;
@@ -56,9 +58,17 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         })();
     }
 
-    const maxOrder = _.max(data.map(ec => ec.order)) || 0;
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            warning: {
+                fontWeight: 'bold',
+                color: theme.palette.warning.main
+            },
+        }
+    ));
+    const classes = useStyles();
 
-
+    const maxOrder = max(data.map(ec => ec.order)) || 0;
 
     const typefixInput = (data: any) => {
         data.startInterval = +data.startInterval;
@@ -69,61 +79,68 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <MaterialTable
-            title="Klasser"
-            columns={columns}
-            data={_.sortBy(data, 'order')}
-            options={{
-                sorting: true,
-                paging: false,
-                search: false
-            }}
-            actions={[
-                rowData => ({
-                    icon: () => <ArrowUpwardIcon/>,
-                    tooltip: 'Flytt opp',
-                    onClick: (event, rowData) => moveUp((rowData as EventClass).order),
-                    disabled: (rowData as EventClass).order === 1
-                }),
-                rowData => ({
-                    icon: () => <ArrowDownwardIcon/>,
-                    tooltip: 'Flytt ned',
-                    onClick: (event, rowData) => moveDown((rowData as EventClass).order),
-                    disabled: (rowData as EventClass).order === maxOrder
-                })
-            ]}
-            editable={{
-                onRowAdd: newData =>
-                    new Promise(resolve => {
-                        resolve();
-                        typefixInput(newData);
-                        newData.order = maxOrder + 1;
-                        data.push(newData);
-                        (async () => {
-                            await Firebase.updateEventClasses(props.event.id, data)
-                        })();
+        <>
+            { props.event.startListPublished ? 
+                <p className={classes.warning}>
+                    Endringer i eksisterende klasser utover navn og løypenavn har ingen effekt etter at startliste er publisert.<br/>
+                    Ved innlegging av nye klasser må første/siste startnummer og første starttid beregnes og settes manuelt.
+                </p> : null}
+            <MaterialTable
+                title="Klasser"
+                columns={columns}
+                data={sortBy(data, 'order')}
+                options={{
+                    sorting: true,
+                    paging: false,
+                    search: false
+                }}
+                actions={[
+                    rowData => ({
+                        icon: () => <ArrowUpwardIcon/>,
+                        tooltip: 'Flytt opp',
+                        onClick: (event, rowData) => moveUp((rowData as EventClass).order),
+                        disabled: (rowData as EventClass).order === 1
                     }),
-                onRowUpdate: async (newData, oldData) =>
-                    new Promise(resolve => {
-                        resolve();
-                        if (oldData) {
+                    rowData => ({
+                        icon: () => <ArrowDownwardIcon/>,
+                        tooltip: 'Flytt ned',
+                        onClick: (event, rowData) => moveDown((rowData as EventClass).order),
+                        disabled: (rowData as EventClass).order === maxOrder
+                    })
+                ]}
+                editable={{
+                    onRowAdd: newData =>
+                        new Promise(resolve => {
+                            resolve();
                             typefixInput(newData);
-                            data[data.indexOf(oldData)] = newData;
+                            newData.order = maxOrder + 1;
+                            data.push(newData);
                             (async () => {
                                 await Firebase.updateEventClasses(props.event.id, data)
                             })();
-                        }
-                    }),
-                onRowDelete: oldData =>
-                    new Promise(resolve => {
-                        resolve();
-                        data.splice(data.indexOf(oldData), 1);
-                        (async () => {
-                            await Firebase.updateEventClasses(props.event.id, data)
-                        })();
-                    }),
-            }}
-        />
+                        }),
+                    onRowUpdate: async (newData, oldData) =>
+                        new Promise(resolve => {
+                            resolve();
+                            if (oldData) {
+                                typefixInput(newData);
+                                data[data.indexOf(oldData)] = newData;
+                                (async () => {
+                                    await Firebase.updateEventClasses(props.event.id, data)
+                                })();
+                            }
+                        }),
+                    onRowDelete: oldData =>
+                        new Promise(resolve => {
+                            resolve();
+                            data.splice(data.indexOf(oldData), 1);
+                            (async () => {
+                                await Firebase.updateEventClasses(props.event.id, data)
+                            })();
+                        }),
+                }}
+            />
+        </>
     );
 }
 
