@@ -117,7 +117,7 @@ const updateEvent = async (eventId: string, event: Event) => {
 };
 
 const addEvent = async (event: Event) => {
-    await eventsRef.add({
+    const doc = await eventsRef.add({
         name: event.name,
         eventType: event.eventType,
         description: event.description,
@@ -129,6 +129,7 @@ const addEvent = async (event: Event) => {
         startListGenerated: false,
         startListPublished: false
     });
+    return await doc.get();
 };
 
 const setStartListGenerated = async (eventId: string) => {

@@ -43,8 +43,13 @@ const LateRegistrationPage: React.FC<Props> = (props: Props) => {
             <AppBar position="sticky">
                 <Typography variant="h5" className={classes.title}>Etteranmelding</Typography>
             </AppBar>
-            <LateRegistration event={event} className={classes.button} caption="Meld på"/>
-            <ParticipantList event={event} />
+            {
+                !event.startListPublished ? <p>Etteranmelding har ikke åpnet ennå</p> :
+                <>
+                    <LateRegistration event={event} className={classes.button} caption="Meld på"/>
+                    <ParticipantList event={event} />
+                </> 
+            }
         </>
     )
 }
