@@ -96,18 +96,21 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         (async () => {
             await Firebase.setStartListPublished(props.event.id);
         })();
-        alert("Startliste publisert!");
     }
 
     return (
         <>
             <div className={classes.root}>
-                {!props.event.startListGenerated ? <><Registration event={props.event} />&nbsp;</> : null}
+                {!props.event.startListGenerated ? 
+                    <><Registration event={props.event} />&nbsp;</> : 
+                    <><LateRegistration event={props.event} caption="Etteranmelding"/>&nbsp;</>
+                }
                 {!props.event.startListPublished ? (<>
-                    <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}>Generer Startliste</Button>&nbsp;
-                    <Button variant="contained" color="primary" onClick={handlePublish} >Publiser Startliste</Button>
+                    <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}
+                        >Generer {props.event.startListGenerated ? 'Ny ' : ''}Startliste</Button>&nbsp;
+                    <Button variant="contained" color="primary" onClick={handlePublish} disabled={!props.event.startListGenerated}
+                        >Publiser Startliste</Button>
                 </>) : null}
-                {props.event.startListPublished ? <LateRegistration event={props.event} caption="Etteranmelding"/> : null}
             </div>
             <MaterialTable
                 title=""
