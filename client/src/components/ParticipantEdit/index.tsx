@@ -11,6 +11,7 @@ import moment from 'moment';
 import LateRegistration from '../LateRegistration';
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
+import EmailDownload from './EmailDownload';
 
 interface Props {
     event: Event;
@@ -109,8 +110,9 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="primary" onClick={handleGenerate} disabled={props.event.startListPublished}
                         >Generer {props.event.startListGenerated ? 'Ny ' : ''}Startliste</Button>&nbsp;
                     <Button variant="contained" color="primary" onClick={handlePublish} disabled={!props.event.startListGenerated}
-                        >Publiser Startliste</Button>
+                        >Publiser Startliste</Button>&nbsp;
                 </>) : null}
+                <EmailDownload eventId={props.event.id} eventName={props.event.name}/>
             </div>
             <MaterialTable
                 title=""

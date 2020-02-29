@@ -71,14 +71,6 @@ const subscribeClubs = (callback: any) => {
     });
 };
 
-const fetchEvents = async () => {
-    try {
-        const collection = await eventsRef.get();
-        return collection;
-    } catch (error) {
-        return Promise.reject(error);
-    }
-};
 
 const fetchEvent = async (eventId: string) => {
     const eventBody = await eventsRef.doc(eventId).get();
@@ -154,6 +146,16 @@ const addContact = async (eventId: string, contact: any) => {
         await contactRef.doc(eventId).set({
             contacts: firebase.firestore.FieldValue.arrayUnion(contact)
         });
+    }
+};
+
+const fetchContacts = async (eventId: string) => {
+    try {
+        const contacts = await contactRef.doc(eventId).get();
+        return contacts.data();
+    } catch (error) {
+        console.error("Error getting contacts: " + error);
+        return Promise.reject(error);
     }
 };
 
@@ -268,10 +270,10 @@ export default {
     subscribeEvents,
     subscribeEvent,
     subscribeClubs,
-    fetchEvents,
     fetchEvent,
     addParticipant,
     addContact,
+    fetchContacts,
     updateEventClasses,
     updateParticipants,
     setStartListGenerated,
