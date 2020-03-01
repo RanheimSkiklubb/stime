@@ -103,6 +103,7 @@ const updateEvent = async (eventId: string, event: Event) => {
         startTime: event.startTime, //firebase.firestore.Timestamp.fromDate(event.startTime),
         registrationStart: event.registrationStart, //firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: event.registrationEnd, //firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+        registrationEndInfo: event.registrationEndInfo,
         eventClasses: event.eventClasses,
         participants: event.participants
     });
@@ -116,6 +117,7 @@ const addEvent = async (event: Event) => {
         startTime: event.startTime, // firebase.firestore.Timestamp.fromDate(event.startTime),
         registrationStart: event.registrationStart, // firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: event.registrationEnd, // firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+        registrationEndInfo: event.registrationEndInfo,
         eventClasses: event.eventClasses,
         participants: event.participants,
         startListGenerated: false,
@@ -242,6 +244,7 @@ const eventConverter = {
             data.startTime.toDate(),
             data.registrationStart.toDate(),
             data.registrationEnd.toDate(),
+            data.registrationEndInfo,
             data.startListGenerated,
             data.startListPublished,
             data.eventClasses.map(mapEventClassFromFirestore),

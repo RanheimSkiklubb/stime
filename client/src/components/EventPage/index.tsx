@@ -35,7 +35,7 @@ function TabPanel(props: TabPanelProps) {
 
 const EventPage: React.FC<Props> = (props: Props) => {
 
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), false, false, [], []));
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
     const [tabIndex, setTabIndex] = useState(0);
 
     useEffect(() => {

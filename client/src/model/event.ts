@@ -9,6 +9,7 @@ export default class Event {
     startTime: Date;
     registrationStart: Date;
     registrationEnd: Date;
+    registrationEndInfo: string;
     startListGenerated: boolean;
     startListPublished: boolean;
     constructor(readonly id: string,
@@ -18,6 +19,7 @@ export default class Event {
                 startTime: Date,
                 registrationStart: Date,
                 registrationEnd: Date,
+                registrationEndInfo: string,
                 startListGenerated: boolean,
                 startListPublished: boolean,
                 readonly eventClasses: EventClass[],
@@ -28,6 +30,7 @@ export default class Event {
                     this.startTime = startTime;
                     this.registrationStart = registrationStart;
                     this.registrationEnd = registrationEnd;
+                    this.registrationEndInfo = registrationEndInfo;
                     this.startListGenerated = startListGenerated;
                     this.startListPublished = startListPublished;
                 }

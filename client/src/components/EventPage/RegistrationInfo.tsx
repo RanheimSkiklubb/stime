@@ -19,8 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
             marginTop: '0',
             marginBottom: theme.spacing(3),
         },
-    }));
-
+        noMargin:  {
+            marginTop: "0",
+        }
+    })
+);
 
 const RegistrationInfo: React.FC<Props> = (props: Props) => {
     const classes = useStyles({});
@@ -34,10 +37,11 @@ const RegistrationInfo: React.FC<Props> = (props: Props) => {
     }
     if (props.event.registrationEnded()) {
         if (props.event.eventEnded()) return null;
+        const registrationEndInfo = {__html: props.event.registrationEndInfo}
         return (
             <TableRow>
                 <TableCell>Påmelding:</TableCell>
-                <TableCell>Påmeldingsfristen er ute.<br/>Etteranmelding kan gjøres til <a href="mailto:paamelding@ranheimskiklubb.no">paamelding@ranheimskiklubb.no</a></TableCell>
+                <TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={registrationEndInfo}/></TableCell>
             </TableRow>
         );
     }
