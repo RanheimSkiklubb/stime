@@ -64,7 +64,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
 
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(firebase.auth());
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), false, false, [], []));
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
     const [eventId, setEventId] = useState("");
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -83,13 +83,14 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     }
 
     const saveEvent = async (name: string, eventType: string, description: string,
-        startTime: Date, registrationStart: Date, registrationEnd: Date) => {
+        startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
         event.name = name;
         event.eventType = eventType;
         event.description = description;
         event.startTime = startTime;
         event.registrationStart = registrationStart;
         event.registrationEnd = registrationEnd;
+        event.registrationEndInfo = registrationEndInfo;
         if (eventId) {
             Firebase.updateEvent(eventId, event);
             alert("Arrangmentet ble lagret");

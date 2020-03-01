@@ -10,7 +10,7 @@ import {makeStyles} from "@material-ui/core/styles";
 interface Props {
     event: Event;
     saveEventCallback: (name: string, eventType: string, description: string, 
-        startTime: Date, registrationStart: Date, registrationEnd: Date) => void;
+        startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => void;
 }
 
 const EventInfo: React.FC<Props> = (props: Props) => {
@@ -21,6 +21,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     const [startTime, setStartTime] = useState(props.event.startTime);
     const [registrationStart, setRegistrationStart] = useState(props.event.registrationStart);
     const [registrationEnd, setRegistrationEnd] = useState(props.event.registrationEnd);
+    const [registrationEndInfo, setRegistrationEndInfo] = useState(props.event.registrationEndInfo);
 
     const nameChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newName = e.currentTarget.value;
@@ -62,7 +63,8 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     };
 
     const save = () => {
-        props.saveEventCallback(name, eventType, description, startTime, registrationStart, registrationEnd);
+        props.saveEventCallback(name, eventType, description, startTime, registrationStart, 
+            registrationEnd, registrationEndInfo);
     }
 
     const useStyles = makeStyles(theme => ({
@@ -153,7 +155,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                     <FormControl fullWidth>
                         <TextField id="description" label="Arrangementsinfo" 
                             value={description} onChange={descriptionChange} 
-                            multiline rows={4}/>
+                            multiline rows={5}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
@@ -166,6 +168,13 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                         <TextField disabled id="startListPublished" label="Startliste publisert" 
                             defaultValue={props.event.startListPublished ? "Ja" : "Nei"}
                             InputProps={{classes: {root: classes.root, disabled: classes.disabled}}} />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField id="registrationEndInfo" label="Etteranmeldingsinfo" value={registrationEndInfo} 
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setRegistrationEndInfo(e.target.value)} 
+                            multiline rows={4}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
