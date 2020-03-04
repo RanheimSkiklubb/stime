@@ -11,9 +11,10 @@ import NoLongerAvailable from './NoLongerAvailable';
 import moment from 'moment';
 
 interface Props {
-    event: Event,
-    clubs: Club[],
+    event: Event;
+    clubs: Club[];
     closeCallback: () => void;
+    resetTimerCallback: () => void;
 }
 
 interface StartItem {
@@ -112,6 +113,7 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     }
 
     if (progress === Progress.SelectClass) {
+        props.resetTimerCallback();
         return (<SelectClass event={props.event} nextCallback={handleNext}/>)
     }
     if (progress === Progress.NoAvailableStartNumbers) {
