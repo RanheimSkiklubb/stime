@@ -77,6 +77,13 @@ const fetchEvent = async (eventId: string) => {
     return eventBody.data();
 };
 
+const fetchEvents = async () => {
+    const querySnapshot = await eventsRef.get();
+    const data = querySnapshot.docs
+        .map(event => event.data() as Event);
+    return data;
+};
+
 const addParticipant = async (eventId: string, participant: Participant) => {
     await eventsRef.doc(eventId).update({
         participants: firebase.firestore.FieldValue.arrayUnion(participant)
@@ -274,6 +281,7 @@ export default {
     subscribeEvent,
     subscribeClubs,
     fetchEvent,
+    fetchEvents,
     addParticipant,
     addContact,
     fetchContacts,
