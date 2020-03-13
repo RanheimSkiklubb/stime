@@ -133,7 +133,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <AppBar position="static" className={classes.appBar}>
                     <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
                         <Tab label="Arrangement"/>
-                        <Tab label="Klasser"/>
+                        <Tab label={`Klasser (${event.eventClasses.length})`}/>
                         <Tab label={`Deltakere (${event.participants.length})`}/>
                     </Tabs>
                 </AppBar>
