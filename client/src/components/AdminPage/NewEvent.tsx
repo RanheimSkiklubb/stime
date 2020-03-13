@@ -10,6 +10,7 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 import FormControl from '@material-ui/core/FormControl';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
+import moment from 'moment';
 
 interface Props {
     baseEventCallback: (event: Event) => void;
@@ -59,7 +60,8 @@ const NewEvent: React.FC<Props> = (props: Props) => {
                 <FormControl fullWidth>
                     <NativeSelect inputProps={{id: 'event-class-label'}} onChange={eventChange}>
                         <option value="">Tomt arrangement</option>
-                        {events.map(event => (<option value={event.id} key={event.id}>{`${event.name}`}</option>))}
+                        {events.map(event => 
+                            (<option value={event.id} key={event.id}>{`${moment(event.startTime).format('DD.MM.YYYY')}: ${event.name}`}</option>))}
                     </NativeSelect>
                 </FormControl>
             </DialogContent>
