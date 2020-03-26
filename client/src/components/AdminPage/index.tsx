@@ -18,6 +18,7 @@ import HeaderBar from "../headerbar/HeaderBar";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
 import EventInfo from './EventInfo';
+import NewEvent from './NewEvent';
 
 interface MatchParams {
     eventId: string
@@ -67,6 +68,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
     const [eventId, setEventId] = useState("");
     const [tabIndex, setTabIndex] = useState(0);
+    const [baseEventSelected, setBaseEventSelected] = useState(false);
 
     const [redirect, setRedirect] = useState(false);
 
@@ -80,6 +82,11 @@ const AdminPage: React.FC<Props> = (props: Props) => {
 
     const loadEvent = (e: Event) => {
         setEvent(e);
+    }
+
+    const setBaseEvent = (e: Event) => {
+        setEvent(e);
+        setBaseEventSelected(true);
     }
 
     const saveEvent = async (name: string, eventType: string, description: string,
@@ -131,7 +138,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                     </Tabs>
                 </AppBar>
                 <TabPanel value={tabIndex} index={0}>
-                    <EventInfo event={event} saveEventCallback={saveEvent}/>
+                    {baseEventSelected || eventId ? <EventInfo event={event} saveEventCallback={saveEvent}/> : <NewEvent baseEventCallback={setBaseEvent}/>}
                 </TabPanel>
                 <TabPanel value={tabIndex} index={1}>
                     <EventClassEdit event={event}/>
