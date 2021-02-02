@@ -14,6 +14,7 @@ interface Props {
     event: Event,
     participant: Participant,
     email: string,
+    phone: string,
     editCallback: () => void,
     registerCallback: () => void
 }
@@ -60,7 +61,7 @@ const Step2: React.FC<Props> = (props: Props) => {
                         severity="warning">Det finnes allerede en liknende påmelding</Alert>
                 </Grid>
                 <Grid item xs={12}>
-                    <RegisteredParticipant participant={similar} email="***@***.***" className={classes.similar}/>
+                    <RegisteredParticipant participant={similar} email="***@***.***" phone="********" className={classes.similar}/>
                 </Grid>
             </React.Fragment>
         )
@@ -68,10 +69,10 @@ const Step2: React.FC<Props> = (props: Props) => {
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <Grid item xs={12}>
-                <p className={classes.emphasize}>Du har registrert følgende: </p>
+                <p className={classes.emphasize}>Bekreft påmelding</p>
             </Grid>
             <Grid item xs={12}>
-                <RegisteredParticipant participant={props.participant} email={props.email}/>
+                <RegisteredParticipant participant={props.participant} email={props.email} phone={props.phone}/>
             </Grid>
             {similarNotification}
             <Grid container style={{marginTop: '20px'}}>

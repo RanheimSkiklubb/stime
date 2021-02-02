@@ -128,7 +128,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         }
         return (
             <React.Fragment>
-                <HeaderBar heading={eventId ? "Edit Event" : "New Event"}/>
+                <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
                 <AppBar position="static" className={classes.appBar}>
                     <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">

@@ -17,7 +17,8 @@ interface Props {
     clubs: Club[];
     participant: Participant;
     email: string;
-    nextCallback: (participant: Participant, email: string) => void;
+    phone: string;
+    nextCallback: (participant: Participant, email: string, phone:string) => void;
 }
 
 const Step1: React.FC<Props> = (props: Props) => {
@@ -27,13 +28,16 @@ const Step1: React.FC<Props> = (props: Props) => {
     const [club, setClub] = useState(props.participant.club);
     const [eventClass, setEventClass] = useState(props.participant.eventClass);
     const [email, setEmail] = useState(props.email);
+    const [phone, setPhone] = useState(props.phone);
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [eventClassValid, setEventClassValid] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
+    const [phoneValid, setPhoneValid] = useState(true);
 
     const formValid = (firstName.length > 0 && lastName.length > 0 && 
-        eventClass.length > 0 && email.length > 0 && emailValid)
+        eventClass.length > 0 && email.length > 0 && emailValid && 
+        phone.length > 0 && phoneValid);
 
     const firstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newFirstName = event.currentTarget.value;
@@ -66,13 +70,28 @@ const Step1: React.FC<Props> = (props: Props) => {
         setEmailValid(newEmailValid);
     };
 
+    const isInteger = (val: string): boolean => !isNaN(Number(val));
+
+    const phoneChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newPhone = event.currentTarget.value;
+        if (isInteger(newPhone)) {
+            setPhone(newPhone);
+        }
+        const newPhoneValid = validatePhone(newPhone);
+        setPhoneValid(newPhoneValid);
+    };
+
     const validateEmail  = (email: string) => {
         return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
     };
 
+    const validatePhone  = (phone: string) => {
+        return (phone.length === 8 && isInteger(phone));
+    };
+
     const handleNext = () => {
         const participant: Participant = {firstName, lastName, club, eventClass};
-        props.nextCallback(participant, email)
+        props.nextCallback(participant, email, phone)
     }
 
     let tempValue: string;
@@ -128,10 +147,16 @@ const Step1: React.FC<Props> = (props: Props) => {
                         </NativeSelect>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6}>
                     <FormControl fullWidth>
                         <TextField required id="email" label="Kontakt e-post" value={email} onChange={emailChange}
                                 error={!emailValid}/>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <TextField required id="phone" label="Kontakt telefon" value={phone} onChange={phoneChange}
+                                error={!phoneValid}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} style={{textAlign: 'right'}}>

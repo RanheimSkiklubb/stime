@@ -11,7 +11,7 @@ import moment from 'moment';
 import LateRegistration from '../LateRegistration';
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
-import EmailDownload from './EmailDownload';
+import ContactDownload from './ContactDownload';
 
 interface Props {
     event: Event;
@@ -112,7 +112,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" color="primary" onClick={handlePublish} disabled={!props.event.startListGenerated}
                         >Publiser Startliste</Button>&nbsp;
                 </>) : null}
-                <EmailDownload eventId={props.event.id} eventName={props.event.name}/>
+                <ContactDownload eventId={props.event.id} eventName={props.event.name}/>
             </div>
             <MaterialTable
                 title=""
@@ -127,7 +127,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                 }}
                 editable={{
                     onRowAdd: newData =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             typefixInput(newData);
                             data.push(newData);
@@ -136,7 +136,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                             })();
                         }),
                     onRowUpdate: async (newData, oldData) =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             if (oldData) {
                                 typefixInput(newData);
@@ -147,7 +147,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
                             }
                         }),
                     onRowDelete: oldData =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             data.splice(data.indexOf(oldData), 1);
                             (async () => {
