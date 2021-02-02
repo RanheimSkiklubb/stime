@@ -17,12 +17,15 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
     const [progress, setProgress] = useState(1);
     const [participant, setParticipant] = useState({firstName: "", lastName: "", club: "", eventClass: ""});
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState(""); 
 
     const handleRegister = () => {
         try {
             const contact = {
                 name: participant.firstName + " " + participant.lastName,
-                email: email
+                eventClass: participant.eventClass,
+                email,
+                phone
             };
             (async () => {
                 await Firebase.addParticipant(props.event.id, participant);
@@ -39,18 +42,19 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         setProgress(1);
     }
     const handleEdit = () => setProgress(1);
-    const handleNext = (participant: Participant, email:string) => {
+    const handleNext = (participant: Participant, email:string, phone:string) => {
         setParticipant(participant);
         setEmail(email);
+        setPhone(phone)
         setProgress(2);
     }
 
     if (progress === 1) {
-        return <Step1 nextCallback={handleNext} participant={participant} email={email} event={props.event} clubs={props.clubs} />
+        return <Step1 nextCallback={handleNext} participant={participant} email={email} phone={phone} event={props.event} clubs={props.clubs} />
     }
     if (progress === 2) {
         return <Step2 event={props.event} participant={participant} 
-                    email={email} editCallback={handleEdit} registerCallback={handleRegister} />;
+                    email={email} phone={phone} editCallback={handleEdit} registerCallback={handleRegister} />;
     }   
     return <Step3 registerMoreCallback={handleRegisterMore}/>;
 }

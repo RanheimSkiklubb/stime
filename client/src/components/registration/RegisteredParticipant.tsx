@@ -9,6 +9,7 @@ import Participant from '../../model/participant';
 interface Props {
     participant: Participant,
     email: string,
+    phone: string,
     className?: string
 }
 
@@ -36,6 +37,10 @@ const RegisteredParticipant: React.FC<Props> = (props: Props) => {
                     <TableRow>
                         <TableCell>E-post</TableCell>
                         <TableCell>{props.email}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Telefon</TableCell>
+                        <TableCell>{props.phone}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
