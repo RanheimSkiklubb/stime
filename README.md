@@ -2,4 +2,4 @@
 
 STime is a simple race timing system. It consists of a React/TypeScript-based front end and a Firebase back end.
 
-See the README in the `/client` for instructions on how to run the client locally.
+See the README in `/client` for instructions on how to run the client locally.
