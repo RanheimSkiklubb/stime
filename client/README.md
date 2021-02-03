@@ -1,11 +1,10 @@
 # Simple Race Timer Client
-The STime client was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Simple Race Timer client is bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ### Run in development mode
-You can launch the client in development mode, by running: `npm start`
+Command for launching client in development mode: `npm start`
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### Build app for production
-You can build the app for production, by running `npm run build`
-The build output is planced in the `build` folder.<br />
-The build is minified and the filenames include the hashes.<br />
+Conmand for creating production build: `npm run build`
+The minified build output is planced in the `build` folder.
