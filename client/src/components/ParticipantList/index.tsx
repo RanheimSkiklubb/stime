@@ -16,14 +16,14 @@ interface Row {
 
 const startListColumns = [
     {title: 'Startnr', field: 'startNumber'},
-    {title: 'Name', field: 'name'},
+    {title: 'Navn', field: 'name'},
     {title: 'Klubb', field: 'club'},
     {title: 'Klasse', field: 'eventClass'},
     {title: 'Starttid', field: 'startTime'}
 ];
 
 const participantListColumns = [
-    {title: 'Name', field: 'name'},
+    {title: 'Navn', field: 'name'},
     {title: 'Klubb', field: 'club'},
     {title: 'Klasse', field: 'eventClass'}
 ];
