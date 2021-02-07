@@ -43,7 +43,7 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
 
     return (
         <MaterialTable
-            title=""
+            title = {props.event.startListPublished ? `Startliste ${props.event.name}` : `Deltakerliste ${props.event.name}`}
             columns = {props.event.startListPublished ? startListColumns : participantListColumns}
             data = {sortedParticipants}
             options={{
