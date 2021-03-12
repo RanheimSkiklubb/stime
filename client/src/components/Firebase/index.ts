@@ -235,6 +235,7 @@ const eventConverter = {
             startTime: firebase.firestore.Timestamp.fromDate(event.startTime),
             registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
             registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
+            registrationEndInfo: event.registrationEndInfo,
             eventClasses: event.eventClasses,
             participants: event.participants,
             startListGenerated: event.startListGenerated,
