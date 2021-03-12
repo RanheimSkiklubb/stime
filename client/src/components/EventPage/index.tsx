@@ -32,13 +32,13 @@ const EventPage: React.FC<Props> = (props: Props) => {
             <HeaderBar heading={event.name}/>
             <AppBar position="static">
                 <Tabs value={props.pathname} aria-label="simple tabs example">
-                    <Tab label="Informasjon" component={ Link } value={`${url}/info`} to={`${url}/info`} />
+                    <Tab label="Informasjon" component={ Link } value={`${url}`} to={`${url}`} />
                     <Tab label={event.startListPublished ? `Startliste (${event.participants.length})` : `Deltakerliste (${event.participants.length})`}
                         component={ Link } value={`${url}/list`} to={`${url}/list`} />
                 </Tabs>
             </AppBar>
             <Switch>
-                <Route path={`${path}/info`}>
+                <Route exact path={`${path}`}>
                     <EventInfo event={event}/>
                 </Route>
                 <Route path={`${path}/list`}>
