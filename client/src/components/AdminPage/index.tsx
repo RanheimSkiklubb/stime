@@ -4,10 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
-
 import Event from '../../model/event';
-import {match, useHistory} from "react-router-dom";
-
+import { useHistory, useParams, useRouteMatch, Link, Switch, Route } from "react-router-dom";
 import ParticipantEdit from '../ParticipantEdit';
 import EventClassEdit from '../EventClassEdit';
 import Firebase from '../Firebase';
@@ -25,24 +23,8 @@ interface MatchParams {
 }
 
 interface Props {
-    match: match<MatchParams>
+    pathname: string
 }
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index } = props;
-  
-    return (
-        <div hidden={value !== index}>
-            {value === index && <React.Fragment>{children}</React.Fragment>}
-        </div>
-    );
-  }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -61,16 +43,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AdminPage: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
-    const history = useHistory();
 
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(firebase.auth());
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
-    const [eventId, setEventId] = useState("");
-    const [tabIndex, setTabIndex] = useState(0);
+    const [eventId, setEventId] = useState(useParams<MatchParams>().eventId);
     const [baseEventSelected, setBaseEventSelected] = useState(false);
 
     const [redirect, setRedirect] = useState(false);
+    const history = useHistory();
+    const { path, url } = useRouteMatch();
 
     useEffect(() => {
         const fetchClaims = async () => {
@@ -110,16 +92,11 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     };
 
     useEffect(() => {
-        const eventId = props.match.params.eventId;
         if (eventId) {
             setEventId(eventId);
             return Firebase.subscribeEvent(eventId, loadEvent);
         }
-    }, [props.match]);
-
-    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setTabIndex(newValue);
-    };
+    }, [eventId]);
 
     if (admin) {
         if (redirect) {
@@ -131,21 +108,17 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
                 <AppBar position="static" className={classes.appBar}>
-                    <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
-                        <Tab label="Arrangement"/>
-                        <Tab label={`Klasser (${event.eventClasses.length})`}/>
-                        <Tab label={`Deltakere (${event.participants.length})`}/>
+                    <Tabs value={props.pathname} aria-label="simple tabs example">
+                        <Tab label="Arrangement" component={ Link } value={`${url}`} to={`${url}`}/>
+                        <Tab label={`Klasser (${event.eventClasses.length})`} component={ Link } value={`${url}/classes`} to={`${url}/classes`}/>
+                        <Tab label={`Deltakere (${event.participants.length})`} component={ Link } value={`${url}/list`} to={`${url}/list`}/>
                     </Tabs>
                 </AppBar>
-                <TabPanel value={tabIndex} index={0}>
-                    {baseEventSelected || eventId ? <EventInfo event={event} saveEventCallback={saveEvent}/> : <NewEvent baseEventCallback={setBaseEvent}/>}
-                </TabPanel>
-                <TabPanel value={tabIndex} index={1}>
-                    <EventClassEdit event={event}/>
-                </TabPanel>
-                <TabPanel value={tabIndex} index={2}>
-                    <ParticipantEdit event={event}/>
-                </TabPanel>
+                <Switch>
+                    <Route exact path={`${path}`}>{baseEventSelected || eventId ? <EventInfo event={event} saveEventCallback={saveEvent}/> : <NewEvent baseEventCallback={setBaseEvent}/>}</Route>
+                    <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
+                    <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>´
+                </Switch>
             </React.Fragment>
         );
     }
