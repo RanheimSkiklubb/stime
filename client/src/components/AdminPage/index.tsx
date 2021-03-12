@@ -108,7 +108,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
                 <AppBar position="static" className={classes.appBar}>
-                    <Tabs value={props.pathname} aria-label="simple tabs example">
+                    <Tabs value={props.pathname || url} aria-label="simple tabs example">
                         <Tab label="Arrangement" component={ Link } value={`${url}`} to={`${url}`}/>
                         <Tab label={`Klasser (${event.eventClasses.length})`} component={ Link } value={`${url}/classes`} to={`${url}/classes`}/>
                         <Tab label={`Deltakere (${event.participants.length})`} component={ Link } value={`${url}/list`} to={`${url}/list`}/>
