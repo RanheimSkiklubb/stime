@@ -23,10 +23,10 @@ const App: React.FC = () => {
                 <Router>
                     <Switch>
                         <Route path="/event/:eventId/late-registration" component={(props:any) => <LateRegistrationPage {...props} />} />
-                        <Route path="/event/:eventId" component={(props:any) => <EventPage {...props} />} />
+                        <Route path="/event/:eventId" render={(history) => (<EventPage pathname={history.location.pathname}/>)} />
                         <Route path="/admin/:eventId" component={(props:any) => <AdminPage {...props} />} />
                         <Route path="/admin/" component={(props:any) => <AdminPage {...props} />} />
-                        <Route path="/">
+                        <Route exact path="/">
                             <EventListPage/>
                         </Route>
                     </Switch>

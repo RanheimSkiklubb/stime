@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Event from '../../model/event';
-import { match } from "react-router-dom";
+import { useParams, useRouteMatch, Link, Switch, Route } from "react-router-dom";
 import ParticipantList from '../ParticipantList';
 import Firebase from '../Firebase';
 import HeaderBar from '../headerbar/HeaderBar';
@@ -14,54 +14,37 @@ interface MatchParams {
 }
 
 interface Props {
-    match: match<MatchParams>
+    pathname: string
 }
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-  }
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index } = props;
-  
-    return (
-        <div hidden={value !== index}>
-            {value === index && <React.Fragment>{children}</React.Fragment>}
-        </div>
-    );
-  }
 
 const EventPage: React.FC<Props> = (props: Props) => {
 
+    const { eventId } = useParams<MatchParams>();
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
-    const [tabIndex, setTabIndex] = useState(0);
+    const { path, url } = useRouteMatch();
 
     useEffect(() => {
-        const eventId = props.match.params.eventId;
         return Firebase.subscribeEvent(eventId, setEvent);
-    }, [props.match]);
-
-    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setTabIndex(newValue);
-    };
+    }, [eventId]);
 
     return (
         <React.Fragment>
             <HeaderBar heading={event.name}/>
             <AppBar position="static">
-                <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
-                    <Tab label="Informasjon"/>
-                    <Tab label={event.startListPublished ? `Startliste (${event.participants.length})` : `Deltakerliste (${event.participants.length})`}/>
+                <Tabs value={props.pathname} aria-label="simple tabs example">
+                    <Tab label="Informasjon" component={ Link } value={`${url}/info`} to={`${url}/info`} />
+                    <Tab label={event.startListPublished ? `Startliste (${event.participants.length})` : `Deltakerliste (${event.participants.length})`}
+                        component={ Link } value={`${url}/list`} to={`${url}/list`} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={tabIndex} index={0}>
-                <EventInfo event={event}/>
-            </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
-                <ParticipantList event={event}/>
-            </TabPanel>
+            <Switch>
+                <Route path={`${path}/info`}>
+                    <EventInfo event={event}/>
+                </Route>
+                <Route path={`${path}/list`}>
+                    <ParticipantList event={event}/>
+                </Route>
+            </Switch>
         </React.Fragment>
     );
 }
