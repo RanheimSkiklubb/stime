@@ -18,7 +18,7 @@ const columns: Array<Column<EventClass>> = [
     { title: 'Klasse', field: 'name'},
     { title: 'Løype', field: 'course'},
     { title: 'Beskrivelse', field: 'description'},
-    { title: 'Intervall', field: 'startInterval', lookup: {15: 15, 30: 30, 60: 60}},
+    { title: 'Intervall', field: 'startInterval', lookup: {0:'Fellesstart', 15: 15, 30: 30, 60: 60}},
     { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
     { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
     { title: 'Første starttid', field: 'firstStartTime', type: 'datetime', hidden: false},
@@ -70,10 +70,10 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
 
     const maxOrder = max(data.map(ec => ec.order)) || 0;
 
-    const typefixInput = (data: any) => {
-        data.startInterval = +data.startInterval;
-        data.reserveNumbers = +data.reserveNumbers;
-        if (data.firstStartTime !== undefined) {
+    const validateInput = (data: any) => {
+        data.reserveNumbers = ('reserveNumbers' in data ? +data.reserveNumbers : 0);
+        data.startInterval = ('startInterval' in data ? +data.startInterval : 0);
+        if ('firstStartTime' in data) {
             data.firstStartTime = new Date(data.firstStartTime);
         }
     }
@@ -112,7 +112,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                     onRowAdd: newData =>
                         new Promise(resolve => {
                             resolve();
-                            typefixInput(newData);
+                            validateInput(newData);
                             newData.order = maxOrder + 1;
                             data.push(newData);
                             (async () => {
@@ -123,7 +123,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                         new Promise(resolve => {
                             resolve();
                             if (oldData) {
-                                typefixInput(newData);
+                                validateInput(newData);
                                 data[data.indexOf(oldData)] = newData;
                                 (async () => {
                                     await Firebase.updateEventClasses(props.event.id, data)
