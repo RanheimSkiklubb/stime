@@ -12,6 +12,7 @@ import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import moment from 'moment';
 import RegistrationInfo from './RegistrationInfo';
+import {sortBy} from 'lodash';
 
 interface Props {
     event: Event
@@ -63,13 +64,16 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {props.event.eventClasses.map((ec:EventClass, idx:number) => (
-                                    <TableRow key={ec.name}>
-                                        <TableCell>{ec.name}</TableCell>
-                                        <TableCell>{ec.course}</TableCell>
-                                        <TableCell>{ec.description}</TableCell>
-                                    </TableRow>
-                                ))}
+                                {
+                                    sortBy(props.event.eventClasses, 'order')                                
+                                    .map((ec:EventClass, idx:number) => (
+                                        <TableRow key={ec.name}>
+                                            <TableCell>{ec.name}</TableCell>
+                                            <TableCell>{ec.course}</TableCell>
+                                            <TableCell>{ec.description}</TableCell>
+                                        </TableRow>
+                                    ))
+                                }
                             </TableBody>
                         </Table>
                     </TableContainer>
