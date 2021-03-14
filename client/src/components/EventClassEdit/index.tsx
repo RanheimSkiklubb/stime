@@ -73,6 +73,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
     const validateInput = (data: any) => {
         data.reserveNumbers = ('reserveNumbers' in data ? +data.reserveNumbers : 0);
         data.startInterval = ('startInterval' in data ? +data.startInterval : 0);
+        data.description = ('description' in data ? data.description : "");
         if ('firstStartTime' in data) {
             data.firstStartTime = new Date(data.firstStartTime);
         }
