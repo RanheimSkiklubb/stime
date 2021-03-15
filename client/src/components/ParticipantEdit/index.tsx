@@ -1,6 +1,6 @@
 import React from 'react';
 import Event from '../../model/event';
-import _ from 'lodash';
+import { sortBy, shuffle } from 'lodash';
 import MaterialTable from 'material-table';
 import Firebase from '../Firebase';
 import Participant from '../../model/participant';
@@ -56,10 +56,10 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         return p
     }, {});
 
-    const sortMapping: Record<string, number> = {};
-    props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
+    //const sortMapping: Record<string, number> = {};
+    //props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
     const participants = props.event.participants;
-    const sortedParticipants = props.event.startListGenerated ? _.sortBy(participants, "startTime") : _.sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
+    const sortedParticipants = props.event.startListGenerated ? sortBy(participants, "startTime") : sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
@@ -72,10 +72,11 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         const participants = props.event.participants;
         let startNumber = 1;
         let startTime = moment(props.event.startTime);
-        for (let eventClass of props.event.eventClasses) {
+        const eventClasses = sortBy(props.event.eventClasses, 'order');
+        for (let eventClass of eventClasses) {
             eventClass.firstStartNumber = startNumber;
             eventClass.firstStartTime = startTime.toDate();
-            const participantsInClass = _.shuffle(participants.filter(p => p.eventClass === eventClass.name));
+            const participantsInClass = shuffle(participants.filter(p => p.eventClass === eventClass.name));
             for (let p of participantsInClass) {
                 p.startNumber = startNumber++;
                 p.startTime = startTime.format("HH:mm:ss");
