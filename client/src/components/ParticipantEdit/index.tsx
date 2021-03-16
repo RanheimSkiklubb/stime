@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ParticipantEdit: React.FC<Props> = (props: Props) => {
     const classes = useStyles({});
     const eventClasses:any = {};
-    props.event.eventClasses.forEach(ec => eventClasses[ec.name] = ec.name);
+    sortBy(props.event.eventClasses, 'order').forEach(ec => eventClasses[ec.name] = ec.name);
 
     const startListColumns = [
         {title: 'Startnr', field: 'startNumber', type: 'numeric'},
