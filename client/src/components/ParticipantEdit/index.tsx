@@ -17,12 +17,6 @@ interface Props {
     event: Event;
 }
 
-interface Row {
-    name: string,
-    club: string,
-    eventClass: string
-}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {

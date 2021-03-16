@@ -8,12 +8,6 @@ interface Props {
     event: Event;
 }
 
-interface Row {
-    name: string,
-    club: string,
-    eventClass: string
-}
-
 const startListColumns = [
     {title: 'Startnr', field: 'startNumber'},
     {title: 'Navn', field: 'name'},

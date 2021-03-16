@@ -17,10 +17,6 @@ import HeaderBar from "../headerbar/HeaderBar";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
 
-interface State {
-    events: Event[]
-}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -32,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
         icon: {
             color: 'green',
         },
-    }));
-
+    })
+);
 
 const EventListPage: React.FC = (props) => {
     const classes = useStyles({});

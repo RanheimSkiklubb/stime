@@ -111,7 +111,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                 ]}
                 editable={{
                     onRowAdd: newData =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             validateInput(newData);
                             newData.order = maxOrder + 1;
@@ -121,7 +121,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                             })();
                         }),
                     onRowUpdate: async (newData, oldData) =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             if (oldData) {
                                 validateInput(newData);
@@ -132,7 +132,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                             }
                         }),
                     onRowDelete: oldData =>
-                        new Promise(resolve => {
+                        new Promise<void>(resolve => {
                             resolve();
                             data.splice(data.indexOf(oldData), 1);
                             (async () => {

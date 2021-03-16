@@ -274,7 +274,7 @@ const clubConverter = {
     }
 };
 
-export default {
+const exported = {
     init,
     login,
     logout,
@@ -292,4 +292,6 @@ export default {
     setStartListPublished,
     updateEvent,
     addEvent
-}
+};
+
+export default exported;
