@@ -1,6 +1,6 @@
 import React from 'react';
 import Event from '../../model/event';
-import { sortBy, shuffle } from 'lodash';
+import { sortBy, shuffle, padStart } from 'lodash';
 import MaterialTable from 'material-table';
 import Firebase from '../Firebase';
 import Participant from '../../model/participant';
@@ -50,10 +50,8 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         return p
     }, {});
 
-    //const sortMapping: Record<string, number> = {};
-    //props.event.eventClasses.forEach((ec, idx) => sortMapping[ec.name] = idx);
     const participants = props.event.participants;
-    const sortedParticipants = props.event.startListGenerated ? sortBy(participants, "startTime") : sortBy(participants, (p:Participant) => eventClassOrder[p.eventClass] + p.firstName + p.lastName);
+    const sortedParticipants = props.event.startListGenerated ? sortBy(participants, "startTime") : sortBy(participants, (p:Participant) => padStart(eventClassOrder[p.eventClass], 3, "0") + p.firstName + p.lastName);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
