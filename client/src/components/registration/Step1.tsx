@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
-import _ from 'lodash';
+import { isNil, sortBy } from 'lodash';
 import Participant from '../../model/participant';
 
 interface Props {
@@ -118,7 +118,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                             value={club}
                             options={props.clubs.map(club => club.name)}
                             onChange={(event: any, newValue: any | null) => {
-                                clubChange(_.isNil(newValue) ? "" : newValue);
+                                clubChange(isNil(newValue) ? "" : newValue);
                             }}
                             onInputChange={(event: any, newValue: any) => {
                                 tempValue = newValue; //neccessary due to bug in <Autocomplete>. Should be able to set state directly
@@ -142,7 +142,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                         <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
                                     onChange={eventClassChange} error={!eventClassValid}>
                             <option value=""></option>
-                            {props.event.eventClasses.map(eventClass => (<option value={eventClass.name}
+                            {sortBy(props.event.eventClasses, 'order').map(eventClass => (<option value={eventClass.name}
                                                                                 key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                         </NativeSelect>
                     </FormControl>
