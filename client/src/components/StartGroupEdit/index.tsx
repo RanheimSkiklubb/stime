@@ -10,7 +10,9 @@ interface Props {
 
 const columns: Array<Column<StartGroup>> = [
     { title: 'Pulje', field: 'name'},
-    { title: 'Første starttid', field: 'firstStartTime', type: 'datetime'}
+    { title: 'Første starttid', field: 'firstStartTime', type: 'datetime'},
+    { title: 'Egen nummerserie', field: 'separateNumberRange', type: 'boolean'},
+    { title: 'Første startnummer', field: 'firstNumber', type: 'numeric'}
 ]
 
 const EventClassEdit: React.FC<Props> = (props: Props) => {

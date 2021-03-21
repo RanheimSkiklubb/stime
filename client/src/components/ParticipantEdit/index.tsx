@@ -12,6 +12,7 @@ import LateRegistration from '../LateRegistration';
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
 import ContactDownload from './ContactDownload';
+import StartGroup from '../../model/start-group';
 
 interface Props {
     event: Event;
@@ -60,17 +61,22 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         }
     }
 
+    interface Group {
+        startGroup: StartGroup;
+        eventClasses: EventClass[];
+    }
+
     const handleGenerate = () => {
         const eventClasses = sortBy(props.event.eventClasses, 'order');
-        const startGroups:any = {
+        const startGroups:{[id: string] : Group} = {
             default: {
-                firstStartTime: props.event.startTime,
+                startGroup: {name: 'default', firstStartTime: props.event.startTime, separateNumberRange: false},
                 eventClasses: []
             }
         };
         props.event.startGroups.forEach(sg => {
             startGroups[sg.name] = {
-                firstStartTime: sg.firstStartTime,
+                startGroup: sg,
                 eventClasses: []
             }
         });
@@ -86,9 +92,12 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         const participants = props.event.participants;
         let startNumber = 1;
         for (const startGroupName in startGroups) {
-            const startGroup = startGroups[startGroupName];
-            let startTime = moment(startGroup.firstStartTime);
-            for (const eventClass of startGroup.eventClasses) {
+            const group = startGroups[startGroupName];
+            let startTime = moment(group.startGroup.firstStartTime);
+            if (group.startGroup.separateNumberRange) {
+                startNumber = group.startGroup.firstNumber || startNumber;
+            }
+            for (const eventClass of group.eventClasses) {
                 eventClass.firstStartNumber = startNumber;
                 eventClass.firstStartTime = startTime.toDate();
                 const participantsInClass = shuffle(participants.filter(p => p.eventClass === eventClass.name));

@@ -193,10 +193,15 @@ const mapParticipant = (d: any) => {
 }
 
 const mapStartGroupToFirestore = (startGroup: StartGroup) => {
-    return {
+    const obj:any = {
         name: startGroup.name, 
-        firstStartTime:firebase.firestore.Timestamp.fromDate(startGroup.firstStartTime)
+        firstStartTime:firebase.firestore.Timestamp.fromDate(startGroup.firstStartTime),
+        separateNumberRange: startGroup.separateNumberRange
     };
+    if (startGroup.firstNumber !== undefined) {
+        obj.firstNumber = startGroup.firstNumber;
+    }
+    return obj;
 }
 
 
@@ -227,8 +232,12 @@ const mapEventClassToFirestore = (eventClass: EventClass) => {
 const mapStartGroupFromFirestore = (d: any) => {
     const startGroup: StartGroup = {
         name: d.name, 
-        firstStartTime: d.firstStartTime.toDate()
+        firstStartTime: d.firstStartTime.toDate(),
+        separateNumberRange: d.separateNumberRange
     };
+    if (d.firstNumber !== undefined) {
+        startGroup.firstNumber = d.firstNumber;
+    }
      return startGroup;
 }
 
