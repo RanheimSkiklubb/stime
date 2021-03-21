@@ -4,6 +4,7 @@ export default interface EventClass {
     order: number;
     name: string;
     course: string;
+    startGroup?: string;
     description: string;
     firstStartNumber?: number;
     firstStartTime?: Date;

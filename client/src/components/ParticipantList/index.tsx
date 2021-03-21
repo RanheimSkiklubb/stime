@@ -33,7 +33,7 @@ const ParticipantList: React.FC<Props> = (props: Props) => {
         const name = `${p.firstName} ${p.lastName}`;
         return {startNumber: p.startNumber, startTime: p.startTime, name, club: p.club, eventClass: p.eventClass, sort1: sortMapping[p.eventClass], sort2: name.toLowerCase()};
     });
-    const sortedParticipants = props.event.startListPublished ? _.sortBy(participants, "startTime") : _.sortBy(participants, ["sort1", "sort2"]);
+    const sortedParticipants = props.event.startListPublished ? _.sortBy(participants, ["startTime", "startNumber"]) : _.sortBy(participants, ["sort1", "sort2"]);
 
     return (
         <MaterialTable

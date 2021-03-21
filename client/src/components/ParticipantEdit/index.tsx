@@ -51,7 +51,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     }, {});
 
     const participants = props.event.participants;
-    const sortedParticipants = props.event.startListGenerated ? sortBy(participants, "startTime") : sortBy(participants, (p:Participant) => padStart(eventClassOrder[p.eventClass], 3, "0") + p.firstName + p.lastName);
+    const sortedParticipants = props.event.startListGenerated ? sortBy(participants, ["startTime", "startNumber"]) : sortBy(participants, (p:Participant) => padStart(eventClassOrder[p.eventClass], 3, "0") + p.firstName + p.lastName);
     const data:Participant[] = sortedParticipants;
 
     const typefixInput = (participant: any) => {
@@ -65,7 +65,12 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         let startNumber = 1;
         let startTime = moment(props.event.startTime);
         const eventClasses = sortBy(props.event.eventClasses, 'order');
+        const startGroups:any = {};
+        props.event.startGroups.forEach(sg => startGroups[sg.name] = sg.firstStartTime);
         for (let eventClass of eventClasses) {
+            if (eventClass.startGroup) {
+                startTime = moment(startGroups[eventClass.startGroup]);
+            }
             eventClass.firstStartNumber = startNumber;
             eventClass.firstStartTime = startTime.toDate();
             const participantsInClass = shuffle(participants.filter(p => p.eventClass === eventClass.name));

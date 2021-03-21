@@ -13,20 +13,27 @@ interface Props {
     event: Event
 }
 
-const columns: Array<Column<EventClass>> = [
-    { title: 'Rekkefølge', field: 'order', editable: 'never', hidden: true},
-    { title: 'Klasse', field: 'name'},
-    { title: 'Løype', field: 'course'},
-    { title: 'Beskrivelse', field: 'description'},
-    { title: 'Intervall', field: 'startInterval', lookup: {0:'Fellesstart', 15: 15, 30: 30, 60: 60}},
-    { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
-    { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
-    { title: 'Første starttid', field: 'firstStartTime', type: 'datetime', hidden: false},
-    { title: 'Siste startnr.', field: 'lastStartNumber', type: 'numeric', hidden: false}
-]
+
+
+
 
 const EventClassEdit: React.FC<Props> = (props: Props) => {
     const data:EventClass[] = props.event.eventClasses;
+    const startGroups:any = {}
+    props.event.startGroups.forEach(sg => startGroups[sg.name] = sg.name);
+
+    const columns: Array<Column<EventClass>> = [
+        { title: 'Rekkefølge', field: 'order', editable: 'never', hidden: true},
+        { title: 'Klasse', field: 'name'},
+        { title: 'Løype', field: 'course'},
+        { title: 'Beskrivelse', field: 'description'},
+        { title: 'Intervall', field: 'startInterval', lookup: {0:'Fellesstart', 15: 15, 30: 30, 60: 60}},
+        { title: 'Pulje', field: 'startGroup', lookup: startGroups},
+        { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
+        { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
+        { title: 'Første starttid', field: 'firstStartTime', type: 'datetime', hidden: false},
+        { title: 'Siste startnr.', field: 'lastStartNumber', type: 'numeric', hidden: false}
+    ]
 
     const moveUp = (index: number) => {
         if (index === 0) return;

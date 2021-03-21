@@ -42,13 +42,13 @@ const NewEvent: React.FC<Props> = (props: Props) => {
     const handleOkClick = () => {
         let event: Event;
         if (!eventId) {
-            event = new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [])
+            event = new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], [])
         }
         else {
             const baseEvent = events.filter(eventItem => eventItem.id === eventId)[0];
             const eventClasses = baseEvent.eventClasses.map(eventClass => ({startInterval: eventClass.startInterval, reserveNumbers: eventClass.reserveNumbers, order: eventClass.order, name: eventClass.name, course: eventClass.course, description: eventClass.description}));
             event = new Event("", baseEvent.name + " (kopi)", baseEvent.eventType, baseEvent.description, new Date(), new Date(), 
-                new Date(), baseEvent.registrationEndInfo, false, false, eventClasses, []);
+                new Date(), baseEvent.registrationEndInfo, false, false, baseEvent.startGroups, eventClasses, []);
         }
         props.baseEventCallback(event);
         setShowDialog(false);

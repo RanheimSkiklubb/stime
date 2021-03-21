@@ -4,6 +4,7 @@ import 'firebase/auth';
 import _ from 'lodash';
 import Event from "../../model/event";
 import EventClass from "../../model/event-class";
+import StartGroup from "../../model/start-group";
 import Participant from '../../model/participant';
 import Club from "../../model/club";
 
@@ -96,6 +97,12 @@ const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) =
     });
 };
 
+const updateStartGroups = async (eventId: string, startGroups: StartGroup[]) => {
+    await eventsRef.doc(eventId).update({
+        startGroups: startGroups.map(mapStartGroupToFirestore)
+    });
+};
+
 const updateParticipants = async (eventId: string, participants: Participant[]) => {
     await eventsRef.doc(eventId).update({
         participants: participants.map(mapParticipant)
@@ -125,6 +132,7 @@ const addEvent = async (event: Event) => {
         registrationStart: event.registrationStart, // firebase.firestore.Timestamp.fromDate(event.registrationStart),
         registrationEnd: event.registrationEnd, // firebase.firestore.Timestamp.fromDate(event.registrationEnd),
         registrationEndInfo: event.registrationEndInfo,
+        startGroups: event.startGroups,
         eventClasses: event.eventClasses,
         participants: event.participants,
         startListGenerated: false,
@@ -184,6 +192,14 @@ const mapParticipant = (d: any) => {
     return p;
 }
 
+const mapStartGroupToFirestore = (startGroup: StartGroup) => {
+    return {
+        name: startGroup.name, 
+        firstStartTime:firebase.firestore.Timestamp.fromDate(startGroup.firstStartTime)
+    };
+}
+
+
 const mapEventClassToFirestore = (eventClass: EventClass) => {
     const obj:any = {
         name: eventClass.name, 
@@ -193,6 +209,9 @@ const mapEventClassToFirestore = (eventClass: EventClass) => {
         startInterval: eventClass.startInterval,
         reserveNumbers: eventClass.reserveNumbers
     };
+    if (eventClass.startGroup !== undefined) {
+        obj.startGroup = eventClass.startGroup;
+    } 
     if (eventClass.firstStartNumber !== undefined) {
         obj.firstStartNumber = eventClass.firstStartNumber;
     } 
@@ -202,7 +221,15 @@ const mapEventClassToFirestore = (eventClass: EventClass) => {
     if (eventClass.lastStartNumber !== undefined) {
         obj.lastStartNumber = eventClass.lastStartNumber;
     } 
-     return eventClass;
+     return obj;
+}
+
+const mapStartGroupFromFirestore = (d: any) => {
+    const startGroup: StartGroup = {
+        name: d.name, 
+        firstStartTime: d.firstStartTime.toDate()
+    };
+     return startGroup;
 }
 
 const mapEventClassFromFirestore = (d: any) => {
@@ -214,6 +241,9 @@ const mapEventClassFromFirestore = (d: any) => {
         startInterval: d.startInterval,
         reserveNumbers: d.reserveNumbers
     };
+    if (d.startGroup !== undefined) {
+        eventClass.startGroup = d.startGroup;
+    }
     if (d.firstStartNumber !== undefined) {
         eventClass.firstStartNumber = d.firstStartNumber;
     } 
@@ -236,6 +266,7 @@ const eventConverter = {
             registrationStart: firebase.firestore.Timestamp.fromDate(event.registrationStart),
             registrationEnd: firebase.firestore.Timestamp.fromDate(event.registrationEnd),
             registrationEndInfo: event.registrationEndInfo,
+            startGroups: event.startGroups,
             eventClasses: event.eventClasses,
             participants: event.participants,
             startListGenerated: event.startListGenerated,
@@ -255,6 +286,7 @@ const eventConverter = {
             data.registrationEndInfo,
             data.startListGenerated,
             data.startListPublished,
+            data.startGroups ? data.startGroups.map(mapStartGroupFromFirestore) : [],
             data.eventClasses.map(mapEventClassFromFirestore),
             data.participants.map(mapParticipant)
         );
@@ -286,6 +318,7 @@ const exported = {
     addParticipant,
     addContact,
     fetchContacts,
+    updateStartGroups,
     updateEventClasses,
     updateParticipants,
     setStartListGenerated,

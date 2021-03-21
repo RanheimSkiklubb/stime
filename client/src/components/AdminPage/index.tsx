@@ -8,6 +8,7 @@ import Event from '../../model/event';
 import { useHistory, useParams, useRouteMatch, Link, Switch, Route } from "react-router-dom";
 import ParticipantEdit from '../ParticipantEdit';
 import EventClassEdit from '../EventClassEdit';
+import StartGroupEdit from '../StartGroupEdit';
 import Firebase from '../Firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -46,7 +47,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
 
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(firebase.auth());
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], []));
+    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
     const [eventId, setEventId] = useState(useParams<MatchParams>().eventId);
     const [baseEventSelected, setBaseEventSelected] = useState(false);
 
@@ -110,12 +111,14 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 <AppBar position="static" className={classes.appBar}>
                     <Tabs value={props.pathname || url} aria-label="simple tabs example">
                         <Tab label="Arrangement" component={ Link } value={`${url}`} to={`${url}`}/>
+                        <Tab label={`Puljer (${event.startGroups.length})`} component={ Link } value={`${url}/groups`} to={`${url}/groups`}/>
                         <Tab label={`Klasser (${event.eventClasses.length})`} component={ Link } value={`${url}/classes`} to={`${url}/classes`}/>
                         <Tab label={`Deltakere (${event.participants.length})`} component={ Link } value={`${url}/list`} to={`${url}/list`}/>
                     </Tabs>
                 </AppBar>
                 <Switch>
                     <Route exact path={`${path}`}>{baseEventSelected || eventId ? <EventInfo event={event} saveEventCallback={saveEvent}/> : <NewEvent baseEventCallback={setBaseEvent}/>}</Route>
+                    <Route path={`${path}/groups`}><StartGroupEdit event={event}/></Route>
                     <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
                     <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>´
                 </Switch>

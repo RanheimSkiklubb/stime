@@ -1,5 +1,6 @@
 import Participant from './participant';
 import EventClass from './event-class';
+import StartGroup from './start-group';
 import moment from 'moment';
 
 export default class Event {
@@ -22,6 +23,7 @@ export default class Event {
                 registrationEndInfo: string,
                 startListGenerated: boolean,
                 startListPublished: boolean,
+                readonly startGroups: StartGroup[],
                 readonly eventClasses: EventClass[],
                 readonly participants: Participant[]) {
                     this.name = name;
