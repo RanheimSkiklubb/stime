@@ -61,27 +61,46 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     }
 
     const handleGenerate = () => {
-        const participants = props.event.participants;
-        let startNumber = 1;
-        let startTime = moment(props.event.startTime);
         const eventClasses = sortBy(props.event.eventClasses, 'order');
-        const startGroups:any = {};
-        props.event.startGroups.forEach(sg => startGroups[sg.name] = sg.firstStartTime);
+        const startGroups:any = {
+            default: {
+                firstStartTime: props.event.startTime,
+                eventClasses: []
+            }
+        };
+        props.event.startGroups.forEach(sg => {
+            startGroups[sg.name] = {
+                firstStartTime: sg.firstStartTime,
+                eventClasses: []
+            }
+        });
         for (let eventClass of eventClasses) {
             if (eventClass.startGroup) {
-                startTime = moment(startGroups[eventClass.startGroup]);
+                startGroups[eventClass.startGroup].eventClasses.push(eventClass)
             }
-            eventClass.firstStartNumber = startNumber;
-            eventClass.firstStartTime = startTime.toDate();
-            const participantsInClass = shuffle(participants.filter(p => p.eventClass === eventClass.name));
-            for (let p of participantsInClass) {
-                p.startNumber = startNumber++;
-                p.startTime = startTime.format("HH:mm:ss");
-                startTime = startTime.add(eventClass.startInterval, 's')
+            else {
+                startGroups.default.eventClasses.push(eventClass);
             }
-            startNumber += eventClass.reserveNumbers;
-            eventClass.lastStartNumber = startNumber - 1;
-            startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
+        }
+
+        const participants = props.event.participants;
+        let startNumber = 1;
+        for (const startGroupName in startGroups) {
+            const startGroup = startGroups[startGroupName];
+            let startTime = moment(startGroup.firstStartTime);
+            for (const eventClass of startGroup.eventClasses) {
+                eventClass.firstStartNumber = startNumber;
+                eventClass.firstStartTime = startTime.toDate();
+                const participantsInClass = shuffle(participants.filter(p => p.eventClass === eventClass.name));
+                for (let p of participantsInClass) {
+                    p.startNumber = startNumber++;
+                    p.startTime = startTime.format("HH:mm:ss");
+                    startTime = startTime.add(eventClass.startInterval, 's')
+                }
+                startNumber += eventClass.reserveNumbers;
+                eventClass.lastStartNumber = startNumber - 1;
+                startTime = startTime.add(eventClass.reserveNumbers * eventClass.startInterval, 's');
+            }
         }
         props.event.startListGenerated = true;
         (async () => {
