@@ -6,6 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import Event from '../../model/event';
 import Box from '@material-ui/core/Box';
+import { sortBy } from 'lodash';
 
 
 interface Props {
@@ -34,7 +35,7 @@ const SelectClass: React.FC<Props> = (props: Props) => {
                         <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
                                     onChange={eventClassChange}>
                             <option value=""></option>
-                            {props.event.eventClasses.map(eventClass => (<option value={eventClass.name}
+                            {sortBy(props.event.eventClasses, 'order').map(eventClass => (<option value={eventClass.name}
                                                                                 key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
                         </NativeSelect>
                     </FormControl>
