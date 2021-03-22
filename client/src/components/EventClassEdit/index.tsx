@@ -13,10 +13,6 @@ interface Props {
     event: Event
 }
 
-
-
-
-
 const EventClassEdit: React.FC<Props> = (props: Props) => {
     const data:EventClass[] = props.event.eventClasses;
     const startGroups:any = {}
@@ -91,7 +87,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
             { props.event.startListPublished ? 
                 <p className={classes.warning}>
                     Endringer i eksisterende klasser utover navn og løypenavn har ingen effekt etter at startliste er publisert.<br/>
-                    Ved innlegging av nye klasser må første/siste startnummer og første starttid beregnes og settes manuelt.
+                    Ved innlegging av nye klasser for etteranmelding, må første/siste startnummer og første starttid settes manuelt.
                 </p> : null}
             <MaterialTable
                 title="Klasser"

@@ -3,6 +3,8 @@ import MaterialTable, { Column } from 'material-table';
 import StartGroup from '../../model/start-group';
 import Firebase from '../Firebase';
 import Event from '../../model/event';
+import {makeStyles, Theme} from '@material-ui/core/styles';
+import {createStyles} from "@material-ui/styles";
 
 interface Props {
     event: Event
@@ -22,10 +24,27 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         if ('firstStartTime' in data) {
             data.firstStartTime = new Date(data.firstStartTime);
         }
+        if (!('separateNumberRange' in data)) {
+            data.separateNumberRange = false;
+        }
     }
+
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            warning: {
+                fontWeight: 'bold',
+                color: theme.palette.warning.main
+            },
+        }
+    ));
+const classes = useStyles();
 
     return (
         <>
+        { props.event.startListPublished ? 
+                <p className={classes.warning}>
+                    Endringer i eksisterende puljer har ingen effekt etter at startliste er publisert.
+                </p> : null}
             <MaterialTable
                 title="Puljer"
                 columns={columns}
