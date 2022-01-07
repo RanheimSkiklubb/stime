@@ -9,7 +9,8 @@ import Step3 from './Step3';
 
 interface Props {
     event: Event,
-    clubs: Club[]
+    clubs: Club[],
+    closeCallback: () => void
 }
 
 const RegistrationForm: React.FC<Props> = (props: Props) => {
@@ -49,14 +50,18 @@ const RegistrationForm: React.FC<Props> = (props: Props) => {
         setProgress(2);
     }
 
+    const handleClose = () => {
+        props.closeCallback();
+    }
+
     if (progress === 1) {
-        return <Step1 nextCallback={handleNext} participant={participant} email={email} phone={phone} event={props.event} clubs={props.clubs} />
+        return <Step1 nextCallback={handleNext} closeCallback={handleClose} participant={participant} email={email} phone={phone} event={props.event} clubs={props.clubs} />
     }
     if (progress === 2) {
         return <Step2 event={props.event} participant={participant} 
                     email={email} phone={phone} editCallback={handleEdit} registerCallback={handleRegister} />;
     }   
-    return <Step3 registerMoreCallback={handleRegisterMore}/>;
+    return <Step3 registerMoreCallback={handleRegisterMore} closeCallback={handleClose}/>;
 }
 
 export default RegistrationForm;

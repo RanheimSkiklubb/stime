@@ -19,6 +19,7 @@ interface Props {
     email: string;
     phone: string;
     nextCallback: (participant: Participant, email: string, phone:string) => void;
+    closeCallback: () => void;
 }
 
 const Step1: React.FC<Props> = (props: Props) => {
@@ -94,10 +95,17 @@ const Step1: React.FC<Props> = (props: Props) => {
         props.nextCallback(participant, email, phone)
     }
 
+    const handleClose = () => {
+        props.closeCallback();
+    }
+
     let tempValue: string;
     return (
         <form noValidate autoComplete="off">
             <Grid container spacing={2}>
+                <Grid item xs={12} style={{textAlign: 'center', fontWeight: 'bold'}}>
+                    <p>Steg 1 av 2: Registrer deltaker</p>
+                </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
                         <TextField required id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
@@ -159,9 +167,12 @@ const Step1: React.FC<Props> = (props: Props) => {
                                 error={!phoneValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} style={{textAlign: 'right'}}>
-                    <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
-                            disabled={!formValid}>Neste</Button>
+                <Grid container style={{margin: '20px 8px 20px 8px'}}>
+                    <Grid item xs={6}><Button variant="contained" color="default" onClick={handleClose}>Lukk</Button></Grid>
+                    <Grid item xs={6} style={{textAlign: 'right'}}>
+                        <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
+                            disabled={!formValid}>Gå videre</Button>
+                    </Grid>
                 </Grid>
             </Grid>
         </form>
