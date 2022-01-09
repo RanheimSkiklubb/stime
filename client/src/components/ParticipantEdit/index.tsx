@@ -13,6 +13,7 @@ import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
 import ContactDownload from './ContactDownload';
 import StartGroup from '../../model/start-group';
+import ImportParticipants from '../ImportParticipants';
 
 interface Props {
     event: Event;
@@ -129,7 +130,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
         <>
             <div className={classes.root}>
                 {!props.event.startListGenerated ? 
-                    <><Registration event={props.event} />&nbsp;</> : 
+                    <><Registration event={props.event} />&nbsp;<ImportParticipants event={props.event} />&nbsp;</> : 
                     <><LateRegistration event={props.event} caption="Etteranmelding"/>&nbsp;</>
                 }
                 {!props.event.startListPublished ? (<>
