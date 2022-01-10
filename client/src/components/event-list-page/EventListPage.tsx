@@ -16,6 +16,7 @@ import firebase from "firebase";
 import HeaderBar from "../headerbar/HeaderBar";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
+import {orderBy} from 'lodash';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,8 +39,12 @@ const EventListPage: React.FC = (props) => {
     const [user] = useAuthState(firebase.auth());
     const [events, setEvents] = useState<Event[]>([]);
 
+    const sortAndStore = (events:Event[]) => {
+        setEvents(orderBy(events, ['startTime'], ['desc']));
+    }
+
     useEffect(() => {
-        return Firebase.subscribeEvents(setEvents);
+        return Firebase.subscribeEvents(sortAndStore);
     }, []);
 
     useEffect(() => {
