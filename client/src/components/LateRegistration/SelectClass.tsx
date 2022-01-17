@@ -1,11 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
-import Grid from '@material-ui/core/Grid';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import NativeSelect from '@mui/material/NativeSelect';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
 import Event from '../../model/event';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import { sortBy } from 'lodash';
 
 
@@ -28,7 +28,7 @@ const SelectClass: React.FC<Props> = (props: Props) => {
 
     return (
         <form noValidate autoComplete="off">
-            <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
                 <Grid item xs={9}>
                     <FormControl fullWidth>
                         <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
@@ -48,7 +48,7 @@ const SelectClass: React.FC<Props> = (props: Props) => {
                 </Grid>
             </Grid>
         </form>
-    )
+    );
 }
 
 export default SelectClass;

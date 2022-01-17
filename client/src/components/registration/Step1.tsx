@@ -1,11 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import NativeSelect from '@mui/material/NativeSelect';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Button from '@mui/material/Button';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
@@ -168,7 +168,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                     </FormControl>
                 </Grid>
                 <Grid container style={{margin: '20px 8px 20px 8px'}}>
-                    <Grid item xs={6}><Button variant="contained" color="default" onClick={handleClose}>Lukk</Button></Grid>
+                    <Grid item xs={6}><Button variant="contained" onClick={handleClose}>Lukk</Button></Grid>
                     <Grid item xs={6} style={{textAlign: 'right'}}>
                         <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
                             disabled={!formValid}>Gå videre</Button>
@@ -176,7 +176,7 @@ const Step1: React.FC<Props> = (props: Props) => {
                 </Grid>
             </Grid>
         </form>
-    )
+    );
 }
 
 export default Step1;

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import MaterialTable from 'material-table';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
@@ -106,7 +106,7 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="primary" onClick={doImport} disabled={participants.length === 0}>Importer</Button>
-                    <Button variant="contained" color="default" onClick={handleClose}>Avbryt</Button>
+                    <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

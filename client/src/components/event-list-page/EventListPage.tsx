@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
-import {CheckCircle} from "@material-ui/icons";
+import {CheckCircle} from "@mui/icons-material";
 import {useAuthState} from "react-firebase-hooks/auth";
-import firebase from "firebase";
+import {getAuth} from "firebase/auth";
 import HeaderBar from "../headerbar/HeaderBar";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
+import { Theme } from "@mui/material/styles";
+import {makeStyles} from '@mui/styles';
 import {orderBy} from 'lodash';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
         root: {
             flexGrow: 1,
         },
@@ -29,14 +28,13 @@ const useStyles = makeStyles((theme: Theme) =>
         icon: {
             color: 'green',
         },
-    })
-);
+    }));
 
 const EventListPage: React.FC = (props) => {
-    const classes = useStyles({});
+    const classes = useStyles();
     const history = useHistory();
     const [admin, setAdmin] = useState<boolean>(false);
-    const [user] = useAuthState(firebase.auth());
+    const [user] = useAuthState(getAuth());
     const [events, setEvents] = useState<Event[]>([]);
 
     const sortAndStore = (events:Event[]) => {
@@ -50,7 +48,8 @@ const EventListPage: React.FC = (props) => {
     useEffect(() => {
         const fetchClaims = async () => {
             const idTokenResult =  await user?.getIdTokenResult(true);
-            setAdmin(idTokenResult?.claims.admin);
+            const admin: boolean = idTokenResult ? idTokenResult.claims.admin as unknown as boolean : false;
+            setAdmin(admin === true);
         };
         if (user) fetchClaims();
     }, [user, setAdmin])

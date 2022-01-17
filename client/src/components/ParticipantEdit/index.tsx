@@ -6,11 +6,11 @@ import Firebase from '../Firebase';
 import Participant from '../../model/participant';
 import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import moment from 'moment';
 import LateRegistration from '../LateRegistration';
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
+import { Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import ContactDownload from './ContactDownload';
 import StartGroup from '../../model/start-group';
 import ImportParticipants from '../ImportParticipants';
@@ -19,15 +19,14 @@ interface Props {
     event: Event;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
         root: {
             padding: theme.spacing(1),
         },
     }));
 
 const ParticipantEdit: React.FC<Props> = (props: Props) => {
-    const classes = useStyles({});
+    const classes = useStyles();
     const eventClasses:any = {};
     sortBy(props.event.eventClasses, 'order').forEach(ec => eventClasses[ec.name] = ec.name);
 
@@ -48,7 +47,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     ];
 
     const eventClassOrder:any = props.event.eventClasses.reduce((p:any, c:EventClass) => {
-        p[c.name] = c.order; 
+        p[c.name] = c.order;
         return p
     }, {});
 
@@ -129,8 +128,8 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
     return (
         <>
             <div className={classes.root}>
-                {!props.event.startListGenerated ? 
-                    <><Registration event={props.event} />&nbsp;<ImportParticipants event={props.event} />&nbsp;</> : 
+                {!props.event.startListGenerated ?
+                    <><Registration event={props.event} />&nbsp;<ImportParticipants event={props.event} />&nbsp;</> :
                     <><LateRegistration event={props.event} caption="Etteranmelding"/>&nbsp;</>
                 }
                 {!props.event.startListPublished ? (<>
@@ -185,7 +184,7 @@ const ParticipantEdit: React.FC<Props> = (props: Props) => {
             />
         </>
 
-    ); 
+    );
 }
 
 export default ParticipantEdit;

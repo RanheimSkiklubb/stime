@@ -1,24 +1,23 @@
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Typography from "@mui/material/Typography";
 import Login from "../login/Login";
-import AppBar from "@material-ui/core/AppBar";
+import AppBar from "@mui/material/AppBar";
 import React, {useEffect, useState} from "react";
-import {ListItemIcon, Menu, MenuItem} from "@material-ui/core";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
-import {Home, Create} from "@material-ui/icons";
+import {ListItemIcon, Menu, MenuItem} from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import {makeStyles} from "@mui/styles";
+import {Home, Create} from "@mui/icons-material";
 import {useHistory} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
-import firebase from "firebase";
+import {getAuth} from "firebase/auth";
 
 interface Props {
     heading: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         flexGrow: 1,
     },
@@ -34,17 +33,18 @@ const useStyles = makeStyles((theme: Theme) =>
 }));
 
 const HeaderBar: React.FC<Props> = (props: Props) => {
-    const classes = useStyles({});
+    const classes = useStyles();
 
     const history = useHistory();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [admin, setAdmin] = useState<boolean>(false);
-    const [user] = useAuthState(firebase.auth());
+    const [user] = useAuthState(getAuth());
 
     useEffect(() => {
         const fetchClaims = async () => {
             const idTokenResult =  await user?.getIdTokenResult(true);
-            setAdmin(idTokenResult?.claims.admin);
+            const admin: boolean = idTokenResult ? idTokenResult.claims.admin as unknown as boolean : false;
+            setAdmin(admin === true);
         };
         if (user) fetchClaims();
     }, [user, setAdmin])
@@ -78,7 +78,8 @@ const HeaderBar: React.FC<Props> = (props: Props) => {
                         aria-label="menu-icon"
                         aria-controls="menu"
                         aria-haspopup="true"
-                        onClick={handleClick}>
+                        onClick={handleClick}
+                        size="large">
                         <MenuIcon/>
                     </IconButton>
                     <Menu
@@ -110,7 +111,8 @@ const HeaderBar: React.FC<Props> = (props: Props) => {
                     <Login/>
                 </Toolbar>
             </AppBar>
-        </div>);
+        </div>
+    );
 };
 
 export default HeaderBar;
