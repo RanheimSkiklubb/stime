@@ -101,7 +101,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         }
         let eventEditPane;
         if (baseEventSelected || eventId) {
-            if (event.name.length > 0) {
+            if (event.id.length > 0) {
                 eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
             }
             else {
