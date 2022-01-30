@@ -60,10 +60,6 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         if (user) fetchClaims();
     }, [user, setAdmin])
 
-    const loadEvent = (e: Event) => {
-        setEvent(e);
-    }
-
     const setBaseEvent = (e: Event) => {
         setEvent(e);
         setBaseEventSelected(true);
@@ -92,7 +88,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (eventIdFromUrl) {
             setEventId(eventIdFromUrl);
-            return Firebase.subscribeEvent(eventId, setEvent);
+            return Firebase.subscribeEvent(eventIdFromUrl, setEvent);
         }
     }, [eventIdFromUrl]);
     console.log("BaseEventSelected: ", baseEventSelected);
@@ -102,6 +98,18 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         if (redirect) {
             const url = `/admin/${eventId}`;
             return (<Redirect to={url}/>);
+        }
+        let eventEditPane;
+        if (baseEventSelected || eventId) {
+            if (event.name.length > 0) {
+                eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
+            }
+            else {
+                eventEditPane = <></>
+            }
+        }
+        else {
+            eventEditPane = <NewEvent baseEventCallback={setBaseEvent}/>
         }
         return (
             <React.Fragment>
@@ -116,7 +124,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                     </Tabs>
                 </AppBar>
                 <Switch>
-                    <Route exact path={`${path}`}>{baseEventSelected || eventId ? <EventInfo event={event} saveEventCallback={saveEvent}/> : <NewEvent baseEventCallback={setBaseEvent}/>}</Route>
+                    <Route exact path={`${path}`}>{eventEditPane}</Route>
                     <Route path={`${path}/groups`}><StartGroupEdit event={event}/></Route>
                     <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
                     <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>
