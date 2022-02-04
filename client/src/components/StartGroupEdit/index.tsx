@@ -3,8 +3,8 @@ import MaterialTable, { Column } from 'material-table';
 import StartGroup from '../../model/start-group';
 import Firebase from '../Firebase';
 import Event from '../../model/event';
-import {makeStyles, Theme} from '@material-ui/core/styles';
-import {createStyles} from "@material-ui/styles";
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 
 interface Props {
     event: Event
@@ -29,19 +29,18 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         }
     }
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
+    const useStyles = makeStyles((theme: Theme) => ({
             warning: {
                 fontWeight: 'bold',
                 color: theme.palette.warning.main
             },
         }
     ));
-const classes = useStyles();
+    const classes = useStyles();
 
     return (
         <>
-        { props.event.startListPublished ? 
+        { props.event.startListPublished ?
                 <p className={classes.warning}>
                     Endringer i eksisterende puljer har ingen effekt etter at startliste er publisert.
                 </p> : null}

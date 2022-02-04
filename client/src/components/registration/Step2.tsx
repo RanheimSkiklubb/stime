@@ -1,14 +1,13 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Alert from '@material-ui/lab/Alert';
-import {makeStyles, Theme} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Button from '@mui/material/Button';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
-
 import { compareTwoStrings }  from 'string-similarity';
-import {createStyles} from "@material-ui/styles";
 
 interface Props {
     event: Event,
@@ -39,8 +38,7 @@ const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null
 
 const Step2: React.FC<Props> = (props: Props) => {
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
+    const useStyles = makeStyles((theme: Theme) => ({
         similar: {
             '& td': {
                 color: "grey"
@@ -50,14 +48,14 @@ const Step2: React.FC<Props> = (props: Props) => {
             fontWeight: 'bold',
         },
     }));
-    const classes = useStyles({});
+    const classes = useStyles();
     const similar = lookForSimilarRegistrations(props.participant, props.event);
     let similarNotification = null;
     if (similar) {
         similarNotification = (
             <React.Fragment>
                 <Grid item xs={12}>
-                    <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}} 
+                    <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}}
                         severity="warning">Det finnes allerede en liknende påmelding</Alert>
                 </Grid>
                 <Grid item xs={12}>
@@ -67,7 +65,7 @@ const Step2: React.FC<Props> = (props: Props) => {
         )
     }
     return (
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justifyContent="center" alignItems="center">
             <Grid item xs={12} style={{textAlign: 'center'}}>
                 <p className={classes.emphasize}>Steg 2 av 2: Bekreft påmelding</p>
             </Grid>
@@ -80,7 +78,7 @@ const Step2: React.FC<Props> = (props: Props) => {
                 <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={props.registerCallback}>Meld på</Button></Grid>
             </Grid>
         </Grid>
-    )
+    );
 }
 
 export default Step2;

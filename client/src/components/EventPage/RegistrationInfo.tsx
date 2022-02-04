@@ -1,20 +1,19 @@
 import React from 'react';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 import Event from '../../model/event';
 import moment from 'moment';
 
 import Registration from '../registration/Registration';
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
+import { Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 
 interface Props {
     event: Event,
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
         registrationDate: {
             marginTop: '0',
             marginBottom: theme.spacing(3),
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const RegistrationInfo: React.FC<Props> = (props: Props) => {
-    const classes = useStyles({});
+    const classes = useStyles();
     if (!props.event.registrationStarted()) {
         return (
             <TableRow>

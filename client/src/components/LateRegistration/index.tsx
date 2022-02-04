@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 import LateRegistrationForm from './LateRegistrationForm';
 
 import Event from '../../model/event';
@@ -37,7 +37,7 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
                     <LateRegistrationForm event={props.event} clubs={clubs} closeCallback={handleClose}/>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="default" onClick={handleClose}>Lukk</Button>
+                    <Button variant="contained" onClick={handleClose}>Lukk</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>

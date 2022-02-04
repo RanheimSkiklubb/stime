@@ -1,19 +1,31 @@
 import React, { useState, ChangeEvent } from 'react';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Event from '../../model/event';
 import moment from 'moment';
-import {makeStyles} from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
+import {makeStyles} from "@mui/styles";
 
 interface Props {
     event: Event;
-    saveEventCallback: (name: string, eventType: string, description: string, 
+    saveEventCallback: (name: string, eventType: string, description: string,
         startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => void;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    ({
+    root: {
+        '&$disabled': {
+            color: 'dimgray'
+        }
+    },
+        disabled: {}
+    }));
+
 const EventInfo: React.FC<Props> = (props: Props) => {
+    const classes = useStyles({});
 
     const [name, setName] = useState(props.event.name);
     const [eventType, setEventType] = useState(props.event.eventType);
@@ -63,20 +75,9 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     };
 
     const save = () => {
-        props.saveEventCallback(name, eventType, description, startTime, registrationStart, 
+        props.saveEventCallback(name, eventType, description, startTime, registrationStart,
             registrationEnd, registrationEndInfo);
     }
-
-    const useStyles = makeStyles(theme => ({
-        root: {
-            '&$disabled': {
-                color: 'dimgray' 
-            }
-        },
-        disabled: {}
-    }));
-
-    const classes = useStyles();
 
     return (
         <React.Fragment>
@@ -153,27 +154,27 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="description" label="Arrangementsinfo" 
-                            value={description} onChange={descriptionChange} 
+                        <TextField id="description" label="Arrangementsinfo"
+                            value={description} onChange={descriptionChange}
                             multiline rows={5}/>
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <FormControl fullWidth>
-                        <TextField disabled id="startListGenerated" label="Startliste generert" 
+                    <FormControl sx={(theme) => ({marginBottom: theme.spacing(1)})}fullWidth>
+                        <TextField disabled id="startListGenerated" label="Startliste generert"
                             defaultValue={props.event.startListGenerated ? "Ja" : "Nei"}
-                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
+                            InputProps={{classes: classes}}/>
                     </FormControl>
                     <FormControl fullWidth>
-                        <TextField disabled id="startListPublished" label="Startliste publisert" 
+                        <TextField disabled id="startListPublished" label="Startliste publisert"
                             defaultValue={props.event.startListPublished ? "Ja" : "Nei"}
-                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}} />
+                            InputProps={{classes: classes}} />
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl fullWidth>
-                        <TextField id="registrationEndInfo" label="Etteranmeldingsinfo" value={registrationEndInfo} 
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setRegistrationEndInfo(e.target.value)} 
+                        <TextField id="registrationEndInfo" label="Etteranmeldingsinfo" value={registrationEndInfo}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setRegistrationEndInfo(e.target.value)}
                             multiline rows={4}/>
                     </FormControl>
                 </Grid>

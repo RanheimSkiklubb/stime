@@ -1,7 +1,7 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import { makeStyles } from '@mui/styles';
 import EventListPage from './components/event-list-page/EventListPage';
 import EventPage from './components/EventPage';
 import AdminPage from './components/AdminPage';
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 });
 
 const App: React.FC = () => {
-    const classes = useStyles({});
+    const classes = useStyles();
     return (
         <React.Fragment>
             <CssBaseline />
@@ -26,7 +26,7 @@ const App: React.FC = () => {
                         <Route path="/event/:eventId" render={(history) => (<EventPage pathname={history.location.pathname}/>)} />
                         <Route path="/admin/:eventId" render={(history) => (<AdminPage pathname={history.location.pathname}/>)} />
                         <Route path="/admin/" component={(props:any) => <AdminPage {...props} />} />
-                        <Route exact path="/">
+                        <Route path="/" >
                             <EventListPage/>
                         </Route>
                     </Switch>

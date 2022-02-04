@@ -1,16 +1,14 @@
 import React from 'react';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from "@material-ui/core/Tooltip";
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from "@mui/material/Tooltip";
 
 import {useAuthState} from 'react-firebase-hooks/auth';
 import Firebase from '../Firebase';
-import firebase from 'firebase';
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
+import { getAuth } from 'firebase/auth';
+import {makeStyles} from "@mui/styles";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles({
         root: {
             flexGrow: 1,
         },
@@ -21,11 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
             width: 32,
             height: 32,
         },
-    }));
+    });
 
 const Login: React.FC = () => {
-    const classes = useStyles({});
-    const [user, initializing, error] = useAuthState(firebase.auth());
+    const classes = useStyles();
+    const [user, initializing, error] = useAuthState(getAuth());
 
     if (initializing) {
         return (
@@ -44,7 +42,7 @@ const Login: React.FC = () => {
         const src: string = user.photoURL ? user.photoURL : 'broken';
         return (
             <div className={classes.login} onClick={Firebase.logout}>
-                <Tooltip title={alt} aria-label="avatar">
+                <Tooltip title="Click to log out" aria-label="logout">
                     <Avatar alt={alt} src={src} className={classes.avatar}/>
                 </Tooltip>
             </div>);

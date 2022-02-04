@@ -3,11 +3,11 @@ import MaterialTable, { Column } from 'material-table';
 import EventClass from '../../model/event-class';
 import Firebase from '../Firebase';
 import Event from '../../model/event';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {max, find, sortBy} from 'lodash';
-import {makeStyles, Theme} from '@material-ui/core/styles';
-import {createStyles} from "@material-ui/styles";
+import { Theme } from '@mui/material/styles';
+import {makeStyles} from '@mui/styles';
 
 interface Props {
     event: Event
@@ -61,8 +61,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         })();
     }
 
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
+    const useStyles = makeStyles((theme: Theme) => ({
             warning: {
                 fontWeight: 'bold',
                 color: theme.palette.warning.main
@@ -84,7 +83,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-            { props.event.startListPublished ? 
+            { props.event.startListPublished ?
                 <p className={classes.warning}>
                     Endringer i eksisterende klasser utover navn og løypenavn har ingen effekt etter at startliste er publisert.<br/>
                     Ved innlegging av nye klasser for etteranmelding, må første/siste startnummer og første starttid settes manuelt.
@@ -96,6 +95,8 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
                 options={{
                     sorting: true,
                     paging: false,
+                    padding: "dense",
+                    rowStyle: {fontSize: 12},
                     search: false
                 }}
                 actions={[

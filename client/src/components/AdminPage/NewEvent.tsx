@@ -1,13 +1,13 @@
 import React, {useEffect, useState, ChangeEvent} from "react";
 import {useHistory} from "react-router-dom";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import FormControl from '@material-ui/core/FormControl';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import NativeSelect from '@mui/material/NativeSelect';
+import FormControl from '@mui/material/FormControl';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
 import moment from 'moment';
@@ -47,7 +47,7 @@ const NewEvent: React.FC<Props> = (props: Props) => {
         else {
             const baseEvent = events.filter(eventItem => eventItem.id === eventId)[0];
             const eventClasses = baseEvent.eventClasses.map(eventClass => ({startInterval: eventClass.startInterval, reserveNumbers: eventClass.reserveNumbers, order: eventClass.order, name: eventClass.name, course: eventClass.course, description: eventClass.description}));
-            event = new Event("", baseEvent.name + " (kopi)", baseEvent.eventType, baseEvent.description, new Date(), new Date(), 
+            event = new Event("", baseEvent.name + " (kopi)", baseEvent.eventType, baseEvent.description, new Date(), new Date(),
                 new Date(), baseEvent.registrationEndInfo, false, false, baseEvent.startGroups, eventClasses, []);
         }
         props.baseEventCallback(event);
@@ -55,19 +55,24 @@ const NewEvent: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth="sm" fullWidth={true} disableBackdropClick={true} disableEscapeKeyDown={true}>
-            <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Velg utgangspunkt for nytt arrangement</DialogTitle>
+        <Dialog
+            open={showDialog}
+            onClose={() => setShowDialog(false)}
+            maxWidth="sm"
+            fullWidth={true}
+            disableEscapeKeyDown={true}>
+            <DialogTitle id="form-dialog-title" sx={{textAlign: 'center'}}>Velg utgangspunkt for nytt arrangement</DialogTitle>
             <DialogContent>
                 <FormControl fullWidth>
                     <NativeSelect inputProps={{id: 'event-class-label'}} onChange={eventChange}>
                         <option value="">Tomt arrangement</option>
-                        {events.map(event => 
+                        {events.map(event =>
                             (<option value={event.id} key={event.id}>{`${moment(event.startTime).format('DD.MM.YYYY')}: ${event.name}`}</option>))}
                     </NativeSelect>
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="default" onClick={handleCancelClick}>Avbryt</Button>
+                <Button variant="contained" onClick={handleCancelClick}>Avbryt</Button>
                 <Button variant="contained" color="primary" onClick={handleOkClick}>Ok</Button>
             </DialogActions>
         </Dialog>

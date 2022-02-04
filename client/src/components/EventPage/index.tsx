@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import Event from '../../model/event';
 import { useParams, useRouteMatch, Link, Switch, Route } from "react-router-dom";
 import ParticipantList from '../ParticipantList';
@@ -31,10 +31,10 @@ const EventPage: React.FC<Props> = (props: Props) => {
         <React.Fragment>
             <HeaderBar heading={event.name}/>
             <AppBar position="static">
-                <Tabs value={props.pathname} aria-label="simple tabs example">
-                    <Tab label="Informasjon" component={ Link } value={`${url}`} to={`${url}`} />
+                <Tabs indicatorColor="primary" textColor="inherit" value={props.pathname} aria-label="simple tabs example">
+                    <Tab label="Informasjon" component={ Link } value={`${url}`} to={`${url}`}/>
                     <Tab label={event.startListPublished ? `Startliste (${event.participants.length})` : `Deltakerliste (${event.participants.length})`}
-                        component={ Link } value={`${url}/list`} to={`${url}/list`} />
+                         component={ Link } value={`${url}/list`} to={`${url}/list`} />
                 </Tabs>
             </AppBar>
             <Switch>

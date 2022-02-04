@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import AppBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography";
-import {makeStyles, Theme} from "@material-ui/core/styles";
-import {createStyles} from "@material-ui/styles";
-import { match } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Typography from "@mui/material/Typography";
+import { Theme } from "@mui/material/styles";
+import {makeStyles} from "@mui/styles";
 import Event from '../../model/event';
 import Firebase from '../Firebase';
 import ParticipantList from '../ParticipantList';
 import LateRegistration from '../LateRegistration';
 
-interface MatchParams {
-    eventId: string
-}
-
 interface Props {
-    match: match<MatchParams>
+    match: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
         title: {
             flexGrow: 1,
             padding: theme.spacing(2)
@@ -31,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const LateRegistrationPage: React.FC<Props> = (props: Props) => {
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
-    const classes = useStyles({});
+    const classes = useStyles();
 
     useEffect(() => {
-        const eventId = props.match.params.eventId;
+        const eventId = props.match;
         return Firebase.subscribeEvent(eventId, setEvent);
     }, [props.match]);
 
@@ -48,7 +42,7 @@ const LateRegistrationPage: React.FC<Props> = (props: Props) => {
                 <>
                     <LateRegistration event={event} className={classes.button} caption="Meld på"/>
                     <ParticipantList event={event} />
-                </> 
+                </>
             }
         </>
     )
