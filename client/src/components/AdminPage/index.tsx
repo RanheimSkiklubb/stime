@@ -91,9 +91,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
             return Firebase.subscribeEvent(eventIdFromUrl, setEvent);
         }
     }, [eventIdFromUrl]);
-    console.log("BaseEventSelected: ", baseEventSelected);
-    console.log("Event id: ", eventId);
-    console.log("Event: ", event);
+    
     if (admin) {
         if (redirect) {
             const url = `/admin/${eventId}`;
@@ -101,12 +99,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
         }
         let eventEditPane;
         if (baseEventSelected || eventId) {
-            if (event.id.length > 0) {
-                eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
-            }
-            else {
-                eventEditPane = <></>
-            }
+            eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
         }
         else {
             eventEditPane = <NewEvent baseEventCallback={setBaseEvent}/>
