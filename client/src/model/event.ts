@@ -52,4 +52,8 @@ export default class Event {
     eventEnded():boolean {
         return moment().isAfter(this.startTime);
     };
+
+    static newEvent(): Event {
+        return new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []);
+    }
 }

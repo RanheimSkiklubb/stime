@@ -165,17 +165,15 @@ const updateParticipants = async (eventId: string, participants: Participant[]) 
     await updateDoc(eventRef(eventId), 'participants', participants.map(mapParticipant));
 };
 
-const updateEvent = async (eventId: string, event: Event) => {
+const updateEvent = async (eventId: string, name: string, eventType: string, description: string, startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
     await updateDoc(eventRef(eventId),
-        'name', event.name,
-        'eventType', event.eventType,
-        'description', event.description,
-        'startTime', event.startTime,
-        'registrationStart', event.registrationStart,
-        'registrationEnd', event.registrationEnd,
-        'registrationEndInfo', event.registrationEndInfo,
-        'eventClasses', event.eventClasses,
-        'participants', event.participants);
+        'name', name,
+        'eventType', eventType,
+        'description', description,
+        'startTime', startTime,
+        'registrationStart', registrationStart,
+        'registrationEnd', registrationEnd,
+        'registrationEndInfo', registrationEndInfo);
 };
 
 const addEvent = async (event: Event) => {

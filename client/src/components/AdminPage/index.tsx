@@ -44,7 +44,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
     const eventIdFromUrl = useParams<MatchParams>().eventId;
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
+    const [event, setEvent] = useState<Event>(Event.newEvent());
     const [eventId, setEventId] = useState(eventIdFromUrl);
     const [baseEventSelected, setBaseEventSelected] = useState(false);
     const [redirect, setRedirect] = useState(false);
@@ -67,15 +67,8 @@ const AdminPage: React.FC<Props> = (props: Props) => {
 
     const saveEvent = async (name: string, eventType: string, description: string,
         startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
-        event.name = name;
-        event.eventType = eventType;
-        event.description = description;
-        event.startTime = startTime;
-        event.registrationStart = registrationStart;
-        event.registrationEnd = registrationEnd;
-        event.registrationEndInfo = registrationEndInfo;
         if (eventId) {
-            await Firebase.updateEvent(eventId, event);
+            await Firebase.updateEvent(eventId, name, eventType, description, startTime, registrationStart, registrationEnd, registrationEndInfo);
             alert("Arrangmentet ble lagret");
         }
         else {
@@ -98,7 +91,11 @@ const AdminPage: React.FC<Props> = (props: Props) => {
             return (<Redirect to={url}/>);
         }
         let eventEditPane;
-        if (baseEventSelected || eventId) {
+
+        if (eventId && event.id.length === 0) {
+            eventEditPane = (<></>); //Don't render edit pane until event loaded
+        }
+        else if (baseEventSelected || eventId) {
             eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
         }
         else {
