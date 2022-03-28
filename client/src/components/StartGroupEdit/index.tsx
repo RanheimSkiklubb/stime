@@ -5,6 +5,7 @@ import Firebase from '../Firebase';
 import Event from '../../model/event';
 import { Theme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
+import TimeString from '../../model/time';
 
 interface Props {
     event: Event
@@ -12,17 +13,18 @@ interface Props {
 
 const columns: Array<Column<StartGroup>> = [
     { title: 'Pulje', field: 'name'},
-    { title: 'Første starttid', field: 'firstStartTime', type: 'datetime'},
+    { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', validate: (rowData:any) => TimeString.validate(rowData.firstStartTimeStr)},
     { title: 'Egen nummerserie', field: 'separateNumberRange', type: 'boolean'},
     { title: 'Første startnummer', field: 'firstNumber', type: 'numeric'}
 ]
 
-const EventClassEdit: React.FC<Props> = (props: Props) => {
-    const data:StartGroup[] = props.event.startGroups;
+const StartGroupEdit: React.FC<Props> = (props: Props) => {
+    const data:any[] = props.event.startGroups;
+    data.forEach(item => item.firstStartTimeStr = TimeString.fromDate(item.firstStartTime));
 
     const validateInput = (data: any) => {
-        if ('firstStartTime' in data) {
-            data.firstStartTime = new Date(data.firstStartTime);
+        if ('firstStartTimeStr' in data) {
+            data.firstStartTime = TimeString.toDate(props.event.startTime, data.firstStartTimeStr);
         }
         if (!('separateNumberRange' in data)) {
             data.separateNumberRange = false;
@@ -88,4 +90,4 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
     );
 }
 
-export default EventClassEdit;
+export default StartGroupEdit;

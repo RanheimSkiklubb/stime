@@ -11,7 +11,10 @@ export default class TimeString {
         return moment(date).hour(hour).minutes(minutes).toDate();
     }
     
-    static validate = (timeString:string):boolean => {
+    static validate = (timeString:string|undefined):boolean => {
+        if (!timeString || timeString.length === 0) {
+            return true;
+        }
         const regex = /\d\d:\d\d/;
         return regex.test(timeString);
     }
