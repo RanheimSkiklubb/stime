@@ -8,5 +8,5 @@ export default interface EventClass {
     description: string;
     firstStartNumber?: number;
     firstStartTime?: Date;
-    lastStartNumber?: number 
+    lastStartNumber?: number ;
 }

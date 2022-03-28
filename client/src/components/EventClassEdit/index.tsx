@@ -8,13 +8,15 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {max, find, sortBy} from 'lodash';
 import { Theme } from '@mui/material/styles';
 import {makeStyles} from '@mui/styles';
+import TimeString from '../../model/time';
 
 interface Props {
     event: Event
 }
 
 const EventClassEdit: React.FC<Props> = (props: Props) => {
-    const data:EventClass[] = props.event.eventClasses;
+    const data:any[] = props.event.eventClasses;
+    data.forEach(item => item.firstStartTimeStr = TimeString.fromDate(item.firstStartTime));
     const startGroups:any = {}
     props.event.startGroups.forEach(sg => startGroups[sg.name] = sg.name);
 
@@ -27,7 +29,7 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         { title: 'Pulje', field: 'startGroup', lookup: startGroups},
         { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
         { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
-        { title: 'Første starttid', field: 'firstStartTime', type: 'datetime', hidden: false},
+        { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', hidden: false, validate: (rowData:any) => TimeString.validate(rowData.firstStartTimeStr)},
         { title: 'Siste startnr.', field: 'lastStartNumber', type: 'numeric', hidden: false}
     ]
 
@@ -76,8 +78,8 @@ const EventClassEdit: React.FC<Props> = (props: Props) => {
         data.reserveNumbers = ('reserveNumbers' in data ? +data.reserveNumbers : 0);
         data.startInterval = ('startInterval' in data ? +data.startInterval : 0);
         data.description = ('description' in data ? data.description : "");
-        if ('firstStartTime' in data) {
-            data.firstStartTime = new Date(data.firstStartTime);
+        if ('firstStartTimeStr' in data) {
+            data.firstStartTime = TimeString.toDate(props.event.startTime, data.firstStartTimeStr);
         }
     }
 
