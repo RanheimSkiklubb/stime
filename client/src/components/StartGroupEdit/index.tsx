@@ -2,13 +2,15 @@ import React from 'react';
 import MaterialTable, { Column } from 'material-table';
 import StartGroup from '../../model/start-group';
 import Firebase from '../Firebase';
-import Event from '../../model/event';
 import { Theme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import TimeString from '../../model/time';
 
 interface Props {
-    event: Event
+    eventId: string;
+    startGroups: StartGroup[];
+    startTime: Date;
+    startListPublished: boolean;
 }
 
 const columns: Array<Column<StartGroup>> = [
@@ -19,12 +21,12 @@ const columns: Array<Column<StartGroup>> = [
 ]
 
 const StartGroupEdit: React.FC<Props> = (props: Props) => {
-    const data:any[] = props.event.startGroups;
+    const data:any[] = props.startGroups;
     data.forEach(item => item.firstStartTimeStr = TimeString.fromDate(item.firstStartTime));
 
     const validateInput = (data: any) => {
         if ('firstStartTimeStr' in data) {
-            data.firstStartTime = TimeString.toDate(props.event.startTime, data.firstStartTimeStr);
+            data.firstStartTime = TimeString.toDate(props.startTime, data.firstStartTimeStr);
         }
         if (!('separateNumberRange' in data)) {
             data.separateNumberRange = false;
@@ -42,7 +44,7 @@ const StartGroupEdit: React.FC<Props> = (props: Props) => {
 
     return (
         <>
-        { props.event.startListPublished ?
+        { props.startListPublished ?
                 <p className={classes.warning}>
                     Endringer i eksisterende puljer har ingen effekt etter at startliste er publisert.
                 </p> : null}
@@ -62,7 +64,7 @@ const StartGroupEdit: React.FC<Props> = (props: Props) => {
                             validateInput(newData);
                             data.push(newData);
                             (async () => {
-                                await Firebase.updateStartGroups(props.event.id, data)
+                                await Firebase.updateStartGroups(props.eventId, data)
                             })();
                         }),
                     onRowUpdate: async (newData, oldData) =>
@@ -72,7 +74,7 @@ const StartGroupEdit: React.FC<Props> = (props: Props) => {
                                 validateInput(newData);
                                 data[data.indexOf(oldData)] = newData;
                                 (async () => {
-                                    await Firebase.updateStartGroups(props.event.id, data)
+                                    await Firebase.updateStartGroups(props.eventId, data)
                                 })();
                             }
                         }),
@@ -81,7 +83,7 @@ const StartGroupEdit: React.FC<Props> = (props: Props) => {
                             resolve();
                             data.splice(data.indexOf(oldData), 1);
                             (async () => {
-                                await Firebase.updateStartGroups(props.event.id, data)
+                                await Firebase.updateStartGroups(props.eventId, data)
                             })();
                         }),
                 }}

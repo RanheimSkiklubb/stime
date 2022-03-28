@@ -115,7 +115,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                 </AppBar>
                 <Switch>
                     <Route exact path={`${path}`}>{eventEditPane}</Route>
-                    <Route path={`${path}/groups`}><StartGroupEdit event={event}/></Route>
+                    <Route path={`${path}/groups`}><StartGroupEdit eventId={event.id} startGroups={event.startGroups} startTime={event.startTime} startListPublished={event.startListPublished}/></Route>
                     <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
                     <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>
                 </Switch>
