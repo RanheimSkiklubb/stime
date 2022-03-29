@@ -176,23 +176,10 @@ const updateEvent = async (eventId: string, name: string, eventType: string, des
         'registrationEndInfo', registrationEndInfo);
 };
 
-const addEvent = async (event: Event) => {
-    const doc = await addDoc(eventsRef, event);
-        /*
-        {
-        name: event.name,
-        eventType: event.eventType,
-        description: event.description,
-        startTime: event.startTime,
-        registrationStart: event.registrationStart,
-        registrationEnd: event.registrationEnd,
-        registrationEndInfo: event.registrationEndInfo,
-        startGroups: event.startGroups,
-        eventClasses: event.eventClasses,
-        participants: event.participants,
-        startListGenerated: false,
-        startListPublished: false
-    }); */
+const addEvent = async (name: string, eventType: string, description: string,
+    startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
+    const doc = await addDoc(eventsRef, new Event("", name, eventType, description, startTime, registrationStart, 
+        registrationEnd, registrationEndInfo, false, false, [], [], []));
     return await getDoc(doc);
 };
 

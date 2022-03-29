@@ -72,7 +72,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
             alert("Arrangmentet ble lagret");
         }
         else {
-            const doc = await Firebase.addEvent(event)
+            const doc = await Firebase.addEvent(name, eventType, description, startTime, registrationStart, registrationEnd, registrationEndInfo);
             setEventId(doc.id);
             setRedirect(true);
         }
