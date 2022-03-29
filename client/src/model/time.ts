@@ -2,6 +2,9 @@ import moment from 'moment';
 
 export default class TimeString {
     static fromDate = (date:Date|undefined):string => {
+        if (!date) {
+            return "";
+        }
         return moment(date).format('HH:mm');
     }
     static toDate = (date:Date, timeString:string):Date => {

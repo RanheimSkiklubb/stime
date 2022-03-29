@@ -7,9 +7,16 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import MaterialTable from 'material-table';
 import Event from '../../model/event';
+import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
 import Firebase from '../Firebase';
 import { parse } from 'papaparse';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import HelpIcon from '@mui/icons-material/Help';
 
 interface Props {
     event: Event
@@ -17,14 +24,25 @@ interface Props {
 
 const ImportParticipants: React.FC<Props> = (props: Props) => {
     const [show, setShow] = useState(false);
+    const [importEventClasses, setImportEventClasses] = useState(true);
+    const [importParticipants, setImportParticipants] = useState(true);
     const [error, setError] = useState("");
     const [participants, setParticipants] = useState<Participant[]>([]);
+    const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
     const handleClose = () => {
         setShow(false);
         setParticipants([]);
         setError("");
     }
     const handleShow = () => setShow(true);
+
+    const importEventClassesChange = () => {
+        setImportEventClasses(!importEventClasses);
+    };
+
+    const importParticipantsChange = () => {
+        setImportParticipants(!importParticipants);
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
@@ -47,8 +65,8 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
             catch (error) {
                 setError("Ugyldig format på importfila");
             }
-            console.log(mapped);
             setParticipants(mapped);
+            setEventClasses(createEventClasses(mapped));
         }
         parse(fileList[0], {complete: handleParsed, header:true});
     };
@@ -60,9 +78,21 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
         {title: 'Klasse', field: 'eventClass'}
     ];
 
+    const createEventClasses = (participants: Participant[]):EventClass[] => {
+        const eventClassNames = new Set<string>(participants.map(item => item.eventClass));
+        const eventClasses:EventClass[] = [];
+        Array.from(eventClassNames).forEach((name, idx) => eventClasses.push({startInterval: 30, reserveNumbers:0, order:idx, name, course:"", description:""}))
+        return eventClasses;
+    }
+
     const doImport = () => {
         (async () => {
-            await Firebase.updateParticipants(props.event.id, participants)
+            if (importParticipants) {
+                await Firebase.updateParticipants(props.event.id, participants)
+            }
+            if (importEventClasses) {
+                await Firebase.updateEventClasses(props.event.id, eventClasses);
+            }
         })();
         handleClose();
     };
@@ -79,8 +109,8 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
                     ) : null
                     }
                     
-                    { !error ? (
-                        <Alert severity="warning">Advarsel! Import vil overskrive alle deltakere.</Alert>
+                    { !error && props.event.participants.length > 0 ? (
+                        <Alert severity="warning">Advarsel! Import vil overskrive alle klasser og deltakere.</Alert>
                         ) : null
                     }
                     <input
@@ -90,7 +120,23 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
                         type="file"
                         multiple={false}
                         onChange={handleFileChange}
+                        style={{'color': 'white'}}
                     />
+
+                    <Tooltip title="CSV column names: firstName, lastName, eventClass, club" style={{'float':'right'}}>
+                        <IconButton color="primary">
+                            <HelpIcon />
+                        </IconButton>
+                    </Tooltip>
+
+                    <FormGroup row>
+                        <FormControlLabel control={<Checkbox defaultChecked value={importEventClasses} onChange={importEventClassesChange}/>} 
+                            label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")} 
+                        />
+                        <FormControlLabel control={<Checkbox defaultChecked value={importParticipants} onChange={importParticipantsChange}/>} 
+                            label={'Importer deltakere' + (participants.length > 0 ? `(${participants.length})` : "")} 
+                            />
+                    </FormGroup>
 
                     <MaterialTable
                         title = 'Deltakere'
@@ -105,7 +151,8 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary" onClick={doImport} disabled={participants.length === 0}>Importer</Button>
+                    <Button variant="contained" color="primary" onClick={doImport} 
+                        disabled={participants.length === 0 || (!importEventClasses && !importParticipants)}>Importer</Button>
                     <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>
