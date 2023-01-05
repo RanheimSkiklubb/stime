@@ -1,4 +1,3 @@
-import React from 'react';
 import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import _ from 'lodash';
@@ -22,7 +21,7 @@ const participantListColumns = [
     {title: 'Klasse', field: 'eventClass'}
 ];
 
-const ParticipantList: React.FC<Props> = (props: Props) => {
+const ParticipantList = (props: Props) => {
 
     const sortMapping: Record<string, number> = props.event.eventClasses.reduce((p:any, c:EventClass) => {
         p[c.name] = c.order; 

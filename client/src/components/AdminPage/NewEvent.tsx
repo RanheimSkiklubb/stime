@@ -1,4 +1,4 @@
-import React, {useEffect, useState, ChangeEvent} from "react";
+import { useEffect, useState, ChangeEvent} from "react";
 import {useHistory} from "react-router-dom";
 
 import Dialog from '@mui/material/Dialog';
@@ -16,7 +16,7 @@ interface Props {
     baseEventCallback: (event: Event) => void;
 }
 
-const NewEvent: React.FC<Props> = (props: Props) => {
+const NewEvent = (props: Props) => {
     const history = useHistory();
     const [showDialog, setShowDialog] = useState(true);
     const [events, setEvents] = useState<Event[]>([]);

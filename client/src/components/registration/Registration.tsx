@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -14,7 +14,7 @@ interface Props {
     event: Event,
 }
 
-const Registration: React.FC<Props> = (props: Props) => {
+const Registration = (props: Props) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -25,7 +25,7 @@ const Registration: React.FC<Props> = (props: Props) => {
     }, []);
 
     return (
-        <React.Fragment>
+        <>
             <Button variant="contained" color="primary" size="medium" 
             onClick={handleShow}>Påmelding</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
@@ -34,7 +34,7 @@ const Registration: React.FC<Props> = (props: Props) => {
                     <RegistrationForm event={props.event} clubs={clubs} closeCallback={handleClose}/>
                 </DialogContent>
             </Dialog>
-        </React.Fragment>
+        </>
     );
 }
 

@@ -4,11 +4,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Login from "../login/Login";
 import AppBar from "@mui/material/AppBar";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {ListItemIcon, Menu, MenuItem} from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import {Theme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
-import {Home, Create} from "@mui/icons-material";
+import {Create, Home} from "@mui/icons-material";
 import {useHistory} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth} from "firebase/auth";
@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const HeaderBar: React.FC<Props> = (props: Props) => {
+const HeaderBar = (props: Props) => {
     const classes = useStyles();
 
     const history = useHistory();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
 

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import {ChangeEvent, useState} from 'react';
 import Grid from '@mui/material/Grid';
 import NativeSelect from '@mui/material/NativeSelect';
 import FormControl from '@mui/material/FormControl';
@@ -6,7 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Event from '../../model/event';
 import Box from '@mui/material/Box';
-import { sortBy } from 'lodash';
+import {sortBy} from 'lodash';
 
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
     nextCallback: (eventClass: string) => void;
 }
 
-const SelectClass: React.FC<Props> = (props: Props) => {
+const SelectClass = (props: Props) => {
 
     const [eventClass, setEventClass] = useState("");
     const eventClassChange = (event: ChangeEvent<{ value: unknown }>) => {

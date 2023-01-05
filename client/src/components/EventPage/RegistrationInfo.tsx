@@ -1,11 +1,10 @@
-import React from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Event from '../../model/event';
 import moment from 'moment';
 
 import Registration from '../registration/Registration';
-import { Theme } from "@mui/material/styles";
+import {Theme} from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
 
 
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     })
 );
 
-const RegistrationInfo: React.FC<Props> = (props: Props) => {
+const RegistrationInfo = (props: Props) => {
     const classes = useStyles();
     if (!props.event.registrationStarted()) {
         return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import {useState} from 'react';
 import Club from '../../model/club';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
@@ -13,7 +13,7 @@ interface Props {
     closeCallback: () => void
 }
 
-const RegistrationForm: React.FC<Props> = (props: Props) => {
+const RegistrationForm = (props: Props) => {
 
     const [progress, setProgress] = useState(1);
     const [participant, setParticipant] = useState({firstName: "", lastName: "", club: "", eventClass: ""});

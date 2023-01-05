@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
     }));
 
-const EventListPage: React.FC = (props) => {
+const EventListPage: FC = (props) => {
     const classes = useStyles();
     const history = useHistory();
     const [admin, setAdmin] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const EventListPage: React.FC = (props) => {
     };
 
     return (
-        <React.Fragment>
+        <>
             <HeaderBar heading="Arrangement" />
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -85,7 +85,7 @@ const EventListPage: React.FC = (props) => {
                 </Table>
             </TableContainer>
 
-        </React.Fragment>
+        </>
     );
 };
 

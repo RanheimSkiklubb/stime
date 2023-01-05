@@ -1,13 +1,12 @@
-import React from 'react';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
-import { Theme } from '@mui/material/styles';
+import {Theme} from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
-import { compareTwoStrings }  from 'string-similarity';
+import {compareTwoStrings} from 'string-similarity';
 
 interface Props {
     event: Event,
@@ -36,7 +35,7 @@ const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null
 };
 
 
-const Step2: React.FC<Props> = (props: Props) => {
+const Step2 = (props: Props) => {
 
     const useStyles = makeStyles((theme: Theme) => ({
         similar: {
@@ -53,7 +52,7 @@ const Step2: React.FC<Props> = (props: Props) => {
     let similarNotification = null;
     if (similar) {
         similarNotification = (
-            <React.Fragment>
+            <>
                 <Grid item xs={12}>
                     <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}}
                         severity="warning">Det finnes allerede en liknende påmelding</Alert>
@@ -61,7 +60,7 @@ const Step2: React.FC<Props> = (props: Props) => {
                 <Grid item xs={12}>
                     <RegisteredParticipant participant={similar} email="***@***.***" phone="********" className={classes.similar}/>
                 </Grid>
-            </React.Fragment>
+            </>
         )
     }
     return (

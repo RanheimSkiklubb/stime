@@ -1,11 +1,10 @@
-import React from 'react';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from "@mui/material/Tooltip";
 
 import {useAuthState} from 'react-firebase-hooks/auth';
 import Firebase from '../Firebase';
-import { getAuth } from 'firebase/auth';
+import {getAuth} from 'firebase/auth';
 import {makeStyles} from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -21,7 +20,7 @@ const useStyles = makeStyles({
         },
     });
 
-const Login: React.FC = () => {
+const Login = () => {
     const classes = useStyles();
     const [user, initializing, error] = useAuthState(getAuth());
 

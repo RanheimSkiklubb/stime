@@ -1,4 +1,3 @@
-import React from 'react';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
@@ -7,7 +6,7 @@ interface Props {
     closeCallback: () => void
 }
 
-const Step3: React.FC<Props> = (props: Props) => {
+const Step3 = (props: Props) => {
 
     return (
         <Grid>

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import {ChangeEvent, useState} from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -24,7 +24,7 @@ interface Props {
     registerCallback: (participant: Participant) => void;
 }
 
-const ParticipantDetails: React.FC<Props> = (props: Props) => {
+const ParticipantDetails = (props: Props) => {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState(props.lastName);

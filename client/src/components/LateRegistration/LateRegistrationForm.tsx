@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import {useState} from 'react';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
@@ -29,7 +29,7 @@ enum Progress {
     StartNumberNoLongerAvailable
 }
 
-const RegistrationForm: React.FC<Props> = (props: Props) => {
+const RegistrationForm = (props: Props) => {
 
     const [progress, setProgress] = useState<Progress>(Progress.SelectClass);
     const [eventClass, setEventClass] = useState("");

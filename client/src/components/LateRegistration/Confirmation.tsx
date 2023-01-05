@@ -1,4 +1,3 @@
-import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,7 +5,7 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import Participant from '../../model/participant';
 import Grid from '@mui/material/Grid';
-import { Theme } from '@mui/material/styles';
+import {Theme} from '@mui/material/styles';
 import {makeStyles} from "@mui/styles";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     ));
 
-const Confirmation: React.FC<Props> = (props: Props) => {
+const Confirmation = (props: Props) => {
 
     const classes = useStyles();
 

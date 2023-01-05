@@ -1,6 +1,5 @@
-import React from 'react';
 import Grid from '@mui/material/Grid';
-import { Theme } from '@mui/material/styles';
+import {Theme} from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -10,7 +9,7 @@ interface Props {
     restartCallback: () => void
 }
 
-const NoLongerAvailable: React.FC<Props> = (props: Props) => {
+const NoLongerAvailable = (props: Props) => {
 
     const useStyles = makeStyles((theme: Theme) => ({
             emphasize: {

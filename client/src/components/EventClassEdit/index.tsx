@@ -1,4 +1,3 @@
-import React from 'react';
 import MaterialTable, { Column } from 'material-table';
 import EventClass from '../../model/event-class';
 import Firebase from '../Firebase';
@@ -14,7 +13,7 @@ interface Props {
     event: Event
 }
 
-const EventClassEdit: React.FC<Props> = (props: Props) => {
+const EventClassEdit = (props: Props) => {
     const data:any[] = props.event.eventClasses;
     data.forEach(item => item.firstStartTimeStr = TimeString.fromDate(item.firstStartTime));
     const startGroups:any = {}

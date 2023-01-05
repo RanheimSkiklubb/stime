@@ -1,6 +1,5 @@
-import React from 'react';
 import Event from '../../model/event';
-import { sortBy, shuffle, padStart } from 'lodash';
+import {padStart, shuffle, sortBy} from 'lodash';
 import MaterialTable from 'material-table';
 import Firebase from '../Firebase';
 import Participant from '../../model/participant';
@@ -9,7 +8,7 @@ import Registration from '../registration/Registration';
 import Button from '@mui/material/Button';
 import moment from 'moment';
 import LateRegistration from '../LateRegistration';
-import { Theme } from "@mui/material/styles";
+import {Theme} from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
 import ContactDownload from './ContactDownload';
 import StartGroup from '../../model/start-group';
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
     }));
 
-const ParticipantEdit: React.FC<Props> = (props: Props) => {
+const ParticipantEdit = (props: Props) => {
     const classes = useStyles();
     const eventClasses:any = {};
     sortBy(props.event.eventClasses, 'order').forEach(ec => eventClasses[ec.name] = ec.name);

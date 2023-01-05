@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import {ChangeEvent, useState} from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 import Club from '../../model/club';
 import Event from '../../model/event';
-import { isNil, sortBy } from 'lodash';
+import {isNil, sortBy} from 'lodash';
 import Participant from '../../model/participant';
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
     closeCallback: () => void;
 }
 
-const Step1: React.FC<Props> = (props: Props) => {
+const Step1 = (props: Props) => {
 
     const [firstName, setFirstName] = useState(props.participant.firstName);
     const [lastName, setLastName] = useState(props.participant.lastName);

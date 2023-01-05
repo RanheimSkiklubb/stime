@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import {ChangeEvent, useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,7 +10,7 @@ import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
 import Firebase from '../Firebase';
-import { parse } from 'papaparse';
+import {parse} from 'papaparse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
@@ -22,7 +22,7 @@ interface Props {
     event: Event
 }
 
-const ImportParticipants: React.FC<Props> = (props: Props) => {
+const ImportParticipants = (props: Props) => {
     const [show, setShow] = useState(false);
     const [importEventClasses, setImportEventClasses] = useState(true);
     const [importParticipants, setImportParticipants] = useState(true);
@@ -44,7 +44,7 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
         setImportParticipants(!importParticipants);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const fileList = e.target.files;
         if (!fileList) return;
         const handleParsed = (parsed:any) => {
@@ -98,7 +98,7 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <React.Fragment>
+        <>
             <Button variant="contained" color="primary" size="medium" 
                 onClick={handleShow}>Importer deltakere</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
@@ -156,7 +156,7 @@ const ImportParticipants: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </>
     );
 }
 

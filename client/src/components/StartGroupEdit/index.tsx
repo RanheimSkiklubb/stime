@@ -1,8 +1,7 @@
-import React from 'react';
-import MaterialTable, { Column } from 'material-table';
+import MaterialTable, {Column} from 'material-table';
 import StartGroup from '../../model/start-group';
 import Firebase from '../Firebase';
-import { Theme } from '@mui/material/styles';
+import {Theme} from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import TimeString from '../../model/time';
 
@@ -20,7 +19,7 @@ const columns: Array<Column<StartGroup>> = [
     { title: 'Første startnummer', field: 'firstNumber', type: 'numeric'}
 ]
 
-const StartGroupEdit: React.FC<Props> = (props: Props) => {
+const StartGroupEdit = (props: Props) => {
     const data:any[] = props.startGroups;
     data.forEach(item => item.firstStartTimeStr = TimeString.fromDate(item.firstStartTime));
 

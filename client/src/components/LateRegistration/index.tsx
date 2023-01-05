@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,14 +10,13 @@ import Event from '../../model/event';
 import Club from '../../model/club';
 import Firebase from '../Firebase';
 
-
 interface Props {
     event: Event,
     className?: string,
     caption: string
 }
 
-const LateRegistration: React.FC<Props> = (props: Props) => {
+const LateRegistration = (props: Props) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -28,7 +27,7 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
     }, []);
 
     return (
-        <React.Fragment>
+        <>
             <Button variant="contained" color="primary" size="medium" 
                 onClick={handleShow} className={props.className}>{props.caption}</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
@@ -40,7 +39,7 @@ const LateRegistration: React.FC<Props> = (props: Props) => {
                     <Button variant="contained" onClick={handleClose}>Lukk</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </>
     );
 }
 

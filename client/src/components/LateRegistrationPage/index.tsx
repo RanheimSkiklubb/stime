@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
-import { Theme } from "@mui/material/styles";
+import {Theme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 import Event from '../../model/event';
 import Firebase from '../Firebase';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     })
 );
 
-const LateRegistrationPage: React.FC<Props> = (props: Props) => {
+const LateRegistrationPage = (props: Props) => {
     const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
     const classes = useStyles();
 

@@ -1,14 +1,13 @@
-import React from 'react';
 import Button from '@mui/material/Button';
 import Firebase from '../Firebase';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 
 interface Props {
     eventId: string,
     eventName: string
 }
 
-const ContactDownload: React.FC<Props> = (props: Props) => {
+const ContactDownload = (props: Props) => {
     const separator = ';'
     const handleDownload = async () => {
         const contacts:any = await Firebase.fetchContacts(props.eventId);

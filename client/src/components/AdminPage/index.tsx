@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) =>({
     }));
 
 
-const AdminPage: React.FC<Props> = (props: Props) => {
+const AdminPage = (props: Props) => {
     const classes = useStyles();
 
     const eventIdFromUrl = useParams<MatchParams>().eventId;
@@ -102,7 +102,7 @@ const AdminPage: React.FC<Props> = (props: Props) => {
             eventEditPane = <NewEvent baseEventCallback={setBaseEvent}/>
         }
         return (
-            <React.Fragment>
+            <>
                 <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
                 <AppBar position="static" className={classes.appBar}>
@@ -119,16 +119,16 @@ const AdminPage: React.FC<Props> = (props: Props) => {
                     <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
                     <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>
                 </Switch>
-            </React.Fragment>
+            </>
         );
     }
     return (
-        <React.Fragment>
+        <>
             <HeaderBar heading="Admin" />
 
             <div className={classes.info}>You need to be an administrator to see this page</div>
             <div><Button variant="text" color="primary" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
-        </React.Fragment>
+        </>
     )
 
 }

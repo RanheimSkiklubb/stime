@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
         disabled: {}
     }));
 
-const EventInfo: React.FC<Props> = (props: Props) => {
+const EventInfo = (props: Props) => {
     const classes = useStyles({});
 
     const [name, setName] = useState(props.event.name);
@@ -80,7 +80,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <React.Fragment>
+        <>
             <form noValidate autoComplete="off">
             <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -183,7 +183,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                 </Grid>
             </Grid>
             </form>
-        </React.Fragment>
+        </>
     )
 }
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,7 +17,7 @@ interface Props {
     event: Event
 }
 
-const EventInfo: React.FC<Props> = (props: Props) => {
+const EventInfo = (props: Props) => {
 
     const useStyles = makeStyles({
         infoTable: {
@@ -37,7 +36,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
     const description = {__html: props.event.description}
     return (
-        <React.Fragment>
+        <>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <TableContainer component={Paper}>
@@ -79,7 +78,7 @@ const EventInfo: React.FC<Props> = (props: Props) => {
                     </TableContainer>
                 </Grid>
             </Grid>
-        </React.Fragment>
+        </>
     )
 }
 

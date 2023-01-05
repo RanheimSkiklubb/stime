@@ -1,7 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
-import { ThemeProvider, Theme } from "@mui/material/styles";
+import {Theme, ThemeProvider} from "@mui/material/styles";
 import App from './App';
 import theme from "./styles/theme";
 
