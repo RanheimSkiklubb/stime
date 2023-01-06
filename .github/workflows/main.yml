@@ -19,6 +19,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           entryPoint: ./firebase
+          working-directory: ./client
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SIMPLE_RACE_TIMER }}'
           channelId: live
