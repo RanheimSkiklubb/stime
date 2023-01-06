@@ -9,7 +9,6 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-
 ReactDOM.render(
     <ThemeProvider theme={theme}>
         <App />
