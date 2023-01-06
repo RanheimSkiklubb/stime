@@ -3,3 +3,5 @@ server/build
 **/yarn.lock
 **/.DS_Store
 **/client/firebase-setup.sh
+**/client/.env
+**/.idea
