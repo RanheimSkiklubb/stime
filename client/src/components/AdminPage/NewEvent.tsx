@@ -1,5 +1,5 @@
 import { useEffect, useState, ChangeEvent} from "react";
-import {useHistory} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,7 +13,6 @@ import Firebase from '../Firebase';
 import moment from 'moment';
 
 interface Props {
-    baseEventCallback: (event: Event) => void;
 }
 
 const NewEvent = (props: Props) => {
@@ -21,6 +20,7 @@ const NewEvent = (props: Props) => {
     const [showDialog, setShowDialog] = useState(true);
     const [events, setEvents] = useState<Event[]>([]);
     const [eventId, setEventId] = useState("");
+    const [redirect, setRedirect] = useState(false);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -39,7 +39,7 @@ const NewEvent = (props: Props) => {
         history.push("/");
     }
 
-    const handleOkClick = () => {
+    const handleOkClick = async () => {
         let event: Event;
         if (!eventId) {
             event = new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], [])
@@ -50,8 +50,15 @@ const NewEvent = (props: Props) => {
             event = new Event("", baseEvent.name + " (kopi)", baseEvent.eventType, baseEvent.description, new Date(), new Date(),
                 new Date(), baseEvent.registrationEndInfo, false, false, baseEvent.startGroups, eventClasses, []);
         }
-        props.baseEventCallback(event);
+        const savedEvent = await Firebase.createNewEvent(event);
         setShowDialog(false);
+        setEventId(savedEvent.id);
+        setRedirect(true);
+    }
+
+    if (redirect) {
+        const url = `/admin/${eventId}`;
+        return (<Redirect to={url}/>);
     }
 
     return (

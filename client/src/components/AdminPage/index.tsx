@@ -60,11 +60,6 @@ const AdminPage = (props: Props) => {
         if (user) fetchClaims();
     }, [user, setAdmin])
 
-    const setBaseEvent = (e: Event) => {
-        setEvent(e);
-        setBaseEventSelected(true);
-    }
-
     const saveEvent = async (name: string, eventType: string, description: string,
         startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
         if (eventId) {
@@ -84,7 +79,7 @@ const AdminPage = (props: Props) => {
             return Firebase.subscribeEvent(eventIdFromUrl, setEvent);
         }
     }, [eventIdFromUrl]);
-    
+
     if (admin) {
         if (redirect) {
             const url = `/admin/${eventId}`;
@@ -99,7 +94,7 @@ const AdminPage = (props: Props) => {
             eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
         }
         else {
-            eventEditPane = <NewEvent baseEventCallback={setBaseEvent}/>
+            eventEditPane = <NewEvent />
         }
         return (
             <>

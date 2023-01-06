@@ -178,10 +178,17 @@ const updateEvent = async (eventId: string, name: string, eventType: string, des
 
 const addEvent = async (name: string, eventType: string, description: string,
     startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => {
-    const doc = await addDoc(eventsRef, new Event("", name, eventType, description, startTime, registrationStart, 
+    const doc = await addDoc(eventsRef, new Event("", name, eventType, description, startTime, registrationStart,
         registrationEnd, registrationEndInfo, false, false, [], [], []));
     return await getDoc(doc);
 };
+
+const createNewEvent = async (event: Event) => {
+    const doc = await addDoc(eventsRef, event);
+    await updateEventClasses(doc.id, event.eventClasses);
+    await updateStartGroups(doc.id, event.startGroups);
+    return await getDoc(doc);
+}
 
 const setStartListGenerated = async (eventId: string) => {
     await updateDoc(eventRef(eventId), 'startListGenerated', true);
@@ -319,7 +326,8 @@ const exported = {
     setStartListGenerated,
     setStartListPublished,
     updateEvent,
-    addEvent
+    addEvent,
+    createNewEvent
 };
 
 export default exported;
