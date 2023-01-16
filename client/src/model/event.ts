@@ -1,7 +1,9 @@
 import Participant from './participant';
 import EventClass from './event-class';
 import StartGroup from './start-group';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 export default class Event {
     name: string;
@@ -38,22 +40,23 @@ export default class Event {
                 }
 
     registrationStarted(): boolean {
-        return moment().isAfter(this.registrationStart);
+        return dayjs().isAfter(this.registrationStart);
     }
 
     registrationEnded(): boolean {
-        return moment().isAfter(this.registrationEnd);
+        return dayjs().isAfter(this.registrationEnd);
     }
 
     registrationOpen():boolean {
-        return moment().isBetween(this.registrationStart, this.registrationEnd);
+        return dayjs().isBetween(this.registrationStart, this.registrationEnd);
     };
 
     eventEnded():boolean {
-        return moment().isAfter(this.startTime);
+        return dayjs().isAfter(this.startTime);
     };
 
     static newEvent(): Event {
-        return new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []);
+        const date = dayjs().startOf('hour').add(1, 'hour').toDate();
+        return new Event("", "", "", "", date, date, date, "", false, false, [], [], []);
     }
 }

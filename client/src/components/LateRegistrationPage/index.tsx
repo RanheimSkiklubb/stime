@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 );
 
 const LateRegistrationPage = (props: Props) => {
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
+    const [event, setEvent] = useState<Event>(Event.newEvent());
     const classes = useStyles();
 
     useEffect(() => {

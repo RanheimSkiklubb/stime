@@ -42,7 +42,7 @@ const NewEvent = (props: Props) => {
     const handleOkClick = async () => {
         let event: Event;
         if (!eventId) {
-            event = new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], [])
+            event = Event.newEvent();
         }
         else {
             const baseEvent = events.filter(eventItem => eventItem.id === eventId)[0];

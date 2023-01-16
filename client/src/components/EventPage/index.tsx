@@ -20,7 +20,7 @@ interface Props {
 const EventPage = (props: Props) => {
 
     const { eventId } = useParams<MatchParams>();
-    const [event, setEvent] = useState<Event>(new Event("", "", "", "", new Date(), new Date(), new Date(), "", false, false, [], [], []));
+    const [event, setEvent] = useState<Event>(Event.newEvent());
     const { path, url } = useRouteMatch();
 
     useEffect(() => {
