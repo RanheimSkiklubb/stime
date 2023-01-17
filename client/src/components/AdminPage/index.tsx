@@ -46,7 +46,6 @@ const AdminPage = (props: Props) => {
     const [user] = useAuthState(getAuth());
     const [event, setEvent] = useState<Event>(Event.newEvent());
     const [eventId, setEventId] = useState(eventIdFromUrl);
-    const [baseEventSelected, setBaseEventSelected] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const history = useHistory();
     const { path, url } = useRouteMatch();
@@ -90,7 +89,7 @@ const AdminPage = (props: Props) => {
         if (eventId && event.id.length === 0) {
             eventEditPane = (<></>); //Don't render edit pane until event loaded
         }
-        else if (baseEventSelected || eventId) {
+        else if (eventId) {
             eventEditPane = <EventInfo event={event} saveEventCallback={saveEvent}/>
         }
         else {
