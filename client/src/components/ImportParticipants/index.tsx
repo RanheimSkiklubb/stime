@@ -68,7 +68,7 @@ const ImportParticipants = (props: Props) => {
             setParticipants(mapped);
             setEventClasses(createEventClasses(mapped));
         }
-        parse(fileList[0], {complete: handleParsed, header:true});
+        parse(fileList[0], {complete: handleParsed, header:true, skipEmptyLines: true});
     };
 
     const columns = [
