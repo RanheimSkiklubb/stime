@@ -123,6 +123,10 @@ const ParticipantEdit = (props: Props) => {
             await Firebase.setStartListPublished(props.event.id);
         })();
     }
+    
+    const colors = ["white", "aliceblue"];
+    let startTime:any;
+    let backgroundColor:string = colors[0];
 
     return (
         <>
@@ -148,7 +152,15 @@ const ParticipantEdit = (props: Props) => {
                     paging: false,
                     padding: "dense",
                     exportButton: true,
-                    exportDelimiter: ';'
+                    exportDelimiter: ';',
+                    rowStyle: x => {  
+                        // striped rows, but color consecutive rows with same start time the same
+                        if (props.event.startListGenerated && x.startTime !== startTime) {
+                            startTime = x.startTime;
+                            backgroundColor = colors[(colors.indexOf(backgroundColor) + 1) % 2];
+                        }
+                        return {backgroundColor};
+                    }
                 }}
                 editable={{
                     onRowAdd: newData =>
