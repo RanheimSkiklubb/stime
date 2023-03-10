@@ -28,7 +28,8 @@ enum ImportAction {
 const ImportParticipants = (props: Props) => {
     const [show, setShow] = useState(false);
     const [importEventClasses, setImportEventClasses] = useState(true);
-    const [importParticipants, setImportParticipants] = useState<ImportAction>(ImportAction.overwrite);
+    const [importEventClassesEnabled, setImportEventClassesEnabled] = useState(true);
+    const [importAction, setImportAction] = useState<ImportAction>(ImportAction.overwrite);
     const [error, setError] = useState("");
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
@@ -44,9 +45,15 @@ const ImportParticipants = (props: Props) => {
     };
 
     const importParticipantsChange = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log("here");
-        const importAction = (e.target.value === ImportAction.overwrite.toString() ? ImportAction.overwrite : ImportAction.append);
-        setImportParticipants(importAction);
+        if (e.target.value === ImportAction.overwrite.toString()) {
+            setImportAction(ImportAction.overwrite);
+            setImportEventClassesEnabled(true);
+        }
+        else {
+            setImportAction(ImportAction.append);
+            setImportEventClasses(false);
+            setImportEventClassesEnabled(false);
+        }
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,12 +99,12 @@ const ImportParticipants = (props: Props) => {
 
     const doImport = () => {
         (async () => {
-            if (importParticipants === ImportAction.overwrite) {
+            if (importAction === ImportAction.overwrite) {
                 await Firebase.updateParticipants(props.event.id, participants);
             } else {
                 await Firebase.addParticipants(props.event.id, participants);
             }
-            if (importEventClasses) {
+            if (importEventClasses && importEventClassesEnabled) {
                 await Firebase.updateEventClasses(props.event.id, eventClasses);
             }
         })();
@@ -105,22 +112,22 @@ const ImportParticipants = (props: Props) => {
     };
 
     const Warning = () => {
-        if (error || props.event.participants.length === 0) return (<></>);
-        let warningMessage;
-        if (importParticipants === ImportAction.overwrite) {
+        if (error || props.event.participants.length === 0) {
+            return (<></>);
+        }
+        if (importAction === ImportAction.overwrite) {
+            let warningMessage;
             if (importEventClasses) {
                 warningMessage = "Advarsel! Import vil overskrive alle klasser og deltakere";
             }
             else {
                 warningMessage = "Advarsel! Import vil overskrive alle deltakere";
             }
-        } else if (importEventClasses) {
-            warningMessage = "Advarsel! Import vil overskrive alle klasser";
-        }
+            return (<Alert severity="warning">{warningMessage}</Alert>);
+        } 
         else {
             return (<></>);
         }
-        return (<Alert severity="warning">{warningMessage}</Alert>);
     }
 
     return (
@@ -147,19 +154,20 @@ const ImportParticipants = (props: Props) => {
                     />
 
                     <FormGroup row>
-                        <FormControlLabel control={<Checkbox defaultChecked value={importEventClasses} onChange={importEventClassesChange}/>} 
-                            style={{display:'table'}} label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")} 
-                        />
                         <RadioGroup
                             aria-labelledby="demo-radio-buttons-group-label"
                             defaultValue="female"
                             name="radio-buttons-group"
                             onChange={importParticipantsChange}
-                            value={importParticipants}
+                            value={importAction}
                         >
                             <FormControlLabel value={ImportAction.overwrite} control={<Radio />} label="Importer og overskriv deltakere" />
                             <FormControlLabel value={ImportAction.append} control={<Radio />} label="Importer og legg til deltakere" />
                         </RadioGroup>
+                        <FormControlLabel control={<Checkbox onChange={importEventClassesChange}
+                            disabled={!importEventClassesEnabled} checked={importEventClasses}/>} style={{display:'table'}} 
+                            label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")}
+                        />
                     </FormGroup>
 
                     <MaterialTable
@@ -176,7 +184,7 @@ const ImportParticipants = (props: Props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="primary" onClick={doImport} 
-                        disabled={participants.length === 0 || (!importEventClasses && !importParticipants)}>Importer</Button>
+                        disabled={participants.length === 0 || (!importEventClasses && !importAction)}>Importer</Button>
                     <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>
