@@ -14,18 +14,21 @@ import {parse} from 'papaparse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import HelpIcon from '@mui/icons-material/Help';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
 
 interface Props {
     event: Event
 }
 
+enum ImportAction {
+    overwrite, append
+}
+
 const ImportParticipants = (props: Props) => {
     const [show, setShow] = useState(false);
     const [importEventClasses, setImportEventClasses] = useState(true);
-    const [importParticipants, setImportParticipants] = useState(true);
+    const [importParticipants, setImportParticipants] = useState<ImportAction>(ImportAction.overwrite);
     const [error, setError] = useState("");
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
@@ -40,8 +43,10 @@ const ImportParticipants = (props: Props) => {
         setImportEventClasses(!importEventClasses);
     };
 
-    const importParticipantsChange = () => {
-        setImportParticipants(!importParticipants);
+    const importParticipantsChange = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log("here");
+        const importAction = (e.target.value === ImportAction.overwrite.toString() ? ImportAction.overwrite : ImportAction.append);
+        setImportParticipants(importAction);
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -87,8 +92,10 @@ const ImportParticipants = (props: Props) => {
 
     const doImport = () => {
         (async () => {
-            if (importParticipants) {
-                await Firebase.updateParticipants(props.event.id, participants)
+            if (importParticipants === ImportAction.overwrite) {
+                await Firebase.updateParticipants(props.event.id, participants);
+            } else {
+                await Firebase.addParticipants(props.event.id, participants);
             }
             if (importEventClasses) {
                 await Firebase.updateEventClasses(props.event.id, eventClasses);
@@ -96,6 +103,25 @@ const ImportParticipants = (props: Props) => {
         })();
         handleClose();
     };
+
+    const Warning = () => {
+        if (error || props.event.participants.length === 0) return (<></>);
+        let warningMessage;
+        if (importParticipants === ImportAction.overwrite) {
+            if (importEventClasses) {
+                warningMessage = "Advarsel! Import vil overskrive alle klasser og deltakere";
+            }
+            else {
+                warningMessage = "Advarsel! Import vil overskrive alle deltakere";
+            }
+        } else if (importEventClasses) {
+            warningMessage = "Advarsel! Import vil overskrive alle klasser";
+        }
+        else {
+            return (<></>);
+        }
+        return (<Alert severity="warning">{warningMessage}</Alert>);
+    }
 
     return (
         <>
@@ -108,11 +134,8 @@ const ImportParticipants = (props: Props) => {
                         <Alert severity="error">{error}</Alert>
                     ) : null
                     }
-                    
-                    { !error && props.event.participants.length > 0 ? (
-                        <Alert severity="warning">Advarsel! Import vil overskrive alle klasser og deltakere.</Alert>
-                        ) : null
-                    }
+                    <Alert severity="info">CSV column names: firstName, lastName, eventClass, club</Alert>
+                    <Warning/>
                     <input
                         accept=".csv"
                         id="file-upload"
@@ -123,19 +146,20 @@ const ImportParticipants = (props: Props) => {
                         style={{'color': 'white'}}
                     />
 
-                    <Tooltip title="CSV column names: firstName, lastName, eventClass, club" style={{'float':'right'}}>
-                        <IconButton color="primary">
-                            <HelpIcon />
-                        </IconButton>
-                    </Tooltip>
-
                     <FormGroup row>
                         <FormControlLabel control={<Checkbox defaultChecked value={importEventClasses} onChange={importEventClassesChange}/>} 
-                            label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")} 
+                            style={{display:'table'}} label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")} 
                         />
-                        <FormControlLabel control={<Checkbox defaultChecked value={importParticipants} onChange={importParticipantsChange}/>} 
-                            label={'Importer deltakere' + (participants.length > 0 ? `(${participants.length})` : "")} 
-                            />
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                            onChange={importParticipantsChange}
+                            value={importParticipants}
+                        >
+                            <FormControlLabel value={ImportAction.overwrite} control={<Radio />} label="Importer og overskriv deltakere" />
+                            <FormControlLabel value={ImportAction.append} control={<Radio />} label="Importer og legg til deltakere" />
+                        </RadioGroup>
                     </FormGroup>
 
                     <MaterialTable
