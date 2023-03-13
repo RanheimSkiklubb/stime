@@ -161,12 +161,12 @@ const ImportParticipants = (props: Props) => {
                             onChange={importParticipantsChange}
                             value={importAction}
                         >
-                            <FormControlLabel value={ImportAction.overwrite} control={<Radio />} label="Importer og overskriv deltakere" />
-                            <FormControlLabel value={ImportAction.append} control={<Radio />} label="Importer og legg til deltakere" />
+                            <FormControlLabel value={ImportAction.overwrite} control={<Radio />} label="Overskriv deltakere" />
+                            <FormControlLabel value={ImportAction.append} control={<Radio />} label="Legg til deltakere" />
                         </RadioGroup>
                         <FormControlLabel control={<Checkbox onChange={importEventClassesChange}
                             disabled={!importEventClassesEnabled} checked={importEventClasses}/>} style={{display:'table'}} 
-                            label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")}
+                            label={'Importer og overskriv klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")}
                         />
                     </FormGroup>
 
