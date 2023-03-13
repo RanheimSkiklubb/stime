@@ -27,7 +27,7 @@ enum ImportAction {
 
 const ImportParticipants = (props: Props) => {
     const [show, setShow] = useState(false);
-    const [importEventClasses, setImportEventClasses] = useState(true);
+    const [importEventClasses, setImportEventClasses] = useState(false);
     const [importEventClassesEnabled, setImportEventClassesEnabled] = useState(true);
     const [importAction, setImportAction] = useState<ImportAction>(ImportAction.overwrite);
     const [error, setError] = useState("");
