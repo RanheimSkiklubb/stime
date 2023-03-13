@@ -183,8 +183,7 @@ const ImportParticipants = (props: Props) => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary" onClick={doImport} 
-                        disabled={participants.length === 0 || (!importEventClasses && !importAction)}>Importer</Button>
+                    <Button variant="contained" color="primary" onClick={doImport} disabled={participants.length === 0}>Importer</Button>
                     <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>
