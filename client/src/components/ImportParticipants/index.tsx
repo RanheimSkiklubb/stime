@@ -1,4 +1,4 @@
-import {ChangeEvent, useState} from 'react';
+import {ChangeEvent, useState, useRef} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -34,8 +34,8 @@ const ImportParticipants = (props: Props) => {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
     
-    async function handleClose() {
-        await setShow(false);
+    const handleClose = () => {
+        setShow(false);
         setParticipants([]);
         setEventClasses([]);
         setError("");
@@ -58,10 +58,7 @@ const ImportParticipants = (props: Props) => {
         }
     };
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setError("");
-        const fileList = e.target.files;
-        if (!fileList) return;
+    const processFile = (file:File) => {
         const handleParsed = (parsed:any) => {
             let mapped = [];
             try {
@@ -83,8 +80,8 @@ const ImportParticipants = (props: Props) => {
             setParticipants(mapped);
             setEventClasses(createEventClasses(mapped));
         }
-        parse(fileList[0], {complete: handleParsed, header:true, skipEmptyLines: 'greedy'});
-    };
+        parse(file, {complete: handleParsed, header:true, skipEmptyLines: 'greedy'});
+    }
 
     const columns = [
         {title: 'Fornavn', field: 'firstName'},
@@ -133,6 +130,34 @@ const ImportParticipants = (props: Props) => {
         }
     }
 
+    const FileUploader = () => {
+        const hiddenFileInput = useRef<HTMLInputElement>(null);
+        const handleClick = () => {
+            if (hiddenFileInput && hiddenFileInput.current) {
+                hiddenFileInput.current.click();
+            }
+        }
+        const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+            setError("");
+            const fileList = e.target.files;
+            if (!fileList) return;
+            processFile(fileList[0]);
+        };
+        return (<>
+            <input
+                accept=".csv"
+                id="file-upload"
+                name="file"
+                type="file"
+                multiple={false}
+                ref={hiddenFileInput}
+                onChange={handleFileChange}
+                style={{'display': 'none'}}
+            />
+            <Button variant="outlined" color="primary" size="small" onClick={handleClick}>Browse...</Button>
+        </>)
+    }
+
     return (
         <>
             <Button variant="contained" color="primary" size="medium" 
@@ -146,16 +171,7 @@ const ImportParticipants = (props: Props) => {
                     }
                     <Alert severity="info">CSV column names: firstName, lastName, eventClass, club</Alert>
                     <Warning/>
-                    <input
-                        accept=".csv"
-                        id="file-upload"
-                        name="file"
-                        type="file"
-                        multiple={false}
-                        onChange={handleFileChange}
-                        style={{'color': 'white'}}
-                    />
-
+                    <FileUploader/>
                     <FormGroup row>
                         <RadioGroup
                             aria-labelledby="demo-radio-buttons-group-label"
