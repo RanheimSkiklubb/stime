@@ -14,24 +14,30 @@ import {parse} from 'papaparse';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import HelpIcon from '@mui/icons-material/Help';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
 
 interface Props {
     event: Event
 }
 
+enum ImportAction {
+    overwrite, append
+}
+
 const ImportParticipants = (props: Props) => {
     const [show, setShow] = useState(false);
-    const [importEventClasses, setImportEventClasses] = useState(true);
-    const [importParticipants, setImportParticipants] = useState(true);
+    const [importEventClasses, setImportEventClasses] = useState(false);
+    const [importEventClassesEnabled, setImportEventClassesEnabled] = useState(true);
+    const [importAction, setImportAction] = useState<ImportAction>(ImportAction.overwrite);
     const [error, setError] = useState("");
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
-    const handleClose = () => {
-        setShow(false);
+    
+    async function handleClose() {
+        await setShow(false);
         setParticipants([]);
+        setEventClasses([]);
         setError("");
     }
     const handleShow = () => setShow(true);
@@ -40,11 +46,20 @@ const ImportParticipants = (props: Props) => {
         setImportEventClasses(!importEventClasses);
     };
 
-    const importParticipantsChange = () => {
-        setImportParticipants(!importParticipants);
+    const importParticipantsChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === ImportAction.overwrite.toString()) {
+            setImportAction(ImportAction.overwrite);
+            setImportEventClassesEnabled(true);
+        }
+        else {
+            setImportAction(ImportAction.append);
+            setImportEventClasses(false);
+            setImportEventClassesEnabled(false);
+        }
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setError("");
         const fileList = e.target.files;
         if (!fileList) return;
         const handleParsed = (parsed:any) => {
@@ -87,15 +102,36 @@ const ImportParticipants = (props: Props) => {
 
     const doImport = () => {
         (async () => {
-            if (importParticipants) {
-                await Firebase.updateParticipants(props.event.id, participants)
+            if (importAction === ImportAction.overwrite) {
+                await Firebase.updateParticipants(props.event.id, participants);
+            } else {
+                await Firebase.addParticipants(props.event.id, participants);
             }
-            if (importEventClasses) {
+            if (importEventClasses && importEventClassesEnabled) {
                 await Firebase.updateEventClasses(props.event.id, eventClasses);
             }
         })();
         handleClose();
     };
+
+    const Warning = () => {
+        if (error || props.event.participants.length === 0) {
+            return (<></>);
+        }
+        if (importAction === ImportAction.overwrite) {
+            let warningMessage;
+            if (importEventClasses) {
+                warningMessage = "Advarsel! Import vil overskrive alle klasser og deltakere";
+            }
+            else {
+                warningMessage = "Advarsel! Import vil overskrive alle deltakere";
+            }
+            return (<Alert severity="warning">{warningMessage}</Alert>);
+        } 
+        else {
+            return (<></>);
+        }
+    }
 
     return (
         <>
@@ -108,11 +144,8 @@ const ImportParticipants = (props: Props) => {
                         <Alert severity="error">{error}</Alert>
                     ) : null
                     }
-                    
-                    { !error && props.event.participants.length > 0 ? (
-                        <Alert severity="warning">Advarsel! Import vil overskrive alle klasser og deltakere.</Alert>
-                        ) : null
-                    }
+                    <Alert severity="info">CSV column names: firstName, lastName, eventClass, club</Alert>
+                    <Warning/>
                     <input
                         accept=".csv"
                         id="file-upload"
@@ -123,19 +156,21 @@ const ImportParticipants = (props: Props) => {
                         style={{'color': 'white'}}
                     />
 
-                    <Tooltip title="CSV column names: firstName, lastName, eventClass, club" style={{'float':'right'}}>
-                        <IconButton color="primary">
-                            <HelpIcon />
-                        </IconButton>
-                    </Tooltip>
-
                     <FormGroup row>
-                        <FormControlLabel control={<Checkbox defaultChecked value={importEventClasses} onChange={importEventClassesChange}/>} 
-                            label={'Importer klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")} 
+                        <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue="female"
+                            name="radio-buttons-group"
+                            onChange={importParticipantsChange}
+                            value={importAction}
+                        >
+                            <FormControlLabel value={ImportAction.overwrite} control={<Radio />} label="Overskriv deltakere" />
+                            <FormControlLabel value={ImportAction.append} control={<Radio />} label="Legg til deltakere" />
+                        </RadioGroup>
+                        <FormControlLabel control={<Checkbox onChange={importEventClassesChange}
+                            disabled={!importEventClassesEnabled} checked={importEventClasses}/>} style={{display:'table'}} 
+                            label={'Importer og overskriv klasser' + (eventClasses.length > 0 ? `(${eventClasses.length})` : "")}
                         />
-                        <FormControlLabel control={<Checkbox defaultChecked value={importParticipants} onChange={importParticipantsChange}/>} 
-                            label={'Importer deltakere' + (participants.length > 0 ? `(${participants.length})` : "")} 
-                            />
                     </FormGroup>
 
                     <MaterialTable
@@ -151,8 +186,7 @@ const ImportParticipants = (props: Props) => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="primary" onClick={doImport} 
-                        disabled={participants.length === 0 || (!importEventClasses && !importParticipants)}>Importer</Button>
+                    <Button variant="contained" color="primary" onClick={doImport} disabled={participants.length === 0}>Importer</Button>
                     <Button variant="contained" onClick={handleClose}>Avbryt</Button>
                 </DialogActions>
             </Dialog>

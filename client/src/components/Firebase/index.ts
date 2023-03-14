@@ -153,6 +153,10 @@ const addParticipant = async (eventId: string, participant: Participant) => {
     await updateDoc(eventRef(eventId), 'participants', arrayUnion(participant));
 };
 
+const addParticipants = async (eventId: string, participants: Participant[]) => {
+    await updateDoc(eventRef(eventId), 'participants', arrayUnion(...participants));
+};
+
 const updateEventClasses = async (eventId: string, eventClasses: EventClass[]) => {
     await updateDoc(eventRef(eventId), 'eventClasses', eventClasses.map(mapEventClassToFirestore));
 };
@@ -318,6 +322,7 @@ const exported = {
     fetchEvent,
     fetchEvents,
     addParticipant,
+    addParticipants,
     addContact,
     fetchContacts,
     updateStartGroups,
