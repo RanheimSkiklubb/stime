@@ -33,9 +33,11 @@ const ImportParticipants = (props: Props) => {
     const [error, setError] = useState("");
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [eventClasses, setEventClasses] = useState<EventClass[]>([]);
-    const handleClose = () => {
-        setShow(false);
+    
+    async function handleClose() {
+        await setShow(false);
         setParticipants([]);
+        setEventClasses([]);
         setError("");
     }
     const handleShow = () => setShow(true);
@@ -57,6 +59,7 @@ const ImportParticipants = (props: Props) => {
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setError("");
         const fileList = e.target.files;
         if (!fileList) return;
         const handleParsed = (parsed:any) => {
