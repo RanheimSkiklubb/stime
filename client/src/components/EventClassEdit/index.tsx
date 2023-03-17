@@ -143,6 +143,7 @@ const EventClassEdit = (props: Props) => {
                         new Promise<void>(resolve => {
                             resolve();
                             data.splice(data.indexOf(oldData), 1);
+                            data.forEach((item, idx) => item.order = idx + 1);
                             (async () => {
                                 await Firebase.updateEventClasses(props.event.id, data)
                             })();
