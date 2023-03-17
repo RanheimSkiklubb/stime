@@ -13,12 +13,9 @@ export default class TimeString {
         const minutes = parseInt(parts[1]);
         return moment(date).hour(hour).minutes(minutes).toDate();
     }
-    
-    static validate = (timeString:string|undefined):boolean => {
-        if (!timeString || timeString.length === 0) {
-            return true;
-        }
-        const regex = /\d\d:\d\d/;
+
+    static isValid = (timeString: string):boolean => {
+        const regex = /^\d\d:\d\d$/;
         return regex.test(timeString);
     }
 }

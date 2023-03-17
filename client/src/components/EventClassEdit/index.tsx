@@ -28,7 +28,7 @@ const EventClassEdit = (props: Props) => {
         { title: 'Pulje', field: 'startGroup', lookup: startGroups},
         { title: 'Ant. reservenr.', field: 'reserveNumbers', type: 'numeric'},
         { title: 'Første startnr.', field: 'firstStartNumber', type: 'numeric', hidden: false},
-        { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', hidden: false, validate: (rowData:any) => TimeString.validate(rowData.firstStartTimeStr)},
+        { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', hidden: false, validate: (rowData:any) => !rowData.firstStartTimeStr || TimeString.isValid(rowData.firstStartTimeStr)},
         { title: 'Siste startnr.', field: 'lastStartNumber', type: 'numeric', hidden: false}
     ]
 
@@ -77,8 +77,11 @@ const EventClassEdit = (props: Props) => {
         data.reserveNumbers = ('reserveNumbers' in data ? +data.reserveNumbers : 0);
         data.startInterval = ('startInterval' in data ? +data.startInterval : 0);
         data.description = ('description' in data ? data.description : "");
-        if ('firstStartTimeStr' in data) {
+        if ('firstStartTimeStr' in data && data.firstStartTimeStr.length > 0) {
             data.firstStartTime = TimeString.toDate(props.event.startTime, data.firstStartTimeStr);
+        }
+        else {
+            delete data.firstStartTime;
         }
     }
 
