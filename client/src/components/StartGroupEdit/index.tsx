@@ -14,7 +14,7 @@ interface Props {
 
 const columns: Array<Column<StartGroup>> = [
     { title: 'Pulje', field: 'name'},
-    { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', validate: (rowData:any) => TimeString.validate(rowData.firstStartTimeStr)},
+    { title: 'Første starttid', field: 'firstStartTimeStr', type: 'string', validate: (rowData:any) => rowData.firstStartTimeStr && TimeString.isValid(rowData.firstStartTimeStr)},
     { title: 'Egen nummerserie', field: 'separateNumberRange', type: 'boolean'},
     { title: 'Første startnummer', field: 'firstNumber', type: 'numeric'}
 ]
@@ -26,6 +26,8 @@ const StartGroupEdit = (props: Props) => {
     const validateInput = (data: any) => {
         if ('firstStartTimeStr' in data) {
             data.firstStartTime = TimeString.toDate(props.startTime, data.firstStartTimeStr);
+        } else {
+            data.firstStartTime = props.startTime;
         }
         if (!('separateNumberRange' in data)) {
             data.separateNumberRange = false;
