@@ -8,6 +8,7 @@ name: CI
       - master
     paths:
       - 'client/**'
+      - '.github/workflows/main.yml'
 
 jobs:
   build_and_deploy:
