@@ -2,6 +2,7 @@ import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import _ from 'lodash';
 import MaterialTable from 'material-table';
+import { createStartTimeRowStyle } from '../../utils/startTimeRowStyle';
 
 interface Props {
     event: Event;
@@ -34,6 +35,8 @@ const ParticipantList = (props: Props) => {
     });
     const sortedParticipants = props.event.startListPublished ? _.sortBy(participants, ["startTime", "startNumber"]) : _.sortBy(participants, ["sort1", "sort2"]);
 
+    const rowStyle = props.event.startListPublished ? createStartTimeRowStyle() : undefined;
+
     return (
         <MaterialTable
             title = {props.event.startListPublished ? `Startliste ${props.event.name}` : `Deltakerliste ${props.event.name}`}
@@ -44,7 +47,8 @@ const ParticipantList = (props: Props) => {
                 paging: false,
                 padding: "dense",
                 exportButton: true,
-                exportDelimiter: ';'
+                exportDelimiter: ';',
+                rowStyle
             }}
         />
 
