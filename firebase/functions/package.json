@@ -23,5 +23,8 @@
     "typescript": "^3.2.2",
     "firebase-functions-test": "^0.1.6"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "@tootallnate/once": "^3.0.1"
+  }
 }
