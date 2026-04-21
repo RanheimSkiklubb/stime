@@ -1,4 +1,4 @@
-const colors = ["white", "aliceblue"];
+const colors = ["white", "#d3e9fb"];
 
 /**
  * Returns a MaterialTable rowStyle function that alternates background colors
