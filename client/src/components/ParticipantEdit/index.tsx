@@ -13,6 +13,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import ContactDownload from './ContactDownload';
 import StartGroup from '../../model/start-group';
 import ImportParticipants from '../ImportParticipants';
+import { createStartTimeRowStyle } from '../../utils/startTimeRowStyle';
 
 interface Props {
     event: Event;
@@ -124,9 +125,7 @@ const ParticipantEdit = (props: Props) => {
         })();
     }
     
-    const colors = ["white", "aliceblue"];
-    let startTime:any;
-    let backgroundColor:string = colors[0];
+    const rowStyle = props.event.startListGenerated ? createStartTimeRowStyle() : undefined;
 
     return (
         <>
@@ -153,14 +152,7 @@ const ParticipantEdit = (props: Props) => {
                     padding: "dense",
                     exportButton: true,
                     exportDelimiter: ';',
-                    rowStyle: x => {  
-                        // striped rows, but color consecutive rows with same start time the same
-                        if (props.event.startListGenerated && x.startTime !== startTime) {
-                            startTime = x.startTime;
-                            backgroundColor = colors[(colors.indexOf(backgroundColor) + 1) % 2];
-                        }
-                        return {backgroundColor};
-                    }
+                    rowStyle
                 }}
                 editable={{
                     onRowAdd: newData =>
