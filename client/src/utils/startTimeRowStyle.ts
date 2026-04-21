@@ -1,8 +1,9 @@
 const colors = ["white", "#d3e9fb"];
 
 /**
- * Returns a MaterialTable rowStyle function that alternates background colors
- * for consecutive rows sharing the same startTime value.
+ * Returns a MaterialTable rowStyle function that keeps the same background
+ * color for consecutive rows with the same startTime and alternates colors
+ * between consecutive startTime groups.
  */
 export function createStartTimeRowStyle(): (row: any) => { backgroundColor: string } {
     let currentStartTime: any;
