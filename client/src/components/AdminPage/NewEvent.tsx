@@ -10,7 +10,7 @@ import NativeSelect from '@mui/material/NativeSelect';
 import FormControl from '@mui/material/FormControl';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 interface Props {
 }
@@ -74,7 +74,7 @@ const NewEvent = (props: Props) => {
                     <NativeSelect inputProps={{id: 'event-class-label'}} onChange={eventChange}>
                         <option value="">Tomt arrangement</option>
                         {events.map(event =>
-                            (<option value={event.id} key={event.id}>{`${moment(event.startTime).format('DD.MM.YYYY')}: ${event.name}`}</option>))}
+                            (<option value={event.id} key={event.id}>{`${dayjs(event.startTime).format('DD.MM.YYYY')}: ${event.name}`}</option>))}
                     </NativeSelect>
                 </FormControl>
             </DialogContent>

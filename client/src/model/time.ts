@@ -1,17 +1,17 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class TimeString {
     static fromDate = (date:Date|undefined):string => {
         if (!date) {
             return "";
         }
-        return moment(date).format('HH:mm');
+        return dayjs(date).format('HH:mm');
     }
     static toDate = (date:Date, timeString:string):Date => {
         const parts = timeString.split(':');
         const hour = parseInt(parts[0]);
         const minutes = parseInt(parts[1]);
-        return moment(date).hour(hour).minutes(minutes).toDate();
+        return dayjs(date).hour(hour).minute(minutes).toDate();
     }
 
     static isValid = (timeString: string):boolean => {

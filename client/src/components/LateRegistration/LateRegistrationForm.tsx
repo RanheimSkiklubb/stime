@@ -8,7 +8,7 @@ import ParticipantDetails from './ParticipantDetails';
 import SelectClass from './SelectClass';
 import Confirmation from './Confirmation';
 import NoLongerAvailable from './NoLongerAvailable';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 interface Props {
     event: Event,
@@ -47,7 +47,7 @@ const RegistrationForm = (props: Props) => {
         const firstStartNumber = eventClass.firstStartNumber || 0;
         const lastStartNumber = eventClass.lastStartNumber || 0;
         const findStartTime = (startNumber: number):string => 
-            moment(eventClass.firstStartTime)
+            dayjs(eventClass.firstStartTime)
                 .add(eventClass.startInterval * (startNumber - firstStartNumber), 's')
                 .format("HH:mm:ss");
         

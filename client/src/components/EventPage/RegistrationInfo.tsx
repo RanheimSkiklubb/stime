@@ -1,7 +1,7 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Event from '../../model/event';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import Registration from '../registration/Registration';
 import {Theme} from "@mui/material/styles";
@@ -48,7 +48,7 @@ const RegistrationInfo = (props: Props) => {
             <TableRow>
                 <TableCell>Påmeldingsfrist:</TableCell>
                 <TableCell>
-                    <p className={classes.registrationDate}>{moment(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
+                    <p className={classes.registrationDate}>{dayjs(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
                     <Registration event={props.event} />
                 </TableCell>
             </TableRow>
