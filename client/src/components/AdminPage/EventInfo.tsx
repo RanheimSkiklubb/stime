@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Event from '../../model/event';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Theme } from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 
@@ -52,7 +52,7 @@ const EventInfo = (props: Props) => {
 
     const startDateChange = (e: ChangeEvent<HTMLInputElement>) => {
         const isValidDate = (d:Date) => !isNaN(d.getTime());
-        const timeComponent = isValidDate(startTime) ? `T${moment(startTime).format("HH:mm")}` : '';
+        const timeComponent = isValidDate(startTime) ? `T${dayjs(startTime).format("HH:mm")}` : '';
         const newStartTime = new Date(`${e.currentTarget.value}${timeComponent}`);
         if (isValidDate(newStartTime)) {
             setStartTime(new Date(newStartTime));
@@ -60,7 +60,7 @@ const EventInfo = (props: Props) => {
     };
 
     const startTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newStartTime = `${moment(startTime).format("YYYY-MM-DD")}T${e.currentTarget.value}`;
+        const newStartTime = `${dayjs(startTime).format("YYYY-MM-DD")}T${e.currentTarget.value}`;
         setStartTime(new Date(newStartTime));
     };
 
@@ -94,7 +94,7 @@ const EventInfo = (props: Props) => {
                             id="start-date"
                             label="Dato"
                             type="date"
-                            value={moment(startTime).format("YYYY-MM-DD")}
+                            value={dayjs(startTime).format("YYYY-MM-DD")}
                             onChange={startDateChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -113,7 +113,7 @@ const EventInfo = (props: Props) => {
                         id="start-time"
                         label="Første start"
                         type="time"
-                        value={moment(startTime).format("HH:mm")}
+                        value={dayjs(startTime).format("HH:mm")}
                         onChange={startTimeChange}
                         InputLabelProps={{
                             shrink: true,
@@ -130,7 +130,7 @@ const EventInfo = (props: Props) => {
                         id="registration-start"
                         label="Påmelding åpner"
                         type="datetime-local"
-                        value={moment(registrationStart).format("YYYY-MM-DDTHH:mm")}
+                        value={dayjs(registrationStart).format("YYYY-MM-DDTHH:mm")}
                         onChange={registrationStartChange}
                         InputLabelProps={{
                             shrink: true,
@@ -144,7 +144,7 @@ const EventInfo = (props: Props) => {
                         id="registration-end"
                         label="Påmeldingsfrist"
                         type="datetime-local"
-                        value={moment(registrationEnd).format("YYYY-MM-DDTHH:mm")}
+                        value={dayjs(registrationEnd).format("YYYY-MM-DDTHH:mm")}
                         onChange={registrationEndChange}
                         InputLabelProps={{
                             shrink: true,

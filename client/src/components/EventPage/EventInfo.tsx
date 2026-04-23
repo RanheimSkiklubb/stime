@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import makeStyles from '@mui/styles/makeStyles';
 import Event from '../../model/event';
 import EventClass from '../../model/event-class';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import RegistrationInfo from './RegistrationInfo';
 import {sortBy} from 'lodash';
 
@@ -43,9 +43,9 @@ const EventInfo = (props: Props) => {
                         <Table className={classes.infoTable}>
                             <TableBody>
                                 <TableRow><TableCell>Arrangement:</TableCell><TableCell>{props.event.name}</TableCell></TableRow>
-                                <TableRow><TableCell>Dato:</TableCell><TableCell>{moment(props.event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
+                                <TableRow><TableCell>Dato:</TableCell><TableCell>{dayjs(props.event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{props.event.eventType}</TableCell></TableRow>
-                                <TableRow><TableCell>Første start:</TableCell><TableCell>{moment(props.event.startTime).format("HH:mm")}</TableCell></TableRow>
+                                <TableRow><TableCell>Første start:</TableCell><TableCell>{dayjs(props.event.startTime).format("HH:mm")}</TableCell></TableRow>
                                 <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={props.event} />
                             </TableBody>

@@ -6,7 +6,7 @@ import Participant from '../../model/participant';
 import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
 import Button from '@mui/material/Button';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import LateRegistration from '../LateRegistration';
 import {Theme} from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
@@ -93,7 +93,7 @@ const ParticipantEdit = (props: Props) => {
         let startNumber = 1;
         for (const startGroupName in startGroups) {
             const group = startGroups[startGroupName];
-            let startTime = moment(group.startGroup.firstStartTime);
+            let startTime = dayjs(group.startGroup.firstStartTime);
             if (group.startGroup.separateNumberRange) {
                 startNumber = group.startGroup.firstNumber || startNumber;
             }

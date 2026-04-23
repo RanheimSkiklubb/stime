@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useHistory } from "react-router-dom";
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
 import {CheckCircle} from "@mui/icons-material";
@@ -76,7 +76,7 @@ const EventListPage: FC = (props) => {
                     {events.map((event:Event) => (
                         <TableRow hover key={event.name} onClick={() => history.push(eventLink(event))}>
                             <TableCell align='center'>{event.registrationOpen() ? <CheckCircle className={classes.icon} /> : <div></div>}</TableCell>
-                            <TableCell>{moment(event.startTime).format("DD. MMM YYYY")}</TableCell>
+                            <TableCell>{dayjs(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell>{event.eventType}</TableCell>
                         </TableRow>
