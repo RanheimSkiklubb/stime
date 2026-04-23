@@ -1,11 +1,11 @@
-import {ChangeEvent, useState, useRef} from 'react';
+import {ChangeEvent, useState, useRef, useMemo} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import MaterialTable from 'material-table';
+import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
 import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import Participant from '../../model/participant';
@@ -83,12 +83,29 @@ const ImportParticipants = (props: Props) => {
         parse(file, {complete: handleParsed, header:true, skipEmptyLines: 'greedy'});
     }
 
-    const columns = [
-        {title: 'Fornavn', field: 'firstName'},
-        {title: 'Etternavn', field: 'lastName'},
-        {title: 'Klubb', field: 'club'},
-        {title: 'Klasse', field: 'eventClass'}
-    ];
+    const columns = useMemo<MRT_ColumnDef<Participant>[]>(() => [
+        {header: 'Fornavn', accessorKey: 'firstName'},
+        {header: 'Etternavn', accessorKey: 'lastName'},
+        {header: 'Klubb', accessorKey: 'club'},
+        {header: 'Klasse', accessorKey: 'eventClass'},
+    ], []);
+
+    const previewTable = useMaterialReactTable({
+        columns,
+        data: participants,
+        enablePagination: false,
+        enableSorting: false,
+        enableColumnActions: false,
+        enableHiding: false,
+        enableBottomToolbar: false,
+        enableDensityToggle: false,
+        enableFullScreenToggle: false,
+        enableTopToolbar: true,
+        initialState: { density: 'compact' },
+        renderTopToolbarCustomActions: () => (
+            <h4 style={{margin: 0, padding: '4px 8px'}}>Deltakere</h4>
+        ),
+    });
 
     const createEventClasses = (participants: Participant[]):EventClass[] => {
         const eventClassNames = new Set<string>(participants.map(item => item.eventClass));
@@ -189,16 +206,7 @@ const ImportParticipants = (props: Props) => {
                         />
                     </FormGroup>
 
-                    <MaterialTable
-                        title = 'Deltakere'
-                        columns = {columns}
-                        data = {participants}
-                        options={{
-                            paging: false,
-                            padding: "dense",
-                            exportDelimiter: ';'
-                        }}
-                    />
+                    <MaterialReactTable table={previewTable} />
 
                 </DialogContent>
                 <DialogActions>
