@@ -1,10 +1,10 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions/v1';
 import * as admin from 'firebase-admin';
 import * as _ from 'lodash';
 
 admin.initializeApp();
 
-export const addAdminRole = functions.auth.user().onCreate(async (user) => {
+export const addAdminRole = functions.auth.user().onCreate(async (user: admin.auth.UserRecord) => {
     const adminUsers = [
         'jorn@olmheim.com',
         'oyvind.ronne@gmail.com',
