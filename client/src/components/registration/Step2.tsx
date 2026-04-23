@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
 import RegisteredParticipant from './RegisteredParticipant';
-import {compareTwoStrings} from 'string-similarity';
 
 interface Props {
     event: Event,
@@ -16,6 +15,30 @@ interface Props {
     editCallback: () => void,
     registerCallback: () => void
 }
+
+// Dice's coefficient on character bigrams. Returns a similarity score in [0, 1].
+const compareTwoStrings = (a: string, b: string): number => {
+    if (a === b) return 1;
+    if (a.length < 2 || b.length < 2) return 0;
+
+    const bigrams = (s: string) => {
+        const map = new Map<string, number>();
+        for (let i = 0; i < s.length - 1; i++) {
+            const bg = s.substring(i, i + 2);
+            map.set(bg, (map.get(bg) || 0) + 1);
+        }
+        return map;
+    };
+
+    const aBigrams = bigrams(a);
+    const bBigrams = bigrams(b);
+    let intersection = 0;
+    aBigrams.forEach((count, bg) => {
+        const bCount = bBigrams.get(bg);
+        if (bCount) intersection += Math.min(count, bCount);
+    });
+    return (2 * intersection) / (a.length + b.length - 2);
+};
 
 const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null => {
     if (!e) return null;
