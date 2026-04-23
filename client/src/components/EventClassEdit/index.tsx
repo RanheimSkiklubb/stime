@@ -204,7 +204,7 @@ const EventClassEdit = (props: Props) => {
                     <span>
                         <IconButton
                             size="small"
-                            disabled={row.original.order === 1}
+                            disabled={row.original.order <= 1}
                             onClick={() => moveUp(row.original.order)}
                         >
                             <ArrowUpwardIcon fontSize="small" />
