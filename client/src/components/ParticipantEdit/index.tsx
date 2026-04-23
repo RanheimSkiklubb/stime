@@ -49,17 +49,18 @@ const ParticipantEdit = (props: Props) => {
     sortBy(props.event.eventClasses, 'order').forEach(ec => eventClasses[ec.name] = ec.name);
     const eventClassNames = Object.keys(eventClasses);
 
-    const eventClassOrder: any = props.event.eventClasses.reduce((p: any, c: EventClass) => {
-        p[c.name] = c.order;
-        return p
-    }, {});
+    const eventClassOrder = useMemo<Record<string, number>>(() => (
+        props.event.eventClasses.reduce((p: Record<string, number>, c: EventClass) => {
+            p[c.name] = c.order;
+            return p;
+        }, {})
+    ), [props.event.eventClasses]);
 
     const sortedInitial = useMemo(() => (
         props.event.startListGenerated
             ? sortBy(props.event.participants, ["startTime", "startNumber"])
-            : sortBy(props.event.participants, (p: Participant) => padStart(eventClassOrder[p.eventClass], 3, "0") + p.firstName + p.lastName)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    ), [props.event.participants, props.event.startListGenerated]);
+            : sortBy(props.event.participants, (p: Participant) => padStart(String(eventClassOrder[p.eventClass]), 3, "0") + p.firstName + p.lastName)
+    ), [props.event.participants, props.event.startListGenerated, eventClassOrder]);
 
     const data = sortedInitial;
 
