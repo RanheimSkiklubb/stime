@@ -14,24 +14,9 @@ import {CheckCircle} from "@mui/icons-material";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth} from "firebase/auth";
 import HeaderBar from "../headerbar/HeaderBar";
-import { Theme } from "@mui/material/styles";
-import {makeStyles} from '@mui/styles';
 import {orderBy} from 'lodash';
 
-const useStyles = makeStyles((theme: Theme) => ({
-        root: {
-            flexGrow: 1,
-        },
-        narrowCell: {
-            width: '10%',
-        },
-        icon: {
-            color: 'green',
-        },
-    }));
-
-const EventListPage: FC = (props) => {
-    const classes = useStyles();
+const EventListPage: FC = () => {
     const navigate = useNavigate();
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
@@ -66,7 +51,7 @@ const EventListPage: FC = (props) => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align='center' className={classes.narrowCell}>Påmelding åpen</TableCell>
+                            <TableCell align='center' sx={{ width: '10%' }}>Påmelding åpen</TableCell>
                             <TableCell>Dato</TableCell>
                             <TableCell>Arrangement</TableCell>
                             <TableCell>Øvelse</TableCell>
@@ -75,7 +60,7 @@ const EventListPage: FC = (props) => {
                     <TableBody>
                     {events.map((event:Event) => (
                         <TableRow hover key={event.name} onClick={() => navigate(eventLink(event))}>
-                            <TableCell align='center'>{event.registrationOpen() ? <CheckCircle className={classes.icon} /> : <div></div>}</TableCell>
+                            <TableCell align='center'>{event.registrationOpen() ? <CheckCircle sx={{ color: 'green' }} /> : <div></div>}</TableCell>
                             <TableCell>{dayjs(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell>{event.eventType}</TableCell>

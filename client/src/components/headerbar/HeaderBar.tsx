@@ -4,10 +4,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import Login from "../login/Login";
 import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 import {useEffect, useState} from "react";
 import {ListItemIcon, Menu, MenuItem} from "@mui/material";
-import {Theme} from "@mui/material/styles";
-import {makeStyles} from "@mui/styles";
 import {Create, Home} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
@@ -17,24 +16,7 @@ interface Props {
     heading: string
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-    appBar: {
-        marginBottom: theme.spacing(1),
-    }
-}));
-
 const HeaderBar = (props: Props) => {
-    const classes = useStyles();
-
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [admin, setAdmin] = useState<boolean>(false);
@@ -68,12 +50,12 @@ const HeaderBar = (props: Props) => {
     };
 
     return (
-        <div className={classes.root}>
-            <AppBar position="sticky" className={classes.appBar}>
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="sticky" sx={{ mb: 1 }}>
                 <Toolbar>
                     <IconButton
                         edge="start"
-                        className={classes.menuButton}
+                        sx={{ mr: 2 }}
                         color="inherit"
                         aria-label="menu-icon"
                         aria-controls="menu"
@@ -105,13 +87,13 @@ const HeaderBar = (props: Props) => {
                             :
                             <div></div>}
                     </Menu>
-                    <Typography variant="h5" className={classes.title}>
+                    <Typography variant="h5" sx={{ flexGrow: 1 }}>
                         {props.heading}
                     </Typography>
                     <Login/>
                 </Toolbar>
             </AppBar>
-        </div>
+        </Box>
     );
 };
 

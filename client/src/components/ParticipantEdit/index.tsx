@@ -22,8 +22,6 @@ import EventClass from '../../model/event-class';
 import Registration from '../registration/Registration';
 import dayjs from 'dayjs';
 import LateRegistration from '../LateRegistration';
-import { Theme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import ContactDownload from './ContactDownload';
 import StartGroup from '../../model/start-group';
 import ImportParticipants from '../ImportParticipants';
@@ -37,14 +35,7 @@ interface Props {
     event: Event;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        padding: theme.spacing(1),
-    },
-}));
-
 const ParticipantEdit = (props: Props) => {
-    const classes = useStyles();
     const eventClasses: Record<string, string> = {};
     sortBy(props.event.eventClasses, 'order').forEach(ec => eventClasses[ec.name] = ec.name);
     const eventClassNames = Object.keys(eventClasses);
@@ -343,7 +334,7 @@ const ParticipantEdit = (props: Props) => {
 
     return (
         <>
-            <div className={classes.root}>
+            <Box sx={{ p: 1 }}>
                 {!props.event.startListGenerated ?
                     <><Registration event={props.event} />&nbsp;<ImportParticipants event={props.event} />&nbsp;</> :
                     <><LateRegistration event={props.event} caption="Etteranmelding" />&nbsp;</>
@@ -355,7 +346,7 @@ const ParticipantEdit = (props: Props) => {
                     >Publiser Startliste</Button>&nbsp;
                 </>) : null}
                 <ContactDownload eventId={props.event.id} eventName={props.event.name} />
-            </div>
+            </Box>
             <MaterialReactTable table={table} />
         </>
     );

@@ -3,6 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Event from '../../model/event';
 import { useNavigate, useParams, useLocation, Link, Routes, Route, Navigate } from "react-router-dom";
 import ParticipantEdit from '../ParticipantEdit';
@@ -12,26 +13,10 @@ import Firebase from '../Firebase';
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth} from "firebase/auth";
 import HeaderBar from "../headerbar/HeaderBar";
-import {makeStyles} from "@mui/styles";
 import EventInfo from './EventInfo';
 import NewEvent from './NewEvent';
 
-const useStyles = makeStyles((theme) =>({
-        root: {
-            flexGrow: 1,
-        },
-        appBar: {
-            marginBottom: theme.spacing(1),
-        },
-        info: {
-            marginTop: 32,
-            fontWeight: "bold",
-        }
-    }));
-
-
 const AdminPage = () => {
-    const classes = useStyles();
 
     const { eventId: eventIdFromUrl } = useParams<{ eventId: string }>();
     const [admin, setAdmin] = useState<boolean>(false);
@@ -92,7 +77,7 @@ const AdminPage = () => {
             <>
                 <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
-                <AppBar position="static" className={classes.appBar}>
+                <AppBar position="static" sx={{ mb: 1 }}>
                     <Tabs indicatorColor="primary" textColor="inherit" value={location.pathname || url} aria-label="simple tabs example">
                         <Tab label="Arrangement" component={ Link } value={`${url}`} to={`${url}`}/>
                         <Tab label={`Puljer (${event.startGroups.length})`}  component={ Link } value={`${url}/groups`} to={`${url}/groups`}/>
@@ -113,7 +98,7 @@ const AdminPage = () => {
         <>
             <HeaderBar heading="Admin" />
 
-            <div className={classes.info}>You need to be an administrator to see this page</div>
+            <Box sx={{ mt: 4, fontWeight: 'bold' }}>You need to be an administrator to see this page</Box>
             <div><Button variant="text" color="primary" onClick={() => navigate(`/event/${event.id}`)}>Go to event page</Button></div>
         </>
     )

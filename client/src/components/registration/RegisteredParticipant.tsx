@@ -3,19 +3,20 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
+import { SxProps, Theme } from '@mui/material/styles';
 import Participant from '../../model/participant';
 
 interface Props {
     participant: Participant,
     email: string,
     phone: string,
-    className?: string
+    sx?: SxProps<Theme>
 }
 
 const RegisteredParticipant = (props: Props) => {
     return (
         <TableContainer>
-            <Table size="small" className={props.className}>
+            <Table size="small" sx={props.sx}>
                 <TableBody>
                     <TableRow>
                         <TableCell>Fornavn</TableCell>

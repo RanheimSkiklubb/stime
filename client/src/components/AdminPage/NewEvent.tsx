@@ -64,10 +64,11 @@ const NewEvent = (props: Props) => {
     return (
         <Dialog
             open={showDialog}
-            onClose={() => setShowDialog(false)}
+            onClose={(_, reason) => {
+                if (reason !== 'escapeKeyDown') setShowDialog(false);
+            }}
             maxWidth="sm"
-            fullWidth={true}
-            disableEscapeKeyDown={true}>
+            fullWidth={true}>
             <DialogTitle id="form-dialog-title" sx={{textAlign: 'center'}}>Velg utgangspunkt for nytt arrangement</DialogTitle>
             <DialogContent>
                 <FormControl fullWidth>

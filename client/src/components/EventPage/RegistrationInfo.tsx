@@ -4,27 +4,13 @@ import Event from '../../model/event';
 import dayjs from 'dayjs';
 
 import Registration from '../registration/Registration';
-import {Theme} from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 
 
 interface Props {
     event: Event,
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-        registrationDate: {
-            marginTop: '0',
-            marginBottom: theme.spacing(3),
-        },
-        noMargin:  {
-            marginTop: "0",
-        }
-    })
-);
-
 const RegistrationInfo = (props: Props) => {
-    const classes = useStyles();
     if (!props.event.registrationStarted()) {
         return (
             <TableRow>
@@ -39,7 +25,7 @@ const RegistrationInfo = (props: Props) => {
         return (
             <TableRow>
                 <TableCell>Påmelding:</TableCell>
-                <TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={registrationEndInfo}/></TableCell>
+                <TableCell><span style={{ marginTop: 0 }} dangerouslySetInnerHTML={registrationEndInfo}/></TableCell>
             </TableRow>
         );
     }
@@ -48,7 +34,7 @@ const RegistrationInfo = (props: Props) => {
             <TableRow>
                 <TableCell>Påmeldingsfrist:</TableCell>
                 <TableCell>
-                    <p className={classes.registrationDate}>{dayjs(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
+                    <p style={{ marginTop: 0, marginBottom: 24 }}>{dayjs(props.event.registrationEnd).format("D. MMM YYYY, HH:mm")}</p>
                     <Registration event={props.event} />
                 </TableCell>
             </TableRow>

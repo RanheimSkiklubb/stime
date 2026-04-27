@@ -103,22 +103,22 @@ const Step1 = (props: Props) => {
     return (
         <form noValidate autoComplete="off">
             <Grid container spacing={2}>
-                <Grid item xs={12} style={{textAlign: 'center', fontWeight: 'bold'}}>
+                <Grid size={12} style={{textAlign: 'center', fontWeight: 'bold'}}>
                     <p>Steg 1 av 2: Registrer deltaker</p>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField required id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
                                 error={!firstNameValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField required id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange}
                                 error={!lastNameValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <Autocomplete
                             id="club"
@@ -138,13 +138,13 @@ const Step1 = (props: Props) => {
                             }}
                             renderInput={params => (
                                 <TextField {...params} label="Klubb" margin="normal" fullWidth
-                                        InputProps={{...params.InputProps, type: 'search'}}
+                                        slotProps={{ input: { ...params.slotProps.input, type: 'search' } }}
                                         style={{marginTop: '0'}}/>
                             )}
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <InputLabel required htmlFor="event-class-label">Klasse</InputLabel>
                         <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
@@ -155,21 +155,21 @@ const Step1 = (props: Props) => {
                         </NativeSelect>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField required id="email" label="Kontakt e-post" value={email} onChange={emailChange}
                                 error={!emailValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField required id="phone" label="Kontakt telefon" value={phone} onChange={phoneChange}
                                 error={!phoneValid}/>
                     </FormControl>
                 </Grid>
                 <Grid container style={{margin: '20px 8px 20px 8px'}}>
-                    <Grid item xs={6}><Button variant="contained" onClick={handleClose}>Lukk</Button></Grid>
-                    <Grid item xs={6} style={{textAlign: 'right'}}>
+                    <Grid size={6}><Button variant="contained" onClick={handleClose}>Lukk</Button></Grid>
+                    <Grid size={6} style={{textAlign: 'right'}}>
                         <Button className="float-right" variant="contained" color="primary" onClick={handleNext}
                             disabled={!formValid}>Gå videre</Button>
                     </Grid>

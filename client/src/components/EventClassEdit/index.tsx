@@ -17,8 +17,6 @@ import Event from '../../model/event';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { max, sortBy } from 'lodash';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
 import TimeString from '../../model/time';
 
 interface Props {
@@ -64,14 +62,6 @@ const EventClassEdit = (props: Props) => {
         }
         return next;
     };
-
-    const useStyles = makeStyles((theme: Theme) => ({
-        warning: {
-            fontWeight: 'bold',
-            color: theme.palette.warning.main
-        },
-    }));
-    const classes = useStyles();
 
     const sorted = useMemo(() => sortBy(data, 'order'), [data]);
     const maxOrder = max(data.map(ec => ec.order)) || 0;
@@ -241,10 +231,10 @@ const EventClassEdit = (props: Props) => {
     return (
         <>
             {props.event.startListPublished ?
-                <p className={classes.warning}>
+                <Box component="p" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
                     Endringer i eksisterende klasser utover navn og løypenavn har ingen effekt etter at startliste er publisert.<br />
                     Ved innlegging av nye klasser for etteranmelding, må første/siste startnummer og første starttid settes manuelt.
-                </p> : null}
+                </Box> : null}
             <h3 style={{ margin: '8px 0' }}>Klasser</h3>
             <MaterialReactTable table={table} />
         </>

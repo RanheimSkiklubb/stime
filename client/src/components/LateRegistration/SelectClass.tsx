@@ -1,5 +1,5 @@
 import {ChangeEvent, useState} from 'react';
-import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import NativeSelect from '@mui/material/NativeSelect';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -28,25 +28,21 @@ const SelectClass = (props: Props) => {
 
     return (
         <form noValidate autoComplete="off">
-            <Grid container direction="column" justifyContent="center" alignItems="center">
-                <Grid item xs={9}>
-                    <FormControl fullWidth>
-                        <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
-                        <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
-                                    onChange={eventClassChange}>
-                            <option value=""></option>
-                            {sortBy(props.event.eventClasses, 'order').map(eventClass => (<option value={eventClass.name}
-                                                                                key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
-                        </NativeSelect>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box m={2}>
-                        <Button variant="contained" color="primary" onClick={handleNext}
-                                disabled={eventClass === ""}>Neste</Button>
-                    </Box>
-                </Grid>
-            </Grid>
+            <Stack sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                <FormControl fullWidth sx={{ width: '75%' }}>
+                    <InputLabel htmlFor="event-class-label">Klasse</InputLabel>
+                    <NativeSelect inputProps={{id: 'event-class-label'}} value={eventClass}
+                                onChange={eventClassChange}>
+                        <option value=""></option>
+                        {sortBy(props.event.eventClasses, 'order').map(eventClass => (<option value={eventClass.name}
+                                                                            key={eventClass.name}>{`${eventClass.name} (${eventClass.course})`}</option>))}
+                    </NativeSelect>
+                </FormControl>
+                <Box sx={{ m: 2 }}>
+                    <Button variant="contained" color="primary" onClick={handleNext}
+                            disabled={eventClass === ""}>Neste</Button>
+                </Box>
+            </Stack>
         </form>
     );
 }
