@@ -9,7 +9,7 @@ import {ListItemIcon, Menu, MenuItem} from "@mui/material";
 import {Theme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
 import {Create, Home} from "@mui/icons-material";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth} from "firebase/auth";
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const HeaderBar = (props: Props) => {
     const classes = useStyles();
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
@@ -59,12 +59,12 @@ const HeaderBar = (props: Props) => {
 
     const goHome = () => {
         handleClose();
-        history.push("/");
+        navigate("/");
     };
 
     const newEvent = () => {
         handleClose();
-        history.push("/admin/");
+        navigate("/admin/");
     };
 
     return (

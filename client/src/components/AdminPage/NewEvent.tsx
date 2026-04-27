@@ -1,5 +1,5 @@
 import { useEffect, useState, ChangeEvent} from "react";
-import {Redirect, useHistory} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const NewEvent = (props: Props) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [showDialog, setShowDialog] = useState(true);
     const [events, setEvents] = useState<Event[]>([]);
     const [eventId, setEventId] = useState("");
@@ -36,7 +36,7 @@ const NewEvent = (props: Props) => {
     };
 
     const handleCancelClick = () => {
-        history.push("/");
+        navigate("/");
     }
 
     const handleOkClick = async () => {
@@ -58,7 +58,7 @@ const NewEvent = (props: Props) => {
 
     if (redirect) {
         const url = `/admin/${eventId}`;
-        return (<Redirect to={url}/>);
+        return (<Navigate to={url} replace />);
     }
 
     return (

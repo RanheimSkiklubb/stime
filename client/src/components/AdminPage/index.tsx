@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Button from '@mui/material/Button';
 import Event from '../../model/event';
-import { useHistory, useParams, useRouteMatch, Link, Switch, Route, Redirect } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link, Routes, Route, Navigate } from "react-router-dom";
 import ParticipantEdit from '../ParticipantEdit';
 import EventClassEdit from '../EventClassEdit';
 import StartGroupEdit from '../StartGroupEdit';
@@ -15,14 +15,6 @@ import HeaderBar from "../headerbar/HeaderBar";
 import {makeStyles} from "@mui/styles";
 import EventInfo from './EventInfo';
 import NewEvent from './NewEvent';
-
-interface MatchParams {
-    eventId: string
-}
-
-interface Props {
-    pathname: string
-}
 
 const useStyles = makeStyles((theme) =>({
         root: {
@@ -38,17 +30,18 @@ const useStyles = makeStyles((theme) =>({
     }));
 
 
-const AdminPage = (props: Props) => {
+const AdminPage = () => {
     const classes = useStyles();
 
-    const eventIdFromUrl = useParams<MatchParams>().eventId;
+    const { eventId: eventIdFromUrl } = useParams<{ eventId: string }>();
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
     const [event, setEvent] = useState<Event>(Event.newEvent());
     const [eventId, setEventId] = useState(eventIdFromUrl);
     const [redirect, setRedirect] = useState(false);
-    const history = useHistory();
-    const { path, url } = useRouteMatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const url = eventIdFromUrl ? `/admin/${eventIdFromUrl}` : '/admin';
 
     useEffect(() => {
         const fetchClaims = async () => {
@@ -82,7 +75,7 @@ const AdminPage = (props: Props) => {
     if (admin) {
         if (redirect) {
             const url = `/admin/${eventId}`;
-            return (<Redirect to={url}/>);
+            return (<Navigate to={url} replace />);
         }
         let eventEditPane;
 
@@ -100,19 +93,19 @@ const AdminPage = (props: Props) => {
                 <HeaderBar heading={eventId ? "Event Admin" : "New Event"}/>
 
                 <AppBar position="static" className={classes.appBar}>
-                    <Tabs indicatorColor="primary" textColor="inherit" value={props.pathname || url} aria-label="simple tabs example">
+                    <Tabs indicatorColor="primary" textColor="inherit" value={location.pathname || url} aria-label="simple tabs example">
                         <Tab label="Arrangement" component={ Link } value={`${url}`} to={`${url}`}/>
                         <Tab label={`Puljer (${event.startGroups.length})`}  component={ Link } value={`${url}/groups`} to={`${url}/groups`}/>
                         <Tab label={`Klasser (${event.eventClasses.length})`} component={ Link } value={`${url}/classes`} to={`${url}/classes`}/>
                         <Tab label={`Deltakere (${event.participants.length})`} component={ Link } value={`${url}/list`} to={`${url}/list`}/>
                     </Tabs>
                 </AppBar>
-                <Switch>
-                    <Route exact path={`${path}`}>{eventEditPane}</Route>
-                    <Route path={`${path}/groups`}><StartGroupEdit eventId={event.id} startGroups={event.startGroups} startTime={event.startTime} startListPublished={event.startListPublished}/></Route>
-                    <Route path={`${path}/classes`}><EventClassEdit event={event}/></Route>
-                    <Route path={`${path}/list`}><ParticipantEdit event={event}/></Route>
-                </Switch>
+                <Routes>
+                    <Route index element={eventEditPane} />
+                    <Route path="groups" element={<StartGroupEdit eventId={event.id} startGroups={event.startGroups} startTime={event.startTime} startListPublished={event.startListPublished}/>} />
+                    <Route path="classes" element={<EventClassEdit event={event}/>} />
+                    <Route path="list" element={<ParticipantEdit event={event}/>} />
+                </Routes>
             </>
         );
     }
@@ -121,7 +114,7 @@ const AdminPage = (props: Props) => {
             <HeaderBar heading="Admin" />
 
             <div className={classes.info}>You need to be an administrator to see this page</div>
-            <div><Button variant="text" color="primary" onClick={() => history.push(`/event/${event.id}`)}>Go to event page</Button></div>
+            <div><Button variant="text" color="primary" onClick={() => navigate(`/event/${event.id}`)}>Go to event page</Button></div>
         </>
     )
 

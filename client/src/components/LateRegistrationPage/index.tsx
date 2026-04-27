@@ -3,14 +3,11 @@ import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import {Theme} from "@mui/material/styles";
 import {makeStyles} from "@mui/styles";
+import {useParams} from "react-router-dom";
 import Event from '../../model/event';
 import Firebase from '../Firebase';
 import ParticipantList from '../ParticipantList';
 import LateRegistration from '../LateRegistration';
-
-interface Props {
-    match: string
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
         title: {
@@ -23,14 +20,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     })
 );
 
-const LateRegistrationPage = (props: Props) => {
+const LateRegistrationPage = () => {
+    const { eventId } = useParams<{ eventId: string }>();
     const [event, setEvent] = useState<Event>(Event.newEvent());
     const classes = useStyles();
 
     useEffect(() => {
-        const eventId = props.match;
+        if (!eventId) return;
         return Firebase.subscribeEvent(eventId, setEvent);
-    }, [props.match]);
+    }, [eventId]);
 
     return (
         <>

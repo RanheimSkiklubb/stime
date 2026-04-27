@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import Event from '../../model/event';
 import Firebase from '../Firebase';
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const EventListPage: FC = (props) => {
     const classes = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [admin, setAdmin] = useState<boolean>(false);
     const [user] = useAuthState(getAuth());
     const [events, setEvents] = useState<Event[]>([]);
@@ -74,7 +74,7 @@ const EventListPage: FC = (props) => {
                     </TableHead>
                     <TableBody>
                     {events.map((event:Event) => (
-                        <TableRow hover key={event.name} onClick={() => history.push(eventLink(event))}>
+                        <TableRow hover key={event.name} onClick={() => navigate(eventLink(event))}>
                             <TableCell align='center'>{event.registrationOpen() ? <CheckCircle className={classes.icon} /> : <div></div>}</TableCell>
                             <TableCell>{dayjs(event.startTime).format("DD. MMM YYYY")}</TableCell>
                             <TableCell>{event.name}</TableCell>
