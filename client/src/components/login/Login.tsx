@@ -33,7 +33,7 @@ const Login = () => {
     if (error) {
         return (
             <div>
-                <p>Error: {error}</p>
+                <p>Error: {error.message}</p>
             </div>);
     }
     if (user) {
