@@ -1,27 +1,13 @@
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
 
 import {useAuthState} from 'react-firebase-hooks/auth';
 import Firebase from '../Firebase';
 import {getAuth} from 'firebase/auth';
-import {makeStyles} from "@mui/styles";
-
-const useStyles = makeStyles({
-        root: {
-            flexGrow: 1,
-        },
-        login: {
-            float: 'right',
-        },
-        avatar: {
-            width: 32,
-            height: 32,
-        },
-    });
 
 const Login = () => {
-    const classes = useStyles();
     const [user, initializing, error] = useAuthState(getAuth());
 
     if (initializing) {
@@ -33,25 +19,25 @@ const Login = () => {
     if (error) {
         return (
             <div>
-                <p>Error: {error}</p>
+                <p>Error: {error.message}</p>
             </div>);
     }
     if (user) {
         const alt: string = user.displayName ? user.displayName : 'Unknown';
         const src: string = user.photoURL ? user.photoURL : 'broken';
         return (
-            <div className={classes.login} onClick={Firebase.logout}>
+            <Box sx={{ float: 'right' }} onClick={Firebase.logout}>
                 <Tooltip title="Click to log out" aria-label="logout">
-                    <Avatar alt={alt} src={src} className={classes.avatar}/>
+                    <Avatar alt={alt} src={src} sx={{ width: 32, height: 32 }}/>
                 </Tooltip>
-            </div>);
+            </Box>);
     }
     return (
-        <div className={classes.login} onClick={Firebase.login}>
+        <Box sx={{ float: 'right' }} onClick={Firebase.login}>
             <Tooltip title="Click to log in" aria-label="login">
                 <AccountCircle />
             </Tooltip>
-        </div>
+        </Box>
     );
 };
 

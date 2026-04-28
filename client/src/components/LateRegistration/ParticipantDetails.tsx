@@ -1,5 +1,4 @@
 import {ChangeEvent, useState} from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -23,6 +22,13 @@ interface Props {
     club: string;
     registerCallback: (participant: Participant) => void;
 }
+
+const disabledFieldSx = {
+    '& .MuiInputBase-input.Mui-disabled': {
+        color: 'dimgray',
+        WebkitTextFillColor: 'dimgray',
+    },
+};
 
 const ParticipantDetails = (props: Props) => {
 
@@ -70,51 +76,41 @@ const ParticipantDetails = (props: Props) => {
         props.registerCallback(participant);
     };
 
-    const useStyles = makeStyles(theme => ({
-        root: {
-            '&$disabled': {
-                color: 'dimgray' 
-            }
-        },
-        disabled: {}
-    }));
-
-    const classes = useStyles();
     let tempValue: string;
     return (
         <form noValidate autoComplete="off">
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <FormControl fullWidth>
                         <TextField disabled id="eventClass" label="Klasse" defaultValue={props.eventClass} 
-                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
+                            sx={disabledFieldSx}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField disabled id="startNumber" label="Startnummer" defaultValue={props.startNumber}
-                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
+                            sx={disabledFieldSx}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
-                        <TextField disabled id="startTime" label="Startnummer" defaultValue={props.startTime}
-                            InputProps={{classes: {root: classes.root, disabled: classes.disabled}}}/>
+                        <TextField disabled id="startTime" label="Starttid" defaultValue={props.startTime}
+                            sx={disabledFieldSx}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="firstName" label="Fornavn" value={firstName} onChange={firstNameChange}
                                 error={!firstNameValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="lastName" label="Etternavn" value={lastName} onChange={lastNameChange}
                                 error={!lastNameValid}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <Autocomplete
                             id="club"
@@ -134,14 +130,14 @@ const ParticipantDetails = (props: Props) => {
                             }}
                             renderInput={params => (
                                 <TextField {...params} label="Klubb" margin="normal" fullWidth
-                                        InputProps={{...params.InputProps, type: 'search'}}
+                                        slotProps={{ input: { ...params.slotProps.input, type: 'search' } }}
                                         style={{marginTop: '0'}}/>
                             )}
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} style={{textAlign: 'center'}}>
-                    <Box m={2}>
+                <Grid size={12} style={{textAlign: 'center'}}>
+                    <Box sx={{ m: 2 }}>
                         <Button variant="contained" color="primary" onClick={handleRegister}
                             disabled={!formValid}>Meld på</Button>
                     </Box>

@@ -5,8 +5,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Event from '../../model/event';
 import dayjs from 'dayjs';
-import { Theme } from "@mui/material/styles";
-import {makeStyles} from "@mui/styles";
 
 interface Props {
     event: Event;
@@ -14,19 +12,14 @@ interface Props {
         startTime: Date, registrationStart: Date, registrationEnd: Date, registrationEndInfo: string) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    ({
-    root: {
-        '&$disabled': {
-            color: 'dimgray'
-        }
+const disabledFieldSx = {
+    '& .MuiInputBase-input.Mui-disabled': {
+        color: 'dimgray',
+        WebkitTextFillColor: 'dimgray',
     },
-        disabled: {}
-    }));
+};
 
 const EventInfo = (props: Props) => {
-    const classes = useStyles({});
-
     const [name, setName] = useState(props.event.name);
     const [eventType, setEventType] = useState(props.event.eventType);
     const [description, setDescription] = useState(props.event.description);
@@ -83,12 +76,12 @@ const EventInfo = (props: Props) => {
         <>
             <form noValidate autoComplete="off">
             <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="name" label="Navn" onChange={nameChange} value={name}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField
                             id="start-date"
@@ -96,18 +89,16 @@ const EventInfo = (props: Props) => {
                             type="date"
                             value={dayjs(startTime).format("YYYY-MM-DD")}
                             onChange={startDateChange}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
+                            slotProps={{ inputLabel: { shrink: true } }}
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="event-type" label="Øvelse" value={eventType} onChange={eventTypeChange}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                     <TextField
                         id="start-time"
@@ -115,16 +106,14 @@ const EventInfo = (props: Props) => {
                         type="time"
                         value={dayjs(startTime).format("HH:mm")}
                         onChange={startTimeChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                            inputProps={{
-                            step: 300, // 5 min
+                        slotProps={{
+                            inputLabel: { shrink: true },
+                            htmlInput: { step: 300 }, // 5 min
                         }}
                     />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                     <TextField
                         id="registration-start"
@@ -132,13 +121,11 @@ const EventInfo = (props: Props) => {
                         type="datetime-local"
                         value={dayjs(registrationStart).format("YYYY-MM-DDTHH:mm")}
                         onChange={registrationStartChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                        slotProps={{ inputLabel: { shrink: true } }}
                     />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                     <TextField
                         id="registration-end"
@@ -146,39 +133,37 @@ const EventInfo = (props: Props) => {
                         type="datetime-local"
                         value={dayjs(registrationEnd).format("YYYY-MM-DDTHH:mm")}
                         onChange={registrationEndChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                        slotProps={{ inputLabel: { shrink: true } }}
                     />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="description" label="Arrangementsinfo"
                             value={description} onChange={descriptionChange}
                             multiline rows={5}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl sx={(theme) => ({marginBottom: theme.spacing(1)})}fullWidth>
                         <TextField disabled id="startListGenerated" label="Startliste generert"
                             defaultValue={props.event.startListGenerated ? "Ja" : "Nei"}
-                            InputProps={{classes: classes}}/>
+                            sx={disabledFieldSx}/>
                     </FormControl>
                     <FormControl fullWidth>
                         <TextField disabled id="startListPublished" label="Startliste publisert"
                             defaultValue={props.event.startListPublished ? "Ja" : "Nei"}
-                            InputProps={{classes: classes}} />
+                            sx={disabledFieldSx} />
                     </FormControl>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <FormControl fullWidth>
                         <TextField id="registrationEndInfo" label="Etteranmeldingsinfo" value={registrationEndInfo}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setRegistrationEndInfo(e.target.value)}
                             multiline rows={4}/>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Button variant="contained" color="primary" onClick={save}>Lagre</Button>
                 </Grid>
             </Grid>

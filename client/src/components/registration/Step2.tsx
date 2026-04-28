@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
-import {Theme} from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import Button from '@mui/material/Button';
 import Event from '../../model/event';
 import Participant from '../../model/participant';
@@ -59,47 +58,27 @@ const lookForSimilarRegistrations = (p: Participant, e: Event): Participant|null
 
 
 const Step2 = (props: Props) => {
-
-    const useStyles = makeStyles((theme: Theme) => ({
-        similar: {
-            '& td': {
-                color: "grey"
-            }
-        },
-        emphasize: {
-            fontWeight: 'bold',
-        },
-    }));
-    const classes = useStyles();
     const similar = lookForSimilarRegistrations(props.participant, props.event);
     let similarNotification = null;
     if (similar) {
         similarNotification = (
             <>
-                <Grid item xs={12}>
-                    <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}}
-                        severity="warning">Det finnes allerede en liknende påmelding</Alert>
-                </Grid>
-                <Grid item xs={12}>
-                    <RegisteredParticipant participant={similar} email="***@***.***" phone="********" className={classes.similar}/>
-                </Grid>
+                <Alert style={{marginTop: '10px', marginBottom: '10px', paddingTop: '0', paddingBottom: '0'}}
+                    severity="warning">Det finnes allerede en liknende påmelding</Alert>
+                <RegisteredParticipant participant={similar} email="***@***.***" phone="********" sx={{ '& td': { color: 'grey' } }}/>
             </>
         )
     }
     return (
-        <Grid container direction="column" justifyContent="center" alignItems="center">
-            <Grid item xs={12} style={{textAlign: 'center'}}>
-                <p className={classes.emphasize}>Steg 2 av 2: Bekreft påmelding</p>
-            </Grid>
-            <Grid item xs={12}>
-                <RegisteredParticipant participant={props.participant} email={props.email} phone={props.phone}/>
-            </Grid>
+        <Stack sx={{ alignItems: 'center', justifyContent: 'center' }}>
+            <p style={{ textAlign: 'center', fontWeight: 'bold' }}>Steg 2 av 2: Bekreft påmelding</p>
+            <RegisteredParticipant participant={props.participant} email={props.email} phone={props.phone}/>
             {similarNotification}
             <Grid container style={{marginTop: '20px', marginBottom: '20px'}}>
-                <Grid item xs={6}><Button variant="contained" color="primary" onClick={props.editCallback}>Endre</Button></Grid>
-                <Grid item xs={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={props.registerCallback}>Meld på</Button></Grid>
+                <Grid size={6}><Button variant="contained" color="primary" onClick={props.editCallback}>Endre</Button></Grid>
+                <Grid size={6} style={{textAlign: 'right'}}><Button variant="contained" color="primary" className="float-right" onClick={props.registerCallback}>Meld på</Button></Grid>
             </Grid>
-        </Grid>
+        </Stack>
     );
 }
 

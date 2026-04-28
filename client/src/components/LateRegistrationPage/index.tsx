@@ -1,46 +1,30 @@
 import {useEffect, useState} from 'react';
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
-import {Theme} from "@mui/material/styles";
-import {makeStyles} from "@mui/styles";
+import {useParams} from "react-router-dom";
 import Event from '../../model/event';
 import Firebase from '../Firebase';
 import ParticipantList from '../ParticipantList';
 import LateRegistration from '../LateRegistration';
 
-interface Props {
-    match: string
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-        title: {
-            flexGrow: 1,
-            padding: theme.spacing(2)
-        },
-        button: {
-            margin: theme.spacing(2)
-        }
-    })
-);
-
-const LateRegistrationPage = (props: Props) => {
+const LateRegistrationPage = () => {
+    const { eventId } = useParams<{ eventId: string }>();
     const [event, setEvent] = useState<Event>(Event.newEvent());
-    const classes = useStyles();
 
     useEffect(() => {
-        const eventId = props.match;
+        if (!eventId) return;
         return Firebase.subscribeEvent(eventId, setEvent);
-    }, [props.match]);
+    }, [eventId]);
 
     return (
         <>
             <AppBar position="sticky">
-                <Typography variant="h5" className={classes.title}>Etteranmelding</Typography>
+                <Typography variant="h5" sx={{ flexGrow: 1, p: 2 }}>Etteranmelding</Typography>
             </AppBar>
             {
                 !event.startListPublished ? <p>Etteranmelding har ikke åpnet ennå</p> :
                 <>
-                    <LateRegistration event={event} className={classes.button} caption="Meld på"/>
+                    <LateRegistration event={event} sx={{ m: 2 }} caption="Meld på"/>
                     <ParticipantList event={event} />
                 </>
             }

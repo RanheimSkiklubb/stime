@@ -3,27 +3,21 @@ import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Event from '../../model/event';
-import {Link, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
+import {Link, Route, Routes, useParams, useLocation} from "react-router-dom";
 import ParticipantList from '../ParticipantList';
 import Firebase from '../Firebase';
 import HeaderBar from '../headerbar/HeaderBar';
 import EventInfo from './EventInfo';
 
-interface MatchParams {
-    eventId: string
-}
+const EventPage = () => {
 
-interface Props {
-    pathname: string
-}
-
-const EventPage = (props: Props) => {
-
-    const { eventId } = useParams<MatchParams>();
+    const { eventId } = useParams<{ eventId: string }>();
     const [event, setEvent] = useState<Event>(Event.newEvent());
-    const { path, url } = useRouteMatch();
+    const location = useLocation();
+    const url = `/event/${eventId}`;
 
     useEffect(() => {
+        if (!eventId) return;
         return Firebase.subscribeEvent(eventId, setEvent);
     }, [eventId]);
 
@@ -31,20 +25,16 @@ const EventPage = (props: Props) => {
         <>
             <HeaderBar heading={event.name}/>
             <AppBar position="static">
-                <Tabs indicatorColor="primary" textColor="inherit" value={props.pathname} aria-label="simple tabs example">
+                <Tabs indicatorColor="primary" textColor="inherit" value={location.pathname} aria-label="simple tabs example">
                     <Tab label="Informasjon" component={ Link } value={`${url}`} to={`${url}`}/>
                     <Tab label={event.startListPublished ? `Startliste (${event.participants.length})` : `Deltakerliste (${event.participants.length})`}
                          component={ Link } value={`${url}/list`} to={`${url}/list`} />
                 </Tabs>
             </AppBar>
-            <Switch>
-                <Route exact path={`${path}`}>
-                    <EventInfo event={event}/>
-                </Route>
-                <Route path={`${path}/list`}>
-                    <ParticipantList event={event}/>
-                </Route>
-            </Switch>
+            <Routes>
+                <Route index element={<EventInfo event={event}/>} />
+                <Route path="list" element={<ParticipantList event={event}/>} />
+            </Routes>
         </>
     );
 }

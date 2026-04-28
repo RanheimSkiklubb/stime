@@ -13,8 +13,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StartGroup from '../../model/start-group';
 import Firebase from '../Firebase';
-import {Theme} from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import TimeString from '../../model/time';
 
 interface Props {
@@ -56,15 +54,6 @@ const StartGroupEdit = (props: Props) => {
         }
         return next;
     };
-
-    const useStyles = makeStyles((theme: Theme) => ({
-            warning: {
-                fontWeight: 'bold',
-                color: theme.palette.warning.main
-            },
-        }
-    ));
-    const classes = useStyles();
 
     const columns = useMemo<MRT_ColumnDef<StartGroupRow>[]>(() => [
         {
@@ -184,9 +173,9 @@ const StartGroupEdit = (props: Props) => {
     return (
         <>
             { props.startListPublished ?
-                <p className={classes.warning}>
+                <Box component="p" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
                     Endringer i eksisterende puljer har ingen effekt etter at startliste er publisert.
-                </p> : null}
+                </Box> : null}
             <h3 style={{margin: '8px 0'}}>Puljer</h3>
             <MaterialReactTable table={table} />
         </>

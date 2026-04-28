@@ -4,6 +4,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { SxProps, Theme } from '@mui/material/styles';
 import LateRegistrationForm from './LateRegistrationForm';
 
 import Event from '../../model/event';
@@ -12,7 +13,7 @@ import Firebase from '../Firebase';
 
 interface Props {
     event: Event,
-    className?: string,
+    sx?: SxProps<Theme>,
     caption: string
 }
 
@@ -29,7 +30,7 @@ const LateRegistration = (props: Props) => {
     return (
         <>
             <Button variant="contained" color="primary" size="medium" 
-                onClick={handleShow} className={props.className}>{props.caption}</Button>
+                onClick={handleShow} sx={props.sx}>{props.caption}</Button>
             <Dialog open={show} onClose={handleClose} maxWidth="sm" fullWidth={true}>
                 <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Etteranmelding</DialogTitle>
                 <DialogContent>

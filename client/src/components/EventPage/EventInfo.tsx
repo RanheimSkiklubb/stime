@@ -6,7 +6,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
-import makeStyles from '@mui/styles/makeStyles';
 import Event from '../../model/event';
 import EventClass from '../../model/event-class';
 import dayjs from 'dayjs';
@@ -17,42 +16,31 @@ interface Props {
     event: Event
 }
 
-const EventInfo = (props: Props) => {
+const infoTableSx = {
+    '& td': { verticalAlign: 'top' },
+    '& ul': { margin: 0, padding: '0 0 0 16px' },
+};
 
-    const useStyles = makeStyles({
-        infoTable: {
-            '& td': {
-                verticalAlign: "top"
-            },
-            '& ul': {
-                margin: "0",
-                padding: "0 0 0 16px"
-            }
-        },
-        noMargin:  {
-            marginTop: "0",
-        }
-    });
-    const classes = useStyles();
+const EventInfo = (props: Props) => {
     const description = {__html: props.event.description}
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <TableContainer component={Paper}>
-                        <Table className={classes.infoTable}>
+                        <Table sx={infoTableSx}>
                             <TableBody>
                                 <TableRow><TableCell>Arrangement:</TableCell><TableCell>{props.event.name}</TableCell></TableRow>
                                 <TableRow><TableCell>Dato:</TableCell><TableCell>{dayjs(props.event.startTime).format("DD. MMM YYYY")}</TableCell></TableRow>
                                 <TableRow><TableCell>Øvelse:</TableCell><TableCell>{props.event.eventType}</TableCell></TableRow>
                                 <TableRow><TableCell>Første start:</TableCell><TableCell>{dayjs(props.event.startTime).format("HH:mm")}</TableCell></TableRow>
-                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span className={classes.noMargin} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
+                                <TableRow><TableCell>Arrangementsinfo:</TableCell><TableCell><span style={{ marginTop: 0 }} dangerouslySetInnerHTML={description}/></TableCell></TableRow>
                                 <RegistrationInfo event={props.event} />
                             </TableBody>
                         </Table>
                     </TableContainer>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <TableContainer component={Paper}>
                         <Table size="small">
                             <TableHead>
@@ -65,7 +53,7 @@ const EventInfo = (props: Props) => {
                             <TableBody>
                                 {
                                     sortBy(props.event.eventClasses, 'order')
-                                    .map((ec:EventClass, idx:number) => (
+                                    .map((ec:EventClass) => (
                                         <TableRow key={ec.name}>
                                             <TableCell>{ec.name}</TableCell>
                                             <TableCell>{ec.course}</TableCell>
