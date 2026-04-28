@@ -94,7 +94,7 @@ const ParticipantDetails = (props: Props) => {
                 </Grid>
                 <Grid size={6}>
                     <FormControl fullWidth>
-                        <TextField disabled id="startTime" label="Startnummer" defaultValue={props.startTime}
+                        <TextField disabled id="startTime" label="Starttid" defaultValue={props.startTime}
                             sx={disabledFieldSx}/>
                     </FormControl>
                 </Grid>
