@@ -1,0 +1,50 @@
+# CI/CD: Build and deploy Firebase Hosting
+#
+# Triggers:
+#   - Push to master       → deploys to dev  (simple-race-timer-dev)
+#   - Release published    → deploys to prod (simple-race-timer)
+#
+# Required GitHub Environments: "dev" and "prod"
+# Each environment needs these secrets:
+#   FIREBASE_SERVICE_ACCOUNT  — service account JSON for the target Firebase project
+#   API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID
+
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+  release:
+    types: [published]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'release' && 'prod' || 'dev' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install and build
+        run: npm ci && npm run build
+        working-directory: ./client
+        env:
+          REACT_APP_API_KEY: ${{ secrets.API_KEY }}
+          REACT_APP_AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+          REACT_APP_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REACT_APP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          REACT_APP_STOREAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+
+      - name: Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: ${{ github.event_name == 'release' && 'simple-race-timer' || 'simple-race-timer-dev' }}
