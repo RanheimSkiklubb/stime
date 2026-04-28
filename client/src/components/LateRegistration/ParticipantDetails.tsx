@@ -128,9 +128,9 @@ const ParticipantDetails = (props: Props) => {
                                     clubChange(tempValue);
                                 }
                             }}
-                            renderInput={params => (
-                                <TextField {...params} label="Klubb" margin="normal" fullWidth
-                                        slotProps={{ input: { ...params.slotProps.input, type: 'search' } }}
+                            renderInput={({ slotProps: paramSlotProps, ...restParams }) => (
+                                <TextField {...restParams} label="Klubb" margin="normal" fullWidth
+                                        slotProps={{ ...paramSlotProps, input: { ...paramSlotProps.input, type: 'search' } }}
                                         style={{marginTop: '0'}}/>
                             )}
                         />
