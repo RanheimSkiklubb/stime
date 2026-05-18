@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "simple-race-timer",
-    "dev": "simple-race-timer-dev"
+    "default": "simple-race-timer-dev",
+    "prod": "simple-race-timer"
   }
 }
