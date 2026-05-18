@@ -5,9 +5,9 @@
 #   - Release published    → deploys to prod (simple-race-timer)
 #
 # Required GitHub Environments: "dev" and "prod"
-# Each environment needs these secrets:
-#   FIREBASE_SERVICE_ACCOUNT  — service account JSON for the target Firebase project
-#   API_KEY, AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID
+# Each environment needs:
+#   Secrets: FIREBASE_SERVICE_ACCOUNT (service account JSON), API_KEY
+#   Variables: AUTH_DOMAIN, DATABASE_URL, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID
 
 name: Deploy
 on:
@@ -35,11 +35,11 @@ jobs:
         working-directory: ./client
         env:
           REACT_APP_API_KEY: ${{ secrets.API_KEY }}
-          REACT_APP_AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
-          REACT_APP_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          REACT_APP_PROJECT_ID: ${{ secrets.PROJECT_ID }}
-          REACT_APP_STOREAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
-          REACT_APP_MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+          REACT_APP_AUTH_DOMAIN: ${{ vars.AUTH_DOMAIN }}
+          REACT_APP_DATABASE_URL: ${{ vars.DATABASE_URL }}
+          REACT_APP_PROJECT_ID: ${{ vars.PROJECT_ID }}
+          REACT_APP_STOREAGE_BUCKET: ${{ vars.STORAGE_BUCKET }}
+          REACT_APP_MESSAGING_SENDER_ID: ${{ vars.MESSAGING_SENDER_ID }}
 
       - name: Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
